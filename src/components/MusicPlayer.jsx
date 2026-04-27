@@ -298,7 +298,7 @@ export default function MusicPlayer() {
                                 fontSize: 12,
                                 fontWeight: 700,
                                 letterSpacing: '0.1em',
-                                whiteSpace: 'nowrap',
+                                whiteSpace: 'nowrap',   
                                 pointerEvents: 'none',
                                 backdropFilter: 'blur(8px)',
                                 border: '1px solid rgba(74,144,217,0.5)',
