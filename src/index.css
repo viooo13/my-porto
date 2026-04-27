@@ -1,0 +1,580 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
+@import "tailwindcss";
+
+/* ========================================
+   DESIGN TOKENS — B/W + Dark Blue
+   ======================================== */
+:root {
+  --bg: #0a0a0a;
+  --bg-2: #111111;
+  --white: #ffffff;
+  --text: #f5f5f5;
+  --muted: #9ca3af;
+  --subtle: rgba(255, 255, 255, 0.12);
+  --grey-text: #6b7280;
+  --blue: #1e3a5f;
+  --blue-light: #2a5a8f;
+  --blue-glow: rgba(30, 58, 95, 0.35);
+  --font-body: 'Inter', sans-serif;
+  --font-display: 'Plus Jakarta Sans', sans-serif;
+  --ease: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-back: cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+/* ========================================
+   RESET
+   ======================================== */
+*,
+*::before,
+*::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+  font-family: var(--font-body);
+  background: var(--bg);
+  color: var(--text);
+  overflow-x: hidden;
+  cursor: none;
+}
+
+a,
+button,
+input,
+textarea {
+  cursor: none;
+}
+
+::selection {
+  background: var(--blue);
+  color: #fff;
+}
+
+/* ========================================
+   SCROLLBAR — Minimalist
+   ======================================== */
+::-webkit-scrollbar {
+  width: 3px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--bg);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--blue);
+  border-radius: 0px;
+  transition: background 0.3s;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--blue-light);
+}
+
+/* ========================================
+   NOISE OVERLAY
+   ======================================== */
+body::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 9990;
+  opacity: 0.03;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.7' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+/* ========================================
+   CUSTOM CURSOR — Rotating Aim + Hover Frame
+   ======================================== */
+
+/* IDLE — Rotating aim brackets around cursor */
+.cursor-aim {
+  width: 32px;
+  height: 32px;
+  transition: opacity 0.1s ease;
+}
+
+/* Hide custom cursor on mobile devices */
+@media (pointer: coarse),
+(max-width: 768px) {
+
+  .cursor-aim,
+  .cursor-dot,
+  .cursor-brackets {
+    display: none !important;
+  }
+}
+
+.aim-rotate {
+  width: 100%;
+  height: 100%;
+  position: relative;
+  animation: aimSpin 3s linear infinite;
+}
+
+.aim-corner {
+  position: absolute;
+  width: 10px;
+  height: 10px;
+  border: 2px solid rgba(255, 255, 255, 0.7);
+  box-shadow: 0 0 6px rgba(255, 255, 255, 0.3);
+}
+
+.aim-corner.tl {
+  top: 0;
+  left: 0;
+  border-right: none;
+  border-bottom: none;
+}
+
+.aim-corner.tr {
+  top: 0;
+  right: 0;
+  border-left: none;
+  border-bottom: none;
+}
+
+.aim-corner.bl {
+  bottom: 0;
+  left: 0;
+  border-right: none;
+  border-top: none;
+}
+
+.aim-corner.br {
+  bottom: 0;
+  right: 0;
+  border-left: none;
+  border-top: none;
+}
+
+/* Center dot */
+.cursor-dot {
+  width: 8px;
+  height: 8px;
+  background: #fff;
+  border-radius: 50%;
+  box-shadow: 0 0 20px rgba(255, 255, 255, 0.8), 0 0 8px rgba(255, 255, 255, 0.9);
+}
+
+/* HOVER — Only corner brackets, no full border */
+.cursor-brackets {
+  position: fixed;
+  pointer-events: none;
+  z-index: 99999;
+  opacity: 0;
+  transition: opacity 0.1s ease;
+  background: transparent !important;
+  border: none !important;
+}
+
+/* Corner brackets around hovered elements - L shaped */
+.cursor-corner {
+  position: absolute;
+  width: 12px;
+  height: 12px;
+  border-color: rgba(255, 255, 255, 0.95);
+  border-style: solid;
+}
+
+.cursor-corner.tl {
+  top: -2px;
+  left: -2px;
+  border-width: 2px 0 0 2px;
+}
+
+.cursor-corner.tr {
+  top: -2px;
+  right: -2px;
+  border-width: 2px 2px 0 0;
+}
+
+.cursor-corner.bl {
+  bottom: -2px;
+  left: -2px;
+  border-width: 0 0 2px 2px;
+}
+
+.cursor-corner.br {
+  bottom: -2px;
+  right: -2px;
+  border-width: 0 2px 2px 0;
+}
+
+@keyframes aimSpin {
+  0% {
+    transform: rotate(0deg);
+  }
+
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+/* ========================================
+   SCROLL PROGRESS
+   ======================================== */
+.scroll-progress {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 2px;
+  background: linear-gradient(90deg, var(--blue), var(--blue-light));
+  z-index: 9999;
+  transform-origin: left;
+}
+
+/* ========================================
+   KEYFRAMES — MASSIVE ANIMATION LIBRARY
+   ======================================== */
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes fadeUp {
+  from {
+    opacity: 0;
+    transform: translateY(60px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeDown {
+  from {
+    opacity: 0;
+    transform: translateY(-40px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes clipLeft {
+  from {
+    clip-path: inset(0 0 0 0);
+  }
+
+  to {
+    clip-path: inset(0 100% 0 0);
+  }
+}
+
+@keyframes slideUp {
+  from {
+    transform: translateY(110%);
+  }
+
+  to {
+    transform: translateY(0);
+  }
+}
+
+@keyframes spinSlow {
+  from {
+    transform: rotate(0deg);
+  }
+
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes float {
+
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+
+  50% {
+    transform: translateY(-12px);
+  }
+}
+
+@keyframes pulse {
+
+  0%,
+  100% {
+    opacity: 1;
+  }
+
+  50% {
+    opacity: 0.5;
+  }
+}
+
+/* ========================================
+   ANIMATION UTILITIES
+   ======================================== */
+.a-fade-in {
+  animation: fadeIn 0.7s ease both;
+}
+
+.a-fade-up {
+  animation: fadeUp 0.9s var(--ease) both;
+}
+
+.a-fade-down {
+  animation: fadeDown 0.8s var(--ease) both;
+}
+
+.a-clip-left {
+  animation: clipLeft 1s var(--ease) both;
+}
+
+.a-slide-up {
+  animation: slideUp 0.9s var(--ease) both;
+}
+
+.a-spin-slow {
+  animation: spinSlow 20s linear infinite;
+}
+
+.a-float {
+  animation: float 4s ease-in-out infinite;
+}
+
+.a-pulse {
+  animation: pulse 2s ease-in-out infinite;
+}
+
+/* Delays */
+.d-0 {
+  animation-delay: 0s;
+}
+
+.d-1 {
+  animation-delay: 0.1s;
+}
+
+.d-2 {
+  animation-delay: 0.2s;
+}
+
+.d-3 {
+  animation-delay: 0.3s;
+}
+
+.d-4 {
+  animation-delay: 0.4s;
+}
+
+.d-5 {
+  animation-delay: 0.5s;
+}
+
+.d-6 {
+  animation-delay: 0.6s;
+}
+
+.d-7 {
+  animation-delay: 0.7s;
+}
+
+.d-8 {
+  animation-delay: 0.8s;
+}
+
+.d-9 {
+  animation-delay: 0.9s;
+}
+
+.d-10 {
+  animation-delay: 1.0s;
+}
+
+/* ========================================
+   SCROLL-TRIGGERED REVEAL
+   ======================================== */
+.reveal {
+  opacity: 0;
+  transform: translateY(50px);
+  transition: opacity 0.9s var(--ease), transform 0.9s var(--ease);
+}
+
+.reveal.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.reveal-mask {
+  position: absolute;
+  inset: 0;
+  background: var(--bg);
+  transform-origin: right;
+  transition: transform 1.2s cubic-bezier(0.77, 0, 0.175, 1);
+  z-index: 20;
+}
+
+.visible .reveal-mask {
+  transform: scaleX(0);
+}
+
+/* ========================================
+   PREMIUM BUTTONS & UTILITIES
+   ======================================== */
+.btn-primary {
+  position: relative;
+  overflow: hidden;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px 36px;
+  background: var(--white);
+  color: var(--bg);
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 11px;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  text-decoration: none;
+  transition: all 0.4s var(--ease);
+}
+
+.btn-primary::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: var(--blue);
+  transition: transform 0.6s var(--ease);
+  z-index: -1;
+}
+
+.btn-primary:hover {
+  color: var(--white);
+}
+
+.btn-primary:hover::before {
+  transform: translateX(100%);
+}
+
+/* Cinematic Hero Button */
+.btn-hero {
+  position: relative;
+  overflow: hidden;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px 52px;
+  background: transparent;
+  border: 1px solid var(--blue-light);
+  color: var(--blue-light);
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 12px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  text-decoration: none;
+  transition: all 0.5s var(--ease);
+  z-index: 1;
+}
+
+.btn-hero::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: var(--blue-light);
+  transform-origin: left;
+  transform: scaleX(0);
+  transition: transform 0.5s var(--ease);
+  z-index: -1;
+}
+
+.btn-hero .btn-text {
+  position: relative;
+  display: block;
+  overflow: hidden;
+  height: 14px;
+}
+
+.btn-hero .btn-text-inner {
+  display: block;
+  transition: transform 0.5s var(--ease);
+}
+
+.btn-hero .btn-text-alt {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  white-space: nowrap;
+}
+
+.btn-hero:hover {
+  color: var(--white);
+  transform: scale(1.05);
+}
+
+.btn-hero:hover::before {
+  transform: scaleX(1);
+}
+
+.btn-hero:hover .btn-text-inner {
+  transform: translateY(-100%);
+}
+
+.btn-hero .btn-arrow {
+  margin-left: 12px;
+  transition: transform 0.5s var(--ease);
+}
+
+.btn-hero:hover .btn-arrow {
+  transform: translate(4px, -4px) scale(1.2);
+}
+
+/* Glass card */
+.glass {
+  background: rgba(255, 255, 255, 0.015);
+  border: 1px solid rgba(255, 255, 255, 0.04);
+  backdrop-filter: blur(16px);
+  transition: border-color 0.6s var(--ease), background 0.6s var(--ease), transform 0.6s var(--ease), box-shadow 0.6s var(--ease);
+}
+
+.glass:hover {
+  border-color: rgba(30, 58, 95, 0.4);
+  background: rgba(255, 255, 255, 0.03);
+  transform: translateY(-8px);
+  box-shadow: 0 40px 100px rgba(0, 0, 0, 0.6), 0 0 40px rgba(30, 58, 95, 0.1);
+}
+
+/* ========================================
+   RESPONSIVE
+   ======================================== */
+@media (max-width: 768px) {
+  .hide-mobile {
+    display: none !important;
+  }
+}
+
+@media (min-width: 769px) {
+  .hide-desktop {
+    display: none !important;
+  }
+}
