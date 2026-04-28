@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { FaReact, FaNodeJs, FaGitAlt, FaDocker, FaFigma, FaHtml5, FaCss3Alt, FaJs, FaPhp, FaLaravel } from 'react-icons/fa';
 import { SiTypescript, SiNextdotjs, SiTailwindcss, SiMongodb, SiExpress, SiVite, SiWebpack, SiRedux, SiJest, SiMysql, SiPostman } from 'react-icons/si';
+import { StyledWord } from '../../components/StyledWord';
 
 // Animated counter hook
 const useCounter = (target, duration = 1500, start = 0) => {
@@ -140,7 +141,7 @@ export default function Skills() {
     const soft = ['Logic Thinking', 'Creative Strategy', 'Problem Solving', 'Team Lead', 'Adaptive Learning'];
 
     return (
-        <section id="skills" ref={ref} style={{ background: '#0a0a0a', padding: '160px 0', position: 'relative', overflow: 'hidden' }}>
+        <section id="skills" ref={ref} style={{ background: '#0a0a0a', padding: 'clamp(100px, 15vh, 160px) 0', position: 'relative', overflow: 'hidden', zIndex: 1 }}>
             {/* Ambient Background Glows */}
             <div style={{ position: 'absolute', top: '10%', right: '10%', width: 500, height: 500, borderRadius: '50%', background: 'radial-gradient(circle, rgba(30,58,95,0.06) 0%, transparent 70%)', pointerEvents: 'none' }} />
             <div style={{ position: 'absolute', bottom: '10%', left: '5%', width: 400, height: 400, borderRadius: '50%', background: 'radial-gradient(circle, rgba(30,58,95,0.04) 0%, transparent 70%)', pointerEvents: 'none' }} />
@@ -156,7 +157,7 @@ export default function Skills() {
                 <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-20 items-end marginBottom-80" style={{ ...a(vis, 50), marginBottom: 80 }}>
                     <div className="lg:col-span-7">
                         <h2 style={{ fontFamily: 'Plus Jakarta Sans, sans-serif', fontWeight: 800, fontSize: 'clamp(48px, 6vw, 96px)', lineHeight: 0.95, color: '#fff', letterSpacing: '-0.02em' }}>
-                            Tech Stack &<br /><span style={{ color: '#1e3a5f' }}>Expertise</span>
+                            <StyledWord text="Tech Stack &" color="#fff" /><br /><StyledWord text="Expertise" color="#1e3a5f" />
                         </h2>
                     </div>
                     <div className="lg:col-span-5">

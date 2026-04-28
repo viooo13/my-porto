@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import { HiArrowUpRight } from 'react-icons/hi2';
+import { StyledWord, StyledHeading } from '../../components/StyledWord';
 
 import { projectsData as projects } from '../../data/projectsData';
 
@@ -21,7 +22,7 @@ export default function Project() {
     });
 
     return (
-        <section id="projects" ref={ref} style={{ background: '#0a0a0a', padding: '160px 0', position: 'relative', overflow: 'hidden', scrollMarginTop: 80 }}>
+        <section id="projects" ref={ref} style={{ background: '#0a0a0a', padding: 'clamp(100px, 15vh, 160px) 0', position: 'relative', overflow: 'hidden', scrollMarginTop: 80, zIndex: 1 }}>
             {/* Ambient */}
             <div style={{ position: 'absolute', top: '20%', right: '-8%', width: 500, height: 500, borderRadius: '50%', background: 'radial-gradient(circle, rgba(30,58,95,0.06) 0%, transparent 70%)', pointerEvents: 'none' }} />
             <div style={{ position: 'absolute', bottom: '10%', left: '-5%', width: 400, height: 400, borderRadius: '50%', background: 'radial-gradient(circle, rgba(30,58,95,0.04) 0%, transparent 70%)', pointerEvents: 'none' }} />
@@ -35,7 +36,7 @@ export default function Project() {
                 </div>
 
                 <h2 style={{ ...a(50), fontFamily: 'Plus Jakarta Sans, sans-serif', fontWeight: 800, fontSize: 'clamp(48px, 6vw, 96px)', lineHeight: 0.95, color: '#fff', marginBottom: 80, letterSpacing: '-0.02em' }}>
-                    Projects<br /><span style={{ color: '#1e3a5f' }}>Portfolio</span>
+                    <StyledWord text="Projects" color="#fff" /><br /><StyledWord text="Portfolio" color="#1e3a5f" />
                 </h2>
 
                 {/* Project list */}
@@ -70,12 +71,13 @@ export default function Project() {
                                 <h3 style={{
                                     fontFamily: 'Plus Jakarta Sans, sans-serif', fontWeight: 800,
                                     fontSize: 'clamp(28px, 3.5vw, 52px)', lineHeight: 1,
-                                    color: '#fff', marginBottom: 16, letterSpacing: '-0.01em',
+                                    color: '#fff', marginBottom: 16, letterSpacing: '-0.02em',
                                     whiteSpace: 'pre-line',
                                     transition: 'transform 0.5s cubic-bezier(0.16,1,0.3,1)',
                                     transform: hov === i ? 'translateX(8px)' : 'translateX(0)',
+                                    textTransform: 'uppercase',
                                 }}>
-                                    {p.title}
+                                    <StyledHeading text={p.title} color="#fff" />
                                 </h3>
 
                                 <p style={{ fontSize: 13, lineHeight: 1.7, color: 'rgba(255,255,255,0.5)', marginBottom: 20, fontWeight: 300 }}>{p.desc}</p>

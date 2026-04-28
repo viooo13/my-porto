@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import { certificatesData as certs } from '../../data/certificatesData';
+import { StyledWord } from '../../components/StyledWord';
 
 export default function Certificates() {
     const ref = useRef(null);
@@ -39,7 +40,7 @@ export default function Certificates() {
     });
 
     return (
-        <section id="certificates" ref={ref} style={{ background: '#0a0a0a', padding: '160px 0', position: 'relative', overflow: 'hidden', scrollMarginTop: 80 }}>
+        <section id="certificates" ref={ref} style={{ background: '#0a0a0a', padding: 'clamp(100px, 15vh, 160px) 0', position: 'relative', overflow: 'hidden', scrollMarginTop: 80, zIndex: 1 }}>
             {/* Ambient Ambient */}
             <div style={{ position: 'absolute', top: '15%', left: '-10%', width: 600, height: 600, borderRadius: '50%', background: 'radial-gradient(circle, rgba(30,58,95,0.05) 0%, transparent 70%)', pointerEvents: 'none' }} />
             <div style={{ position: 'absolute', bottom: '5%', right: '-5%', width: 400, height: 400, borderRadius: '50%', background: 'radial-gradient(circle, rgba(30,58,95,0.03) 0%, transparent 70%)', pointerEvents: 'none' }} />
@@ -53,7 +54,7 @@ export default function Certificates() {
                 </div>
 
                 <h2 style={{ ...a(50), fontFamily: 'Plus Jakarta Sans, sans-serif', fontWeight: 800, fontSize: 'clamp(48px, 6vw, 96px)', lineHeight: 0.95, color: '#fff', marginBottom: 80, letterSpacing: '-0.02em' }}>
-                    Certifi<span style={{ color: '#1e3a5f' }}>cates</span>
+                    <StyledWord text="Certifi" color="#fff" /><StyledWord text="cates" color="#1e3a5f" />
                 </h2>
 
                 {/* Compact Grid - supports many certificates */}

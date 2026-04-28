@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { HiMail, HiLocationMarker, HiPhone } from 'react-icons/hi';
 import { FaLinkedin, FaGithub, FaTwitter, FaInstagram } from 'react-icons/fa';
+import { StyledWord } from '../../components/StyledWord';
 
 const info = [
     { icon: HiMail, title: 'Email', value: 'vioadytia30@gmail.com', link: 'mailto:vioadytia30@gmail.com' },
@@ -36,7 +37,7 @@ export default function Contact() {
     };
 
     return (
-        <section id="contact" ref={ref} style={{ background: '#0a0a0a', padding: '160px 0', position: 'relative', overflow: 'hidden', scrollMarginTop: 80 }}>
+        <section id="contact" ref={ref} style={{ background: '#0a0a0a', padding: 'clamp(100px, 15vh, 160px) 0', position: 'relative', overflow: 'hidden', scrollMarginTop: 80, zIndex: 1 }}>
             <div style={{ position: 'absolute', top: '30%', left: '25%', width: 500, height: 500, borderRadius: '50%', background: 'radial-gradient(circle, rgba(30,58,95,0.05) 0%, transparent 70%)', pointerEvents: 'none' }} />
 
             <div style={{ maxWidth: 1440, margin: '0 auto', padding: '0 40px' }}>
@@ -48,7 +49,7 @@ export default function Contact() {
                 </div>
 
                 <h2 style={{ ...a(50), fontFamily: 'Plus Jakarta Sans, sans-serif', fontWeight: 800, fontSize: 'clamp(48px, 6vw, 96px)', lineHeight: 0.95, color: '#fff', marginBottom: 16, letterSpacing: '-0.02em' }}>
-                    Let's<br /><span style={{ color: '#1e3a5f' }}>Talk</span>
+                    <StyledWord text="Let's" color="#fff" /><br /><StyledWord text="Talk" color="#1e3a5f" />
                 </h2>
                 <p style={{ ...a(100), fontSize: 15, color: 'rgba(255,255,255,0.5)', maxWidth: 480, lineHeight: 1.7, marginBottom: 80, fontWeight: 300 }}>
                     Have a project in mind or just want to say hi? I'd love to hear from you.

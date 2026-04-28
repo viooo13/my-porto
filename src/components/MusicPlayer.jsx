@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from 'react';
-import { FaPlay, FaPause, FaStepForward, FaStepBackward, FaMusic } from 'react-icons/fa';
+import { FaPlay, FaPause, FaStepForward, FaStepBackward, FaMusic, FaTimes } from 'react-icons/fa';
 
 const tracks = [
     { id: 1, title: '33x', artist: 'Perunggu', src: '/music/33x.mp3' },
@@ -12,6 +12,7 @@ const tracks = [
     { id: 8, title: 'Gemilang', artist: 'Perunggu', src: '/music/Gemilang.mp3' },
     { id: 9, title: 'Stand by Me', artist: 'Oasis', src: '/music/Stand by Me.mp3' },
     { id: 10, title: 'Wonderwall Remastered', artist: 'Oasis', src: '/music/Wonderwall Remastered.mp3' },
+    { id: 11, title: 'Who Knows', artist: 'Daniel Caesar', src: '/music/Who Knows.mp3' },
 ];
 
 export default function MusicPlayer() {
@@ -38,9 +39,10 @@ export default function MusicPlayer() {
     useEffect(() => {
         const w = document.documentElement.clientWidth;
         const h = window.innerHeight; // innerHeight is usually better for mobile to avoid address bar issues, but clientWidth is safer for scrollbars
-        setPosition({ left: w - 48 - PADDING, top: h - 48 - PADDING });
+        setPosition({ left: w - 48 - PADDING - 20, top: h * 0.80, });
         setViewport({ w, h });
         setInitialized(true);
+
     }, []);
 
     // Re-clamp base position when viewport changes (always based on 56x56 icon size)
@@ -205,7 +207,7 @@ export default function MusicPlayer() {
 
     const isRightHalf = position.left > viewport.w / 2;
     const isBottomHalf = position.top > viewport.h / 2;
-    const ICON_SIZE = 56;
+    const ICON_SIZE = 64;
     const EXPANDED_WIDTH = 320;
     const EXPANDED_HEIGHT = 125;
     const isExpanded = isOpen || isHovered;
@@ -275,49 +277,37 @@ export default function MusicPlayer() {
                             display: 'flex',
                             alignItems: 'center',
                             justifyContent: 'center',
-                            background: 'rgba(6,83,166,0.3)',
-                            color: '#4a90d9',
+                            background: 'rgba(6,83,166,0.15)',
+                            backdropFilter: 'blur(12px)',
+                            color: '#fff',
                             opacity: isExpanded ? 0 : 1,
                             transition: 'opacity 0.2s',
-                            animation: 'musicPulse 2s ease-in-out infinite',
+                            animation: 'speakerPulse 1.2s ease-in-out infinite',
+                            border: '1px solid rgba(74,144,217,0.4)',
+                            boxShadow: '0 8px 32px rgba(0,0,0,0.36), 0 0 0 0 rgba(74,144,217,0.6)',
                         }}
                         onMouseEnter={() => setIsIconHovered(true)}
                         onMouseLeave={() => setIsIconHovered(false)}
                     >
-                        {/* Hover Tooltip - positioned to LEFT since icon is at right edge */}
-                        {isIconHovered && !isExpanded && (
-                            <div style={{
-                                position: 'absolute',
-                                top: '50%',
-                                right: ICON_SIZE + 12,
-                                transform: 'translateY(-50%)',
-                                background: 'rgba(6,83,166,0.95)',
-                                color: '#fff',
-                                padding: '8px 16px',
-                                borderRadius: 8,
-                                fontSize: 12,
-                                fontWeight: 700,
-                                letterSpacing: '0.1em',
-                                whiteSpace: 'nowrap',
-                                pointerEvents: 'none',
-                                backdropFilter: 'blur(8px)',
-                                border: '1px solid rgba(74,144,217,0.5)',
-                                boxShadow: '0 4px 20px rgba(6,83,166,0.4)',
-                                zIndex: 1000,
-                                animation: 'tooltipFade 0.2s ease forwards',
-                            }}>
-                                MUSIC
-                                <span style={{
-                                    position: 'absolute',
-                                    top: '50%',
-                                    left: '100%',
-                                    transform: 'translateY(-50%)',
-                                    width: 0, height: 0,
-                                    borderTop: '6px solid transparent',
-                                    borderBottom: '6px solid transparent',
-                                    borderLeft: '6px solid rgba(6,83,166,0.95)',
-                                }} />
-                            </div>
+                        {/* Speaker ripple rings */}
+                        {!isExpanded && isPlaying && (
+                            <>
+                                {[...Array(3)].map((_, i) => (
+                                    <div key={i} style={{
+                                        position: 'absolute',
+                                        top: '50%',
+                                        left: '50%',
+                                        transform: 'translate(-50%, -50%)',
+                                        width: ICON_SIZE,
+                                        height: ICON_SIZE,
+                                        borderRadius: '50%',
+                                        border: `1px solid rgba(74,144,217,${0.4 - i * 0.1})`,
+                                        animation: `speakerRipple ${1.5 + i * 0.3}s ease-out infinite`,
+                                        animationDelay: `${i * 0.4}s`,
+                                        pointerEvents: 'none',
+                                    }} />
+                                ))}
+                            </>
                         )}
                         {isPlaying ? (
                             <div style={{ display: 'flex', alignItems: 'flex-end', gap: 2, height: 16 }}>
@@ -329,7 +319,7 @@ export default function MusicPlayer() {
                                 ))}
                             </div>
                         ) : (
-                            <FaMusic size={18} />
+                            <FaMusic size={20} color='#4a90d9'/>
                         )}
                         {/* Drag indicator dots */}
                         <div style={{ position: 'absolute', bottom: 8, display: 'flex', gap: 3, opacity: 0.6 }}>
@@ -350,7 +340,7 @@ export default function MusicPlayer() {
                         pointerEvents: isExpanded ? 'auto' : 'none',
                     }}>
                         {/* Top: Text + EQ */}
-                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
+                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', position: 'relative', zIndex: 2 }}>
                             <div style={{ display: 'flex', flexDirection: 'column', overflow: 'hidden', paddingRight: 16 }}>
                                 <span style={{
                                     color: '#fff', fontSize: 16, fontWeight: 700,
@@ -445,13 +435,25 @@ export default function MusicPlayer() {
                     0% { height: 4px; }
                     100% { height: 16px; }
                 }
-                @keyframes musicPulse {
-                    0%, 100% { box-shadow: 0 0 0 0 rgba(74,144,217,0.6); }
-                    50% { box-shadow: 0 0 0 16px rgba(74,144,217,0); }
+                @keyframes speakerPulse {
+                    0%, 100% { 
+                        box-shadow: 0 8px 32px rgba(0,0,0,0.36), 0 0 0 0 rgba(74,144,217,0.6); 
+                        transform: scale(1);
+                    }
+                    50% { 
+                        box-shadow: 0 8px 32px rgba(0,0,0,0.36), 0 0 0 20px rgba(74,144,217,0); 
+                        transform: scale(1.08);
+                    }
                 }
-                @keyframes tooltipFade {
-                    from { opacity: 0; transform: translateY(-50%) translateX(-4px); }
-                    to { opacity: 1; transform: translateY(-50%) translateX(0); }
+                @keyframes speakerRipple {
+                    0% { 
+                        transform: translate(-50%, -50%) scale(0.8); 
+                        opacity: 0.5; 
+                    }
+                    100% { 
+                        transform: translate(-50%, -50%) scale(1.8); 
+                        opacity: 0; 
+                    }
                 }
             `}</style>
         </>

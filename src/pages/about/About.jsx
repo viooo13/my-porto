@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
+import { StyledHeading } from '../../components/StyledWord';
 
 export default function About() {
     const ref = useRef(null);
@@ -29,7 +30,7 @@ export default function About() {
     const tags = ['FRONTEND SPECIALIST ', 'LARAVEL ENTHUSIAST', 'UI/UX FOCUSED', 'CLEAN CODE ADVOCATE'];
 
     return (
-        <section id="about" ref={ref} style={{ background: '#0a0a0a', padding: '160px 0', overflow: 'hidden', position: 'relative', scrollMarginTop: 80 }}>
+        <section id="about" ref={ref} style={{ background: '#0a0a0a', padding: 'clamp(100px, 15vh, 160px) 0', overflow: 'hidden', position: 'relative', scrollMarginTop: 80, zIndex: 1 }}>
             {/* Ambient glow */}
             <div style={{ position: 'absolute', bottom: '10%', right: '-5%', width: 500, height: 500, borderRadius: '50%', background: 'radial-gradient(circle, rgba(30,58,95,0.06) 0%, transparent 70%)', pointerEvents: 'none' }} />
 
@@ -96,7 +97,9 @@ export default function About() {
 
                     {/* Right — content */}
                     <div className="lg:col-span-7" style={a(200)}>
-                        <h2 style={{ fontFamily: 'Plus Jakarta Sans, sans-serif', fontWeight: 700, fontSize: 'clamp(32px, 4vw, 52px)', lineHeight: 1.1, color: '#fff', marginBottom: 24, letterSpacing: '-0.01em' }}>Crafting digital excellence through logic & aesthetics</h2>
+                        <h2 style={{ fontFamily: 'Plus Jakarta Sans, sans-serif', fontWeight: 700, fontSize: 'clamp(32px, 4vw, 52px)', lineHeight: 1.1, color: '#fff', marginBottom: 24, letterSpacing: '-0.01em' }}>
+                            <StyledHeading text="Crafting digital excellence through logic & aesthetics" color="#fff" />
+                        </h2>
 
                         <p style={{ fontSize: 13, color: 'rgba(255,255,255,0.5)', lineHeight: 1.9, marginBottom: 40, maxWidth: 540 }}>
                             I’m a passionate Frontend Developer based in <span style={{ color: '#fff', fontWeight: 500 }}>Bogor, Indonesia</span>. With a strong foundation in the Laravel ecosystem, I specialize in building responsive, high-performance, and boldly styled web applications that bridge the gap between complex logic and seamless user experience.

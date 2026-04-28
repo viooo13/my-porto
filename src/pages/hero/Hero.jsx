@@ -1,5 +1,6 @@
 import { useEffect, useState, useRef } from 'react';
 import { FaGithub, FaLinkedin, FaImage } from 'react-icons/fa';
+import { StyledWord } from '../../components/StyledWord';
 
 function HeroButton({ children, href, className }) {
     return (
@@ -46,14 +47,17 @@ export default function Hero() {
     return (
         <>
             <section id="hero" style={{
-            position: 'relative',
-            minHeight: '100vh',
+            position: 'sticky',
+            top: 0,
+            height: '100dvh',
+            minHeight: '600px',
             display: 'flex',
             flexDirection: 'column',
             background: '#0a0a0a',
             overflow: 'hidden',
             width: '100%',
-            paddingTop: 'clamp(80px, 15vh, 140px)'
+            paddingTop: 'clamp(60px, 12vh, 100px)',
+            zIndex: 0,
         }}>
 
             {/* ── Background Master visual ── */}
@@ -76,7 +80,7 @@ export default function Hero() {
                     opacity: 0.5,
                 }} />
             </div>
-
+        
             {/* ── Main Layout Container ── */}
             <div style={{
                 maxWidth: '100%',
@@ -109,21 +113,15 @@ export default function Hero() {
                         <h1 style={{
                             fontFamily: 'Plus Jakarta Sans, sans-serif', fontWeight: 800,
                             fontSize: 'clamp(40px, 14vw, 190px)',
-                            lineHeight: 0.75, letterSpacing: '-0.06em',
+                            lineHeight: 0.75, letterSpacing: '-0.02em',
                             color: '#fff', marginBottom: 56,
                             textTransform: 'uppercase',
                         }}>
                             <div style={{ overflow: 'hidden' }}>
-                                <span style={{ display: 'inline-block', animation: 'slideUp 1s var(--ease) 0.1s both', color: '#ffff' }}>VIO</span>
+                                <StyledWord text="VIO" color="#ffff" animDelay={0.1} />
                             </div>
                             <div style={{ overflow: 'hidden', marginTop: 10 }}>
-                                <span style={{
-                                    display: 'inline-block',
-                                    animation: 'slideUp 1s var(--ease) 0.2s both',
-                                    color: '#1e3a5f'
-                                }}>
-                                    ADYTIA
-                                </span>
+                                <StyledWord text="ADYTIA" color="#1e3a5f" animDelay={0.2} />
                             </div>
                         </h1>
 
