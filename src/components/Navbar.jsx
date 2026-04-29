@@ -161,11 +161,10 @@ export default function Navbar() {
                     display: 'flex', alignItems: 'center', justifyContent: 'space-between',
                     gap: 16,
                     padding: '8px 12px 8px 16px',
-                    background: 'linear-gradient(135deg, rgba(255,255,255,0.08) 0%, rgba(255,255,255,0.03) 100%)',
-                    border: '1px solid rgba(255,255,255,0.12)',
+                    background: 'rgba(15, 15, 15, 0.85)',
+                    border: '1px solid rgba(255,255,255,0.1)',
                     borderRadius: 999,
-                    backdropFilter: 'blur(20px) saturate(150%)',
-                    boxShadow: '0 8px 32px rgba(0,0,0,0.3), inset 0 1px 0 rgba(255,255,255,0.1)',
+                    boxShadow: '0 8px 32px rgba(0,0,0,0.5)',
                     pointerEvents: 'auto',
                 }}>
                     {/* Logo */}

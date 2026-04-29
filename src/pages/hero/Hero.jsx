@@ -21,13 +21,11 @@ function HeroButton({ children, href, className }) {
 
 export default function Hero() {
     const [mouse, setMouse] = useState({ x: 0, y: 0 });
-    const [scroll, setScroll] = useState(0);
     const [loaded, setLoaded] = useState(false);
     const [showCvModal, setShowCvModal] = useState(false);
     const [isPhotoHovered, setIsPhotoHovered] = useState(false);
     useEffect(() => {
         setLoaded(true);
-        const onScroll = () => setScroll(window.scrollY);
         const onMouse = (e) => {
             const { clientX, clientY } = e;
             const centerX = window.innerWidth / 2;
@@ -37,10 +35,8 @@ export default function Hero() {
                 y: (clientY - centerY) / centerY * 40,
             });
         };
-        window.addEventListener('scroll', onScroll, { passive: true });
         window.addEventListener('mousemove', onMouse);
         return () => {
-            window.removeEventListener('scroll', onScroll);
             window.removeEventListener('mousemove', onMouse);
         };
     }, []);

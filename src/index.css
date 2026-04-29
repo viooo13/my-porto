@@ -636,6 +636,11 @@ body::after {
   }
 }
 
+section {
+  will-change: transform;
+  contain: paint;
+}
+
 @media (max-width: 768px) {
   .hide-mobile {
     display: none !important;

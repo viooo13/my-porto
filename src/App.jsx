@@ -31,14 +31,16 @@ function Cursor() {
         };
 
         const move = (e) => {
-            if (dot.current) {
-                dot.current.style.left = `${e.clientX}px`;
-                dot.current.style.top = `${e.clientY}px`;
-            }
-            if (aimRef.current) {
-                aimRef.current.style.left = `${e.clientX}px`;
-                aimRef.current.style.top = `${e.clientY}px`;
-            }
+            window.requestAnimationFrame(() => {
+                if (dot.current) {
+                    dot.current.style.left = `${e.clientX}px`;
+                    dot.current.style.top = `${e.clientY}px`;
+                }
+                if (aimRef.current) {
+                    aimRef.current.style.left = `${e.clientX}px`;
+                    aimRef.current.style.top = `${e.clientY}px`;
+                }
+            });
         };
 
         const over = (e) => {
@@ -128,16 +130,18 @@ function Cursor() {
 
 /* ── Scroll Progress ── */
 function ScrollProgress() {
-    const [w, setW] = useState(0);
+    const barRef = useRef(null);
     useEffect(() => {
         const fn = () => {
+            if (!barRef.current) return;
             const h = document.documentElement.scrollHeight - window.innerHeight;
-            setW(h > 0 ? (window.scrollY / h) * 100 : 0);
+            const progress = h > 0 ? (window.scrollY / h) * 100 : 0;
+            barRef.current.style.width = `${progress}%`;
         };
         window.addEventListener('scroll', fn, { passive: true });
         return () => window.removeEventListener('scroll', fn);
     }, []);
-    return <div className="scroll-progress" style={{ width: `${w}%` }} />;
+    return <div ref={barRef} className="scroll-progress" style={{ width: '0%' }} />;
 }
 
 /* ── Scroll reveal observer hook ── */
