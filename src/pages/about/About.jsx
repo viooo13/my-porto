@@ -97,7 +97,7 @@ export default function About() {
 
                     {/* Right — content */}
                     <div className="lg:col-span-7" style={a(200)}>
-                        <h2 style={{ fontFamily: 'Plus Jakarta Sans, sans-serif', fontWeight: 700, fontSize: 'clamp(32px, 4vw, 52px)', lineHeight: 1.1, color: '#fff', marginBottom: 24, letterSpacing: '-0.01em' }}>
+                        <h2 style={{ fontFamily: 'Plus Jakarta Sans, sans-serif', fontWeight: 400, fontSize: 'clamp(32px, 4vw, 52px)', lineHeight: 1.1, color: '#fff', marginBottom: 24, letterSpacing: '-0.01em' }}>
                             <StyledHeading text="Crafting digital excellence through logic & aesthetics" color="#fff" />
                         </h2>
 

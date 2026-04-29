@@ -11,12 +11,12 @@ export default function Certificates() {
     useEffect(() => {
         const obs = new IntersectionObserver(([e]) => { setVis(e.isIntersecting); }, { threshold: 0.05 });
         if (ref.current) obs.observe(ref.current);
-        
+
         const handleScroll = () => {
             const scrolled = window.scrollY;
             document.documentElement.style.setProperty('--scroll-y', `${scrolled}px`);
         };
-        
+
         window.addEventListener('scroll', handleScroll, { passive: true });
         return () => {
             obs.disconnect();
@@ -53,7 +53,7 @@ export default function Certificates() {
                     <span style={{ fontSize: 10, fontWeight: 500, letterSpacing: '0.25em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.45)' }}>Achievements</span>
                 </div>
 
-                <h2 style={{ ...a(50), fontFamily: 'Plus Jakarta Sans, sans-serif', fontWeight: 800, fontSize: 'clamp(48px, 6vw, 96px)', lineHeight: 0.95, color: '#fff', marginBottom: 80, letterSpacing: '-0.02em' }}>
+                <h2 style={{ ...a(50), fontFamily: 'Plus Jakarta Sans, sans-serif', fontWeight: 400, fontSize: 'clamp(48px, 6vw, 96px)', lineHeight: 0.95, color: '#fff', marginBottom: 80, letterSpacing: '-0.02em' }}>
                     <StyledWord text="Certifi" color="#fff" /><StyledWord text="cates" color="#1e3a5f" />
                 </h2>
 
@@ -69,9 +69,9 @@ export default function Certificates() {
                             transition: 'all 0.4s cubic-bezier(0.16,1,0.3,1)',
                             cursor: 'pointer',
                         }}
-                        onMouseEnter={() => setHov(i)}
-                        onMouseLeave={() => setHov(null)}
-                        onClick={() => setSelectedCert(cert)}
+                            onMouseEnter={() => setHov(i)}
+                            onMouseLeave={() => setHov(null)}
+                            onClick={() => setSelectedCert(cert)}
                         >
                             {/* Image */}
                             <div style={{
@@ -79,8 +79,8 @@ export default function Certificates() {
                                 borderRadius: 4, marginBottom: 16,
                                 border: '1px solid rgba(255,255,255,0.05)',
                             }}>
-                                <img 
-                                    src={cert.image} 
+                                <img
+                                    src={cert.image}
                                     alt={cert.title}
                                     style={{
                                         width: '100%', height: '100%', objectFit: 'cover',
@@ -90,7 +90,7 @@ export default function Certificates() {
                                         transition: 'all 0.6s cubic-bezier(0.16,1,0.3,1)',
                                     }}
                                 />
-                                
+
                                 {/* Hover overlay */}
                                 <div style={{
                                     position: 'absolute', inset: 0,
@@ -133,7 +133,7 @@ export default function Certificates() {
                             </h3>
 
                             <p style={{ fontSize: 12, lineHeight: 1.5, color: 'rgba(255,255,255,0.4)', marginBottom: 12, fontWeight: 300 }}>{cert.issuer}</p>
-                            
+
                             <div style={{ display: 'flex', flexWrap: 'wrap', gap: 4 }}>
                                 {cert.tags.slice(0, 3).map(tag => (
                                     <span key={tag} style={{
@@ -158,8 +158,8 @@ export default function Certificates() {
                         textDecoration: 'none', display: 'inline-flex', alignItems: 'center', gap: 10,
                         transition: 'all 0.4s cubic-bezier(0.34,1.56,0.64,1)',
                     }}
-                    onMouseEnter={e => { e.currentTarget.style.borderColor = '#1e3a5f'; e.currentTarget.style.background = 'rgba(30,58,95,0.1)'; e.currentTarget.style.transform = 'scale(1.05)'; }}
-                    onMouseLeave={e => { e.currentTarget.style.borderColor = 'rgba(255,255,255,0.12)'; e.currentTarget.style.background = 'transparent'; e.currentTarget.style.transform = 'scale(1)'; }}
+                        onMouseEnter={e => { e.currentTarget.style.borderColor = '#1e3a5f'; e.currentTarget.style.background = 'rgba(30,58,95,0.1)'; e.currentTarget.style.transform = 'scale(1.05)'; }}
+                        onMouseLeave={e => { e.currentTarget.style.borderColor = 'rgba(255,255,255,0.12)'; e.currentTarget.style.background = 'transparent'; e.currentTarget.style.transform = 'scale(1)'; }}
                     >
                         GET IN TOUCH ↗
                     </a>
@@ -177,10 +177,10 @@ export default function Certificates() {
                 pointerEvents: selectedCert ? 'auto' : 'none',
                 transition: 'opacity 0.5s ease',
             }}
-            onClick={() => setSelectedCert(null)}
+                onClick={() => setSelectedCert(null)}
             >
                 {/* Close Button */}
-                <button 
+                <button
                     onClick={() => setSelectedCert(null)}
                     style={{
                         position: 'absolute', top: 40, right: 40,
@@ -201,8 +201,8 @@ export default function Certificates() {
                 }}>
                     {selectedCert && (
                         <>
-                            <img 
-                                src={selectedCert.image} 
+                            <img
+                                src={selectedCert.image}
                                 alt={selectedCert.title}
                                 style={{ width: '100%', height: 'auto', borderRadius: 4, boxShadow: '0 40px 100px rgba(0,0,0,0.5)', border: '1px solid rgba(255,255,255,0.1)' }}
                             />

@@ -1,11 +1,12 @@
 import { useEffect, useState, useRef, useCallback } from 'react';
-import Loader  from './components/Loader.jsx';
-import Navbar  from './components/Navbar.jsx';
-import Footer  from './components/Footer.jsx';
+import Loader from './components/Loader.jsx';
+import Navbar from './components/Navbar.jsx';
+import Footer from './components/Footer.jsx';
 import MusicPlayer from './components/MusicPlayer.jsx';
-import Hero    from './pages/hero/Hero.jsx';
-import About   from './pages/about/About.jsx';
-import Skills  from './pages/skills/Skills.jsx';
+import SmoothScroll from './components/SmoothScroll.jsx';
+import Hero from './pages/hero/Hero.jsx';
+import About from './pages/about/About.jsx';
+import Skills from './pages/skills/Skills.jsx';
 import Project from './pages/project/Project.jsx';
 import Certificates from './pages/certificates/Certificates.jsx';
 import Contact from './pages/contact/Contact.jsx';
@@ -156,7 +157,7 @@ export function useReveal(threshold = 0.1) {
 
 /* ── App ── */
 export default function App() {
-    const [done, setDone]       = useState(false);
+    const [done, setDone] = useState(false);
     const [exiting, setExiting] = useState(false);
     const [showLoader, setShow] = useState(true);
 
@@ -170,25 +171,27 @@ export default function App() {
     }, []);
 
     return (
-        <div style={{ minHeight: '100vh' }}>
-            {showLoader && <Loader isExiting={exiting} onComplete={handleComplete} />}
-            {done && <Cursor />}
-            {done && <ScrollProgress />}
-            {done && (
-                <div style={{ opacity: 0, animation: 'fadeIn 0.8s ease 0.15s forwards' }}>
-                    <Navbar />
-                    <main>
-                        <Hero />
-                        <About />
-                        <Skills />
-                        <Project />
-                        <Certificates />
-                        <Contact />
-                    </main>
-                    <Footer />
-                </div>
-            )}
-            {done && <MusicPlayer />}
-        </div>
+        <SmoothScroll>
+            <div style={{ minHeight: '100vh' }}>
+                {showLoader && <Loader isExiting={exiting} onComplete={handleComplete} />}
+                {done && <Cursor />}
+                {done && <ScrollProgress />}
+                {done && (
+                    <div style={{ opacity: 0, animation: 'fadeIn 0.8s ease 0.15s forwards' }}>
+                        <Navbar />
+                        <main>
+                            <Hero />
+                            <About />
+                            <Skills />
+                            <Project />
+                            <Certificates />
+                            <Contact />
+                        </main>
+                        <Footer />
+                    </div>
+                )}
+                {done && <MusicPlayer />}
+            </div>
+        </SmoothScroll>
     );
 }

@@ -22,56 +22,61 @@ export default function Navbar() {
     const touchStartTime = useRef(0);
     const ticking = useRef(false);
 
-    // ─── SCROLL HIDE/SHOW + ACTIVE SECTION (single listener) ─────────────
-    const onScroll = useCallback(() => {
-        if (open) return; // jangan proses saat menu mobile terbuka
+    // ─── INTERSECTION OBSERVER — Active section tracking ──────────────────
+    useEffect(() => {
+        const sectionElements = links.map(l => document.getElementById(l.href.substring(1))).filter(Boolean);
+        if (sectionElements.length === 0) return;
 
-        const y = window.scrollY;
-        const prev = prevScrollY.current;
-        const delta = y - prev;
+        const observer = new IntersectionObserver(
+            (entries) => {
+                const visible = entries
+                    .filter(e => e.isIntersecting)
+                    .sort((a, b) => a.boundingClientRect.top - b.boundingClientRect.top);
 
-        // Active section tracking
-        const scrollPos = y + 120;
-        for (const l of links) {
-            const id = l.href.substring(1);
-            const el = document.getElementById(id);
-            if (el) {
-                const top = el.offsetTop;
-                const bottom = top + el.offsetHeight;
-                if (scrollPos >= top && scrollPos < bottom) {
-                    setActiveSection(id);
-                    break;
+                if (visible.length > 0) {
+                    const topmost = visible[0];
+                    // Prefer section that occupies more viewport (tie-breaker)
+                    let best = topmost;
+                    for (const entry of visible) {
+                        if (entry.intersectionRatio > best.intersectionRatio) {
+                            best = entry;
+                        }
+                    }
+                    setActiveSection(best.target.id);
                 }
+            },
+            {
+                rootMargin: '-120px 0px -40% 0px',
+                threshold: [0, 0.25, 0.5, 0.75, 1],
             }
-        }
+        );
 
-        // Navbar hide/show
-        if (y <= 80) {
-            // Selalu tampilkan di area paling atas
-            setNavHidden(false);
-            prevScrollY.current = y;
-            return;
-        }
+        sectionElements.forEach(el => observer.observe(el));
+        return () => observer.disconnect();
+    }, []);
 
-        // Hanya proses jika ada pergerakan cukup (> 5px)
-        if (Math.abs(delta) < 5) return;
-
-        if (delta > 0) {
-            // Scroll ke BAWAH → sembunyikan
-            setNavHidden(true);
-        } else {
-            // Scroll ke ATAS → tampilkan
-            setNavHidden(false);
-        }
-
-        prevScrollY.current = y;
-    }, [open]);
-
+    // ─── SCROLL HIDE/SHOW ────────────────────────────────────────────────
     useEffect(() => {
         const handleScroll = () => {
+            if (open) return;
             if (!ticking.current) {
                 window.requestAnimationFrame(() => {
-                    onScroll();
+                    const y = window.scrollY;
+                    const prev = prevScrollY.current;
+                    const delta = y - prev;
+
+                    if (y <= 80) {
+                        setNavHidden(false);
+                        prevScrollY.current = y;
+                        ticking.current = false;
+                        return;
+                    }
+
+                    if (Math.abs(delta) >= 5) {
+                        setNavHidden(delta > 0);
+                    }
+
+                    prevScrollY.current = y;
                     ticking.current = false;
                 });
                 ticking.current = true;
@@ -81,7 +86,7 @@ export default function Navbar() {
         prevScrollY.current = window.scrollY;
         window.addEventListener('scroll', handleScroll, { passive: true });
         return () => window.removeEventListener('scroll', handleScroll);
-    }, [onScroll]);
+    }, [open]);
 
     // ─── ESCAPE KEY ──────────────────────────────────────────────────────
     useEffect(() => {

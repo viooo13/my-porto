@@ -13,15 +13,15 @@ const useCounter = (target, duration = 1500, start = 0) => {
         if (isAnimating) return;
         setIsAnimating(true);
         const startTime = performance.now();
-        
+
         const animate = (currentTime) => {
             const elapsed = currentTime - startTime;
             const progress = Math.min(elapsed / duration, 1);
             const easeOut = 1 - Math.pow(1 - progress, 3);
             const current = Math.floor(start + (target - start) * easeOut);
-            
+
             setCount(current);
-            
+
             if (progress < 1) {
                 frameRef.current = requestAnimationFrame(animate);
             } else {
@@ -29,7 +29,7 @@ const useCounter = (target, duration = 1500, start = 0) => {
                 setIsAnimating(false);
             }
         };
-        
+
         frameRef.current = requestAnimationFrame(animate);
     };
 
@@ -47,36 +47,36 @@ const AnimatedNumber = ({ value, pad = 2, trigger }) => {
     const [displayValue, setDisplayValue] = useState(0);
     const [hasAnimated, setHasAnimated] = useState(false);
     const frameRef = useRef();
-    
+
     useEffect(() => {
         if (trigger && !hasAnimated) {
             setHasAnimated(true);
             const duration = 1200;
             const startTime = performance.now();
-            
+
             const animate = (currentTime) => {
                 const elapsed = currentTime - startTime;
                 const progress = Math.min(elapsed / duration, 1);
                 const easeOut = 1 - Math.pow(1 - progress, 3);
                 const current = Math.floor(value * easeOut);
-                
+
                 setDisplayValue(current);
-                
+
                 if (progress < 1) {
                     frameRef.current = requestAnimationFrame(animate);
                 } else {
                     setDisplayValue(value);
                 }
             };
-            
+
             frameRef.current = requestAnimationFrame(animate);
         }
-        
+
         return () => {
             if (frameRef.current) cancelAnimationFrame(frameRef.current);
         };
     }, [trigger, hasAnimated, value]);
-    
+
     return <span>{String(displayValue).padStart(pad, '0')}</span>;
 };
 
@@ -133,7 +133,7 @@ export default function Skills() {
     ];
 
     const tools = [
-        { icon: FaFigma, name: 'Figma' }, { icon: FaGitAlt, name: 'Git' }, 
+        { icon: FaFigma, name: 'Figma' }, { icon: FaGitAlt, name: 'Git' },
         { icon: SiPostman, name: 'Postman' }, { icon: SiVite, name: 'Vite' },
         { icon: FaDocker, name: 'Docker' }, { icon: SiJest, name: 'Jest' }
     ];
@@ -169,7 +169,7 @@ export default function Skills() {
 
                 {/* BENTO GRID LAYOUT */}
                 <div className="grid grid-cols-1 md:grid-cols-12 gap-6">
-                    
+
                     {/* Primary Stack (Large) */}
                     <div className="md:col-span-8" data-hover style={{ ...a(vis, 100), ...glass }} onMouseEnter={cardHover} onMouseLeave={cardLeave}>
                         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 48 }}>
@@ -182,7 +182,7 @@ export default function Skills() {
 
                         <div className="grid grid-cols-2 sm:grid-cols-4 gap-y-12 gap-x-8">
                             {primary.map((s, i) => (
-                                <div key={s.name} 
+                                <div key={s.name}
                                     onMouseEnter={() => setHovIcon(i)}
                                     onMouseLeave={() => setHovIcon(null)}
                                     style={{ display: 'flex', flexDirection: 'column', gap: 12, transition: 'all 0.4s' }}
@@ -213,7 +213,7 @@ export default function Skills() {
                             <h3 style={{ fontSize: 13, letterSpacing: '0.15em', textTransform: 'uppercase', color: '#fff', fontWeight: 700 }}>Experience</h3>
                             <span style={{ fontSize: 10, fontFamily: 'monospace', color: 'rgba(30,58,95,0.5)' }}>[ <AnimatedNumber value={2} pad={2} trigger={vis} /> ]</span>
                         </div>
-                        
+
                         <div style={{ display: 'flex', flexDirection: 'column', gap: 40 }}>
                             <div onMouseEnter={e => e.currentTarget.querySelector('span').style.color = '#1e3a5f'} onMouseLeave={e => e.currentTarget.querySelector('span').style.color = '#fff'}>
                                 <p style={{ fontSize: 10, textTransform: 'uppercase', letterSpacing: '0.2em', color: 'rgba(255,255,255,0.2)', marginBottom: 12 }}>Years Active</p>
@@ -226,7 +226,7 @@ export default function Skills() {
                                 <div style={{ height: 1, width: 40, background: '#1e3a5f', marginTop: 16 }} />
                             </div>
                         </div>
-                        
+
                         <div style={{ position: 'absolute', bottom: -20, right: -20, width: 140, height: 140, background: 'rgba(30,58,95,0.05)', borderRadius: '50%', filter: 'blur(40px)' }} />
                     </div>
 
@@ -244,8 +244,8 @@ export default function Skills() {
                                     display: 'flex', alignItems: 'center', gap: 10,
                                     transition: 'all 0.3s'
                                 }}
-                                onMouseEnter={e => { e.currentTarget.style.borderColor = 'rgba(30,58,95,0.5)'; e.currentTarget.style.background = 'rgba(30,58,95,0.05)'; }}
-                                onMouseLeave={e => { e.currentTarget.style.borderColor = 'rgba(255,255,255,0.05)'; e.currentTarget.style.background = 'rgba(255,255,255,0.01)'; }}
+                                    onMouseEnter={e => { e.currentTarget.style.borderColor = 'rgba(30,58,95,0.5)'; e.currentTarget.style.background = 'rgba(30,58,95,0.05)'; }}
+                                    onMouseLeave={e => { e.currentTarget.style.borderColor = 'rgba(255,255,255,0.05)'; e.currentTarget.style.background = 'rgba(255,255,255,0.01)'; }}
                                 >
                                     <t.icon size={16} color="rgba(255,255,255,0.3)" />
                                     <span style={{ fontSize: 10, fontWeight: 500, color: 'rgba(255,255,255,0.4)', textTransform: 'uppercase', letterSpacing: '0.1em' }}>{t.name}</span>

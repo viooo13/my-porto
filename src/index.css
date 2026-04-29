@@ -33,16 +33,34 @@
 }
 
 html {
-  scroll-behavior: smooth;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+
+/* ========================================
+   LENIS SMOOTH SCROLL
+   ======================================== */
+html.lenis, html.lenis body {
+  height: auto;
+}
+.lenis.lenis-smooth {
+  scroll-behavior: auto !important;
+}
+.lenis.lenis-smooth [data-lenis-prevent] {
+  overscroll-behavior: contain;
+}
+.lenis.lenis-stopped {
+  overflow: hidden;
+}
+.lenis.lenis-smooth iframe {
+  pointer-events: none;
 }
 
 body {
   font-family: var(--font-body);
   background: var(--bg);
   color: var(--text);
-  overflow-x: hidden;
+
   cursor: none;
 }
 
@@ -467,6 +485,8 @@ body::after {
 
 .btn-primary:hover {
   color: var(--white);
+  background: var(--blue);
+  box-shadow: 0 8px 30px rgba(30, 58, 95, 0.4);
 }
 
 .btn-primary:hover::before {
@@ -574,36 +594,44 @@ body::after {
   #hero {
     overflow-y: auto !important;
   }
+
   #hero h1 {
     font-size: clamp(28px, 10vw, 80px) !important;
     line-height: 0.9 !important;
     margin-bottom: 16px !important;
   }
+
   #hero .max-w-\[480px\] p {
     font-size: 13px !important;
     line-height: 1.5 !important;
     margin-bottom: 16px !important;
   }
-  #hero .grid > .lg\:col-span-4 {
+
+  #hero .grid>.lg\:col-span-4 {
     max-width: 220px !important;
     margin: 0 auto !important;
   }
-  #hero .grid > .lg\:col-span-4 > div {
+
+  #hero .grid>.lg\:col-span-4>div {
     max-width: 220px !important;
   }
-  #hero .grid > .lg\:col-span-4 img {
+
+  #hero .grid>.lg\:col-span-4 img {
     max-height: 200px !important;
   }
+
   #hero .flex.flex-col.sm\:flex-row {
     padding: 16px 0 !important;
     justify-content: center !important;
     align-items: center !important;
     text-align: center !important;
   }
-  #hero .flex.flex-col.sm\:flex-row > div:last-child {
+
+  #hero .flex.flex-col.sm\:flex-row>div:last-child {
     text-align: center !important;
   }
-  #hero .flex.flex-col.sm\:flex-row > div:last-child > div:last-child {
+
+  #hero .flex.flex-col.sm\:flex-row>div:last-child>div:last-child {
     margin: 8px auto 0 !important;
   }
 }
@@ -612,37 +640,49 @@ body::after {
   .hide-mobile {
     display: none !important;
   }
+
   #hero {
     padding-top: 70px !important;
     min-height: unset !important;
     height: auto !important;
     min-height: 100dvh !important;
   }
+
   #hero h1 {
     font-size: clamp(24px, 12vw, 60px) !important;
     margin-bottom: 12px !important;
   }
+
   #hero .grid {
     gap: 16px !important;
     padding-top: 8px !important;
     padding-bottom: 8px !important;
   }
+
   #hero .max-w-\[480px\] p {
     font-size: 12px !important;
     margin-bottom: 12px !important;
   }
-  #hero .max-w-\[480px\] > .flex {
+
+  #hero .max-w-\[480px\]>.flex {
     justify-content: center !important;
     margin-bottom: 16px !important;
   }
-  #hero .max-w-\[480px\] > .flex.items-center {
+
+  #hero .hero-social-links {
     justify-content: center !important;
   }
+
+  #hero .max-w-\[480px\]>.flex.items-center {
+    justify-content: center !important;
+  }
+
   #hero .lg\:col-span-8 {
     align-items: center !important;
     text-align: center !important;
   }
-  #hero .lg\:col-span-8 > div:first-child {
+
+  #hero .lg\:col-span-8>div:first-child {
     justify-content: center !important;
   }
 }

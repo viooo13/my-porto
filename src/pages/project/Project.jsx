@@ -35,7 +35,7 @@ export default function Project() {
                     <span style={{ fontSize: 10, fontWeight: 500, letterSpacing: '0.25em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.45)' }}>Selected Work</span>
                 </div>
 
-                <h2 style={{ ...a(50), fontFamily: 'Plus Jakarta Sans, sans-serif', fontWeight: 800, fontSize: 'clamp(48px, 6vw, 96px)', lineHeight: 0.95, color: '#fff', marginBottom: 80, letterSpacing: '-0.02em' }}>
+                <h2 style={{ ...a(50), fontFamily: 'Plus Jakarta Sans, sans-serif', fontWeight: 400, fontSize: 'clamp(48px, 6vw, 96px)', lineHeight: 0.95, color: '#fff', marginBottom: 80, letterSpacing: '-0.02em' }}>
                     <StyledWord text="Projects" color="#fff" /><br /><StyledWord text="Portfolio" color="#1e3a5f" />
                 </h2>
 
@@ -47,8 +47,8 @@ export default function Project() {
                         padding: '56px 0',
                         transition: 'border-color 0.4s cubic-bezier(0.16,1,0.3,1)',
                     }}
-                    onMouseEnter={() => setHov(i)}
-                    onMouseLeave={() => setHov(null)}
+                        onMouseEnter={() => setHov(i)}
+                        onMouseLeave={() => setHov(null)}
                     >
                         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16" style={{ alignItems: 'center' }}>
                             {/* Text — switches order on odd */}
@@ -69,7 +69,7 @@ export default function Project() {
 
                                 {/* Title */}
                                 <h3 style={{
-                                    fontFamily: 'Plus Jakarta Sans, sans-serif', fontWeight: 800,
+                                    fontFamily: 'Plus Jakarta Sans, sans-serif', fontWeight: 400,
                                     fontSize: 'clamp(28px, 3.5vw, 52px)', lineHeight: 1,
                                     color: '#fff', marginBottom: 16, letterSpacing: '-0.02em',
                                     whiteSpace: 'pre-line',
@@ -90,8 +90,8 @@ export default function Project() {
                                             padding: '4px 12px', border: '1px solid rgba(255,255,255,0.08)',
                                             color: 'rgba(255,255,255,0.35)', transition: 'border-color 0.3s, color 0.3s',
                                         }}
-                                        onMouseEnter={e => { e.currentTarget.style.borderColor = '#1e3a5f'; e.currentTarget.style.color = '#fff'; }}
-                                        onMouseLeave={e => { e.currentTarget.style.borderColor = 'rgba(255,255,255,0.08)'; e.currentTarget.style.color = 'rgba(255,255,255,0.35)'; }}
+                                            onMouseEnter={e => { e.currentTarget.style.borderColor = '#1e3a5f'; e.currentTarget.style.color = '#fff'; }}
+                                            onMouseLeave={e => { e.currentTarget.style.borderColor = 'rgba(255,255,255,0.08)'; e.currentTarget.style.color = 'rgba(255,255,255,0.35)'; }}
                                         >{t}</span>
                                     ))}
                                 </div>
@@ -172,7 +172,7 @@ export default function Project() {
 
                 {/* View all */}
                 <div style={{ ...a(700), marginTop: 60, display: 'flex', justifyContent: 'center' }}>
-                    <a href="#" className="btn-primary" data-hover>
+                    <a href="#" className="btn-primary" data-hover at>
                         View All Projects <HiArrowUpRight style={{ marginLeft: 8 }} />
                     </a>
                 </div>
