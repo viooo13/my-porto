@@ -1,11 +1,14 @@
 import { useEffect, useRef, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { HiArrowUpRight } from 'react-icons/hi2';
 import { StyledWord, StyledHeading } from '../../components/StyledWord';
+import { AnimatedNumber } from '../../components/AnimatedNumber';
 
 import { projectsData as projects } from '../../data/projectsData';
 
 export default function Project() {
     const ref = useRef(null);
+    const navigate = useNavigate();
     const [vis, setVis] = useState(false);
     const [hov, setHov] = useState(null);
 
@@ -30,7 +33,7 @@ export default function Project() {
             <div style={{ maxWidth: 1440, margin: '0 auto', padding: '0 40px' }}>
                 {/* Label */}
                 <div style={{ ...a(0), display: 'flex', alignItems: 'center', gap: 16, marginBottom: 24 }}>
-                    <span style={{ fontSize: 10, fontWeight: 500, letterSpacing: '0.25em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.45)' }}>03</span>
+                    <span style={{ fontSize: 10, fontWeight: 500, letterSpacing: '0.25em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.45)' }}><AnimatedNumber value={3} pad={2} trigger={vis} /></span>
                     <div style={{ width: 40, height: 1, background: 'rgba(255,255,255,0.1)' }} />
                     <span style={{ fontSize: 10, fontWeight: 500, letterSpacing: '0.25em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.45)' }}>Selected Work</span>
                 </div>
@@ -55,7 +58,7 @@ export default function Project() {
                             <div className={`lg:col-span-5 ${i % 2 !== 0 ? 'lg:order-2' : ''}`}>
                                 {/* Number + line */}
                                 <div style={{ display: 'flex', alignItems: 'center', gap: 14, marginBottom: 20 }}>
-                                    <span style={{ fontFamily: 'Plus Jakarta Sans, sans-serif', fontWeight: 800, fontSize: 18, color: hov === i ? '#1e3a5f' : 'rgba(255,255,255,0.2)', transition: 'color 0.5s' }}>{p.id}</span>
+                                    <span style={{ fontFamily: 'Plus Jakarta Sans, sans-serif', fontWeight: 800, fontSize: 18, color: hov === i ? '#1e3a5f' : 'rgba(255,255,255,0.2)', transition: 'color 0.5s' }}><AnimatedNumber value={parseInt(p.id)} pad={2} trigger={vis} duration={1800} /></span>
                                     <div style={{
                                         flex: 1, height: 1,
                                         background: hov === i ? 'rgba(30,58,95,0.3)' : 'rgba(255,255,255,0.05)',
@@ -96,14 +99,21 @@ export default function Project() {
                                     ))}
                                 </div>
 
-                                {/* Metrics */}
-                                <div style={{ display: 'flex', gap: 32 }}>
-                                    {p.metrics.map(m => (
-                                        <div key={m.l}>
-                                            <p style={{ fontFamily: 'Plus Jakarta Sans, sans-serif', fontWeight: 800, fontSize: 28, lineHeight: 1, color: hov === i ? '#1e3a5f' : '#fff', transition: 'color 0.4s' }}>{m.v}</p>
-                                            <p style={{ fontSize: 9, letterSpacing: '0.12em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.25)', marginTop: 4 }}>{m.l}</p>
-                                        </div>
-                                    ))}
+                                {/* Details Button */}
+                                <div style={{ display: 'flex', gap: 32, marginTop: 20 }}>
+                                    <button 
+                                        onClick={() => navigate(`/project/${p.id}`)}
+                                        data-hover
+                                        style={{ 
+                                            fontFamily: 'Plus Jakarta Sans, sans-serif', fontWeight: 600, fontSize: 13, 
+                                            color: '#0a0a0a', background: '#fff', padding: '12px 28px',
+                                            borderRadius: '999px',
+                                            border: 'none', cursor: 'none',
+                                            display: 'flex', alignItems: 'center', gap: 8,
+                                            transition: 'all 0.3s',
+                                        }}>
+                                        View Details <HiArrowUpRight size={16} />
+                                    </button>
                                 </div>
                             </div>
 

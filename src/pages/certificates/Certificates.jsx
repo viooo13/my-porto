@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { certificatesData as certs } from '../../data/certificatesData';
 import { StyledWord } from '../../components/StyledWord';
+import { AnimatedNumber } from '../../components/AnimatedNumber';
 
 export default function Certificates() {
     const ref = useRef(null);
@@ -48,8 +49,7 @@ export default function Certificates() {
             <div style={{ maxWidth: 1440, margin: '0 auto', padding: '0 40px' }}>
                 {/* Section label */}
                 <div style={{ ...a(0), display: 'flex', alignItems: 'center', gap: 16, marginBottom: 24 }}>
-                    <span style={{ fontSize: 10, fontWeight: 500, letterSpacing: '0.25em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.45)' }}>04</span>
-                    <div style={{ width: 40, height: 1, background: 'rgba(255,255,255,0.1)' }} />
+                    <span style={{ fontSize: 10, fontWeight: 500, letterSpacing: '0.25em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.45)' }}><AnimatedNumber value={4} pad={2} trigger={vis} /></span>
                     <span style={{ fontSize: 10, fontWeight: 500, letterSpacing: '0.25em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.45)' }}>Achievements</span>
                 </div>
 
@@ -77,7 +77,6 @@ export default function Certificates() {
                             <div style={{
                                 position: 'relative', aspectRatio: '16/10', overflow: 'hidden',
                                 borderRadius: 4, marginBottom: 16,
-                                border: '1px solid rgba(255,255,255,0.05)',
                             }}>
                                 <img
                                     src={cert.image}
@@ -117,8 +116,7 @@ export default function Certificates() {
                             {/* Info */}
                             <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 12 }}>
                                 <span style={{ fontFamily: 'Plus Jakarta Sans, sans-serif', fontWeight: 800, fontSize: 14, color: hov === i ? '#1e3a5f' : 'rgba(255,255,255,0.2)', transition: 'color 0.3s' }}>{cert.id}</span>
-                                <div style={{ flex: 1, height: 1, background: 'rgba(255,255,255,0.06)' }} />
-                                <span style={{ fontSize: 10, fontFamily: 'monospace', color: 'rgba(255,255,255,0.25)' }}>{cert.year}</span>
+                                                                <span style={{ fontSize: 10, fontFamily: 'monospace', color: 'rgba(255,255,255,0.25)' }}>{cert.year}</span>
                             </div>
 
                             <h3 style={{
@@ -154,12 +152,12 @@ export default function Certificates() {
                     <a href="#contact" data-hover style={{
                         fontFamily: 'Plus Jakarta Sans, sans-serif', fontWeight: 700, fontSize: 11,
                         letterSpacing: '0.12em', textTransform: 'uppercase',
-                        color: '#fff', border: '1px solid rgba(255,255,255,0.12)', padding: '16px 36px',
+                        color: '#fff', padding: '16px 36px',
                         textDecoration: 'none', display: 'inline-flex', alignItems: 'center', gap: 10,
                         transition: 'all 0.4s cubic-bezier(0.34,1.56,0.64,1)',
                     }}
-                        onMouseEnter={e => { e.currentTarget.style.borderColor = '#1e3a5f'; e.currentTarget.style.background = 'rgba(30,58,95,0.1)'; e.currentTarget.style.transform = 'scale(1.05)'; }}
-                        onMouseLeave={e => { e.currentTarget.style.borderColor = 'rgba(255,255,255,0.12)'; e.currentTarget.style.background = 'transparent'; e.currentTarget.style.transform = 'scale(1)'; }}
+                        onMouseEnter={e => { e.currentTarget.style.background = 'rgba(30,58,95,0.1)'; e.currentTarget.style.transform = 'scale(1.05)'; }}
+                        onMouseLeave={e => { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.transform = 'scale(1)'; }}
                     >
                         GET IN TOUCH ↗
                     </a>

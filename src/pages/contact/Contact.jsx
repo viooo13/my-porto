@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { HiMail, HiLocationMarker } from 'react-icons/hi';
 import { FaLinkedin, FaGithub, FaWhatsapp } from 'react-icons/fa';
+import { AnimatedNumber } from '../../components/AnimatedNumber';
 
 export default function Contact() {
     const ref = useRef(null);
@@ -73,33 +74,32 @@ export default function Contact() {
     ];
 
     const cardStyle = {
-        background: 'rgba(255,255,255,0.02)',
-        border: '1px solid rgba(255,255,255,0.05)',
-        padding: 'clamp(24px, 3vw, 32px)',
+        background: 'rgba(255,255,255,0.015)',
+        padding: 'clamp(28px, 3vw, 36px)',
         display: 'flex', flexDirection: 'column',
         justifyContent: 'space-between',
-        minHeight: 180,
-        transition: 'all 0.4s cubic-bezier(0.16, 1, 0.3, 1)',
+        minHeight: 200,
+        transition: 'all 0.5s cubic-bezier(0.16, 1, 0.3, 1)',
         position: 'relative',
         overflow: 'hidden',
+        borderRadius: '4px',
     };
 
     return (
         <section id="contact" ref={ref} style={{
             background: '#0a0a0a', position: 'relative', overflow: 'hidden',
             scrollMarginTop: 80, zIndex: 1,
-            padding: 'clamp(100px, 16vh, 200px) 0',
+            padding: 'clamp(120px, 18vh, 220px) 0',
         }}>
             <div style={{ maxWidth: 1440, margin: '0 auto', padding: '0 6vw' }}>
 
-                {/* ── Section Label ── */}
-                <div style={{ ...r(0), display: 'flex', alignItems: 'center', gap: 16, marginBottom: 'clamp(48px, 8vh, 80px)' }}>
-                    <span style={{ fontSize: 10, fontWeight: 600, letterSpacing: '0.4em', color: 'rgba(255,255,255,0.2)' }}>05</span>
-                    <div style={{ width: 40, height: 1, background: 'rgba(255,255,255,0.08)' }} />
-                    <span style={{ fontSize: 10, fontWeight: 600, letterSpacing: '0.4em', color: 'rgba(255,255,255,0.2)' }}>CONTACT</span>
+                {/* Section Label */}
+                <div style={{ ...r(0), display: 'flex', alignItems: 'center', gap: 20, marginBottom: 'clamp(60px, 10vh, 100px)' }}>
+                    <span style={{ fontSize: 11, fontWeight: 500, letterSpacing: '0.3em', color: 'rgba(255,255,255,0.25)', fontFamily: 'monospace' }}><AnimatedNumber value={5} pad={2} trigger={vis} /></span>
+                    <span style={{ fontSize: 11, fontWeight: 500, letterSpacing: '0.3em', color: 'rgba(255,255,255,0.25)' }}>CONTACT</span>
                 </div>
 
-                {/* ── Two Column Layout ── */}
+                {/* Two Column Layout */}
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 lg:gap-24" style={{ alignItems: 'start' }}>
 
                     {/* Left: Text Content */}
@@ -107,34 +107,34 @@ export default function Contact() {
                         {/* Badge */}
                         <div style={{
                             ...r(50),
-                            display: 'inline-flex', alignItems: 'center', gap: 8,
-                            padding: '8px 16px',
-                            border: '1px solid rgba(30,58,95,0.3)',
-                            borderRadius: 999, marginBottom: 32,
+                            display: 'inline-flex', alignItems: 'center', gap: 10,
+                            padding: '10px 20px',
+                            borderRadius: 999, marginBottom: 40,
+                            background: 'rgba(30,58,95,0.08)',
                         }}>
-                            <div style={{ width: 6, height: 6, borderRadius: '50%', background: '#1e3a5f', boxShadow: '0 0 8px rgba(30,58,95,0.5)' }} />
-                            <span style={{ fontSize: 11, fontWeight: 600, letterSpacing: '0.15em', color: 'rgba(255,255,255,0.5)' }}>LET'S CONNECT</span>
+                            <div style={{ width: 8, height: 8, borderRadius: '50%', background: '#1e3a5f' }} />
+                            <span style={{ fontSize: 10, fontWeight: 600, letterSpacing: '0.2em', color: 'rgba(255,255,255,0.6)' }}>LET'S CONNECT</span>
                         </div>
 
                         {/* Heading */}
                         <h2 style={{
                             ...r(100),
                             fontFamily: 'Plus Jakarta Sans, sans-serif',
-                            fontSize: 'clamp(36px, 5vw, 72px)',
-                            fontWeight: 800, lineHeight: 1.05,
-                            letterSpacing: '-0.03em', margin: '0 0 28px',
+                            fontSize: 'clamp(40px, 5.5vw, 76px)',
+                            fontWeight: 800, lineHeight: 1.02,
+                            letterSpacing: '-0.02em', margin: '0 0 32px',
                         }}>
-                            <span style={{ color: '#fff' }}>Ready to start your</span><br />
-                            <span style={{ color: '#1e3a5f' }}>next project?</span>
+                            <span style={{ color: '#fff', display: 'block' }}>Ready to start your</span>
+                            <span style={{ color: '#1e3a5f', display: 'block' }}>next project?</span>
                         </h2>
 
                         {/* Description */}
                         <p style={{
                             ...r(200),
-                            fontSize: 'clamp(14px, 1.1vw, 16px)',
-                            color: 'rgba(255,255,255,0.35)',
-                            lineHeight: 1.8, fontWeight: 300,
-                            maxWidth: 440, marginBottom: 40,
+                            fontSize: 'clamp(15px, 1.2vw, 17px)',
+                            color: 'rgba(255,255,255,0.4)',
+                            lineHeight: 1.9, fontWeight: 300,
+                            maxWidth: 460, marginBottom: 48,
                         }}>
                             I'm always open to discussing new projects, creative ideas, or opportunities to be part of your visions.
                         </p>
@@ -142,141 +142,120 @@ export default function Contact() {
                         {/* CTA Button */}
                         <div style={r(300)}>
                             <a href="mailto:vioadytia30@gmail.com" style={{
-                                display: 'inline-flex', alignItems: 'center', gap: 12,
-                                padding: '16px 32px',
+                                display: 'inline-flex', alignItems: 'center', gap: 14,
+                                padding: '18px 36px',
                                 background: '#1e3a5f',
-                                color: '#fff', fontSize: 13, fontWeight: 700,
-                                letterSpacing: '0.1em',
+                                color: '#fff', fontSize: 12, fontWeight: 600,
+                                letterSpacing: '0.15em',
                                 textDecoration: 'none',
+                                textTransform: 'uppercase',
                                 transition: 'all 0.4s cubic-bezier(0.16, 1, 0.3, 1)',
-                                border: '1px solid rgba(30,58,95,0.8)',
+                                borderRadius: '4px',
                             }}
-                            onMouseEnter={e => {
-                                e.currentTarget.style.background = 'transparent';
-                                e.currentTarget.style.transform = 'translateY(-3px)';
-                                e.currentTarget.style.boxShadow = '0 12px 40px rgba(30,58,95,0.3)';
-                            }}
-                            onMouseLeave={e => {
-                                e.currentTarget.style.background = '#1e3a5f';
-                                e.currentTarget.style.transform = 'translateY(0)';
-                                e.currentTarget.style.boxShadow = 'none';
-                            }}
+                                onMouseEnter={e => {
+                                    e.currentTarget.style.background = '#2a4a6f';
+                                    e.currentTarget.style.transform = 'translateY(-2px)';
+                                }}
+                                onMouseLeave={e => {
+                                    e.currentTarget.style.background = '#1e3a5f';
+                                    e.currentTarget.style.transform = 'translateY(0)';
+                                }}
                             >
                                 Write me an email
-                                <HiMail size={18} />
+                                <HiMail size={16} />
                             </a>
                         </div>
                     </div>
 
                     {/* Right: Contact Cards Grid */}
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                        {cards.map((card, i) => {
-                            const Wrapper = card.href ? 'a' : 'div';
-                            const wrapperProps = card.href
-                                ? { href: card.href, target: '_blank', rel: 'noopener noreferrer', style: { textDecoration: 'none' } }
-                                : {};
-
-                            return (
-                                <div key={card.title} style={{
-                                    ...r(200 + i * 100),
-                                    ...cardStyle,
-                                    cursor: card.onClick ? 'pointer' : card.href ? 'pointer' : 'default',
-                                }}
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        {cards.map((card, i) => (
+                            <div key={card.title} style={{
+                                ...r(200 + i * 100),
+                                ...cardStyle,
+                                cursor: card.onClick ? 'pointer' : card.href ? 'pointer' : 'default',
+                            }}
                                 onMouseEnter={e => {
-                                    e.currentTarget.style.borderColor = 'rgba(30,58,95,0.3)';
-                                    e.currentTarget.style.background = 'rgba(30,58,95,0.06)';
+                                    e.currentTarget.style.background = 'rgba(30,58,95,0.1)';
                                     e.currentTarget.style.transform = 'translateY(-4px)';
                                 }}
                                 onMouseLeave={e => {
-                                    e.currentTarget.style.borderColor = 'rgba(255,255,255,0.05)';
-                                    e.currentTarget.style.background = 'rgba(255,255,255,0.02)';
+                                    e.currentTarget.style.background = 'rgba(255,255,255,0.015)';
                                     e.currentTarget.style.transform = 'translateY(0)';
                                 }}
-                                >
-                                    {/* Icon */}
+                            >
+                                {/* Icon */}
+                                <div style={{
+                                    width: 44, height: 44, borderRadius: 12,
+                                    background: `${card.iconColor}15`,
+                                    display: 'flex', alignItems: 'center', justifyContent: 'center',
+                                    marginBottom: 20,
+                                }}>
+                                    <card.icon size={20} color={card.iconColor} />
+                                </div>
+
+                                {/* Text */}
+                                <div style={{ marginBottom: 20 }}>
+                                    <p style={{ fontSize: 16, fontWeight: 700, color: '#fff', marginBottom: 4 }}>{card.title}</p>
+                                    <p style={{ fontSize: 13, color: 'rgba(255,255,255,0.3)', margin: 0 }}>{card.sub}</p>
+                                </div>
+
+                                {/* Action Button */}
+                                {card.isStatic ? (
                                     <div style={{
-                                        width: 44, height: 44, borderRadius: 12,
-                                        background: `${card.iconColor}15`,
-                                        border: `1px solid ${card.iconColor}25`,
-                                        display: 'flex', alignItems: 'center', justifyContent: 'center',
-                                        marginBottom: 20,
+                                        display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+                                        padding: '10px 14px',
+                                        background: 'rgba(255,255,255,0.03)',
+                                        borderRadius: 6,
                                     }}>
-                                        <card.icon size={20} color={card.iconColor} />
+                                        <span style={{ fontSize: 12, color: 'rgba(255,255,255,0.3)', fontFamily: 'monospace' }}>{card.action}</span>
+                                        {card.actionIcon}
                                     </div>
-
-                                    {/* Text */}
-                                    <div style={{ marginBottom: 20 }}>
-                                        <p style={{ fontSize: 16, fontWeight: 700, color: '#fff', marginBottom: 4 }}>{card.title}</p>
-                                        <p style={{ fontSize: 13, color: 'rgba(255,255,255,0.3)', margin: 0 }}>{card.sub}</p>
-                                    </div>
-
-                                    {/* Action Button */}
-                                    {card.isStatic ? (
-                                        <div style={{
-                                            display: 'flex', alignItems: 'center', justifyContent: 'space-between',
-                                            padding: '10px 14px',
-                                            background: 'rgba(255,255,255,0.03)',
-                                            border: '1px solid rgba(255,255,255,0.04)',
-                                            borderRadius: 6,
-                                        }}>
-                                            <span style={{ fontSize: 12, color: 'rgba(255,255,255,0.3)', fontFamily: 'monospace' }}>{card.action}</span>
-                                            {card.actionIcon}
-                                        </div>
-                                    ) : card.onClick ? (
-                                        <button onClick={card.onClick} style={{
-                                            display: 'flex', alignItems: 'center', justifyContent: 'space-between',
-                                            width: '100%', padding: '10px 14px',
-                                            background: copied ? 'rgba(74,222,128,0.08)' : 'rgba(255,255,255,0.03)',
-                                            border: copied ? '1px solid rgba(74,222,128,0.2)' : '1px solid rgba(255,255,255,0.04)',
-                                            borderRadius: 6, cursor: 'pointer',
-                                            color: copied ? '#4ade80' : 'rgba(255,255,255,0.4)',
-                                            fontSize: 12, fontWeight: 500,
-                                            transition: 'all 0.3s ease',
-                                        }}>
-                                            <span>{card.action}</span>
-                                            {card.actionIcon}
-                                        </button>
-                                    ) : (
-                                        <a href={card.href} target="_blank" rel="noopener noreferrer" style={{
-                                            display: 'flex', alignItems: 'center', justifyContent: 'space-between',
-                                            padding: '10px 14px',
-                                            background: 'rgba(255,255,255,0.03)',
-                                            border: '1px solid rgba(255,255,255,0.04)',
-                                            borderRadius: 6, textDecoration: 'none',
-                                            color: 'rgba(255,255,255,0.4)',
-                                            fontSize: 12, fontWeight: 500,
-                                            transition: 'all 0.3s ease',
-                                        }}
+                                ) : card.onClick ? (
+                                    <button onClick={card.onClick} style={{
+                                        display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+                                        width: '100%', padding: '10px 14px',
+                                        background: copied ? 'rgba(74,222,128,0.08)' : 'rgba(255,255,255,0.03)',
+                                        borderRadius: 6, cursor: 'pointer',
+                                        color: copied ? '#4ade80' : 'rgba(255,255,255,0.4)',
+                                        fontSize: 12, fontWeight: 500,
+                                        border: 'none',
+                                    }}>
+                                        <span>{card.action}</span>
+                                        {card.actionIcon}
+                                    </button>
+                                ) : (
+                                    <a href={card.href} target="_blank" rel="noopener noreferrer" style={{
+                                        display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+                                        padding: '10px 14px',
+                                        background: 'rgba(255,255,255,0.03)',
+                                        borderRadius: 6, textDecoration: 'none',
+                                        color: 'rgba(255,255,255,0.4)',
+                                        fontSize: 12, fontWeight: 500,
+                                    }}
                                         onMouseEnter={e => e.currentTarget.style.color = '#fff'}
                                         onMouseLeave={e => e.currentTarget.style.color = 'rgba(255,255,255,0.4)'}
-                                        >
-                                            <span>{card.action}</span>
-                                            {card.actionIcon}
-                                        </a>
-                                    )}
-                                </div>
-                            );
-                        })}
+                                    >
+                                        <span>{card.action}</span>
+                                        {card.actionIcon}
+                                    </a>
+                                )}
+                            </div>
+                        ))}
                     </div>
                 </div>
 
-                {/* ── WhatsApp CTA ── */}
+                {/* WhatsApp CTA */}
                 <div style={{
                     ...r(700),
                     marginTop: 'clamp(60px, 10vh, 100px)',
-                    paddingTop: 'clamp(40px, 6vh, 60px)',
-                    borderTop: '1px solid rgba(255,255,255,0.05)',
                     display: 'flex', justifyContent: 'space-between', alignItems: 'center',
                     flexWrap: 'wrap', gap: 24,
                 }}>
                     <p style={{ fontSize: 14, color: 'rgba(255,255,255,0.3)', fontWeight: 300 }}>
                         Prefer a quick chat? Reach me on <a href="https://wa.me/6282146495055" target="_blank" rel="noopener noreferrer" style={{
-                            color: '#1e3a5f', fontWeight: 600, textDecoration: 'none', borderBottom: '1px solid rgba(30,58,95,0.3)',
-                            transition: 'border-color 0.3s',
-                        }}
-                        onMouseEnter={e => e.currentTarget.style.borderBottomColor = '#1e3a5f'}
-                        onMouseLeave={e => e.currentTarget.style.borderBottomColor = 'rgba(30,58,95,0.3)'}
-                        >WhatsApp</a>
+                            color: '#1e3a5f', fontWeight: 600, textDecoration: 'none',
+                        }}>WhatsApp</a>
                     </p>
 
                     <div style={{ display: 'flex', gap: 24 }}>
@@ -286,8 +265,8 @@ export default function Contact() {
                                 color: 'rgba(255,255,255,0.2)', textDecoration: 'none',
                                 transition: 'color 0.3s',
                             }}
-                            onMouseEnter={e => e.currentTarget.style.color = '#fff'}
-                            onMouseLeave={e => e.currentTarget.style.color = 'rgba(255,255,255,0.2)'}
+                                onMouseEnter={e => e.currentTarget.style.color = '#fff'}
+                                onMouseLeave={e => e.currentTarget.style.color = 'rgba(255,255,255,0.2)'}
                             >{s}</a>
                         ))}
                     </div>

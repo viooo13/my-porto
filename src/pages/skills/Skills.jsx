@@ -2,83 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import { FaReact, FaNodeJs, FaGitAlt, FaDocker, FaFigma, FaHtml5, FaCss3Alt, FaJs, FaPhp, FaLaravel } from 'react-icons/fa';
 import { SiTypescript, SiNextdotjs, SiTailwindcss, SiMongodb, SiExpress, SiVite, SiWebpack, SiRedux, SiJest, SiMysql, SiPostman } from 'react-icons/si';
 import { StyledWord } from '../../components/StyledWord';
-
-// Animated counter hook
-const useCounter = (target, duration = 1500, start = 0) => {
-    const [count, setCount] = useState(start);
-    const [isAnimating, setIsAnimating] = useState(false);
-    const frameRef = useRef();
-
-    const startAnimation = () => {
-        if (isAnimating) return;
-        setIsAnimating(true);
-        const startTime = performance.now();
-
-        const animate = (currentTime) => {
-            const elapsed = currentTime - startTime;
-            const progress = Math.min(elapsed / duration, 1);
-            const easeOut = 1 - Math.pow(1 - progress, 3);
-            const current = Math.floor(start + (target - start) * easeOut);
-
-            setCount(current);
-
-            if (progress < 1) {
-                frameRef.current = requestAnimationFrame(animate);
-            } else {
-                setCount(target);
-                setIsAnimating(false);
-            }
-        };
-
-        frameRef.current = requestAnimationFrame(animate);
-    };
-
-    useEffect(() => {
-        return () => {
-            if (frameRef.current) cancelAnimationFrame(frameRef.current);
-        };
-    }, []);
-
-    return { count, startAnimation };
-};
-
-// Animated number component
-const AnimatedNumber = ({ value, pad = 2, trigger }) => {
-    const [displayValue, setDisplayValue] = useState(0);
-    const [hasAnimated, setHasAnimated] = useState(false);
-    const frameRef = useRef();
-
-    useEffect(() => {
-        if (trigger && !hasAnimated) {
-            setHasAnimated(true);
-            const duration = 1200;
-            const startTime = performance.now();
-
-            const animate = (currentTime) => {
-                const elapsed = currentTime - startTime;
-                const progress = Math.min(elapsed / duration, 1);
-                const easeOut = 1 - Math.pow(1 - progress, 3);
-                const current = Math.floor(value * easeOut);
-
-                setDisplayValue(current);
-
-                if (progress < 1) {
-                    frameRef.current = requestAnimationFrame(animate);
-                } else {
-                    setDisplayValue(value);
-                }
-            };
-
-            frameRef.current = requestAnimationFrame(animate);
-        }
-
-        return () => {
-            if (frameRef.current) cancelAnimationFrame(frameRef.current);
-        };
-    }, [trigger, hasAnimated, value]);
-
-    return <span>{String(displayValue).padStart(pad, '0')}</span>;
-};
+import { AnimatedNumber, useCounter } from '../../components/AnimatedNumber';
 
 const a = (vis, d = 0) => ({
     opacity: vis ? 1 : 0,
@@ -149,7 +73,7 @@ export default function Skills() {
             <div style={{ maxWidth: 1440, margin: '0 auto', padding: '0 40px' }}>
                 {/* Section Header */}
                 <div style={{ ...a(vis, 0), display: 'flex', alignItems: 'center', gap: 16, marginBottom: 24 }}>
-                    <span style={{ fontSize: 10, fontWeight: 500, letterSpacing: '0.25em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.45)' }}>02</span>
+                    <span style={{ fontSize: 10, fontWeight: 500, letterSpacing: '0.25em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.45)' }}><AnimatedNumber value={2} pad={2} trigger={vis} /></span>
                     <div style={{ width: 40, height: 1, background: 'rgba(255,255,255,0.1)' }} />
                     <span style={{ fontSize: 10, fontWeight: 500, letterSpacing: '0.25em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.45)' }}>Capabilities</span>
                 </div>
@@ -217,12 +141,12 @@ export default function Skills() {
                         <div style={{ display: 'flex', flexDirection: 'column', gap: 40 }}>
                             <div onMouseEnter={e => e.currentTarget.querySelector('span').style.color = '#1e3a5f'} onMouseLeave={e => e.currentTarget.querySelector('span').style.color = '#fff'}>
                                 <p style={{ fontSize: 10, textTransform: 'uppercase', letterSpacing: '0.2em', color: 'rgba(255,255,255,0.2)', marginBottom: 12 }}>Years Active</p>
-                                <span style={{ fontSize: 80, fontWeight: 800, color: '#fff', lineHeight: 1, transition: 'color 0.4s' }}>2+</span>
+                                <span style={{ fontSize: 80, fontWeight: 800, color: '#fff', lineHeight: 1, transition: 'color 0.4s' }}><AnimatedNumber value={2} pad={1} trigger={vis} duration={3500} />+</span>
                                 <div style={{ height: 1, width: 40, background: '#1e3a5f', marginTop: 16 }} />
                             </div>
                             <div onMouseEnter={e => e.currentTarget.querySelector('span').style.color = '#1e3a5f'} onMouseLeave={e => e.currentTarget.querySelector('span').style.color = '#fff'}>
                                 <p style={{ fontSize: 10, textTransform: 'uppercase', letterSpacing: '0.2em', color: 'rgba(255,255,255,0.2)', marginBottom: 12 }}>Projects Done</p>
-                                <span style={{ fontSize: 80, fontWeight: 800, color: '#fff', lineHeight: 1, transition: 'color 0.4s' }}>15+</span>
+                                <span style={{ fontSize: 80, fontWeight: 800, color: '#fff', lineHeight: 1, transition: 'color 0.4s' }}><AnimatedNumber value={15} pad={2} trigger={vis} duration={2500} />+</span>
                                 <div style={{ height: 1, width: 40, background: '#1e3a5f', marginTop: 16 }} />
                             </div>
                         </div>

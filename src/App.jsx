@@ -1,22 +1,46 @@
 import { useEffect, useState, useRef, useCallback } from 'react';
+import { BrowserRouter, Routes, Route, useLocation } from 'react-router-dom';
 import Loader from './components/Loader.jsx';
 import Navbar from './components/Navbar.jsx';
 import Footer from './components/Footer.jsx';
 import MusicPlayer from './components/MusicPlayer.jsx';
-import SmoothScroll from './components/SmoothScroll.jsx';
 import Hero from './pages/hero/Hero.jsx';
 import About from './pages/about/About.jsx';
 import Skills from './pages/skills/Skills.jsx';
 import Project from './pages/project/Project.jsx';
+import ProjectDetails from './pages/project/ProjectDetails.jsx';
 import Certificates from './pages/certificates/Certificates.jsx';
 import Contact from './pages/contact/Contact.jsx';
 
+function ScrollToTop() {
+  const { pathname, hash } = useLocation();
+  useEffect(() => {
+    if (hash) {
+      setTimeout(() => {
+        const el = document.querySelector(hash);
+        if (el) el.scrollIntoView({ behavior: 'smooth' });
+      }, 100);
+    } else {
+      window.scrollTo(0, 0);
+    }
+  }, [pathname, hash]);
+  return null;
+}
+
 /* ── Custom Cursor ── */
 function Cursor() {
+    const { pathname } = useLocation();
     const dot = useRef(null);
     const aimRef = useRef(null);
     const bracketsRef = useRef(null);
     const activeTarget = useRef(null);
+
+    // Reset cursor hover state on route change
+    useEffect(() => {
+        activeTarget.current = null;
+        if (bracketsRef.current) bracketsRef.current.style.opacity = '0';
+        if (aimRef.current) aimRef.current.style.opacity = '1';
+    }, [pathname]);
 
     useEffect(() => {
         const updateBrackets = () => {
@@ -159,6 +183,23 @@ export function useReveal(threshold = 0.1) {
     return observe;
 }
 
+function Home() {
+    return (
+        <div style={{ opacity: 0, animation: 'fadeIn 0.8s ease 0.15s forwards' }}>
+            <Navbar />
+            <main>
+                <Hero />
+                <About />
+                <Skills />
+                <Project />
+                <Certificates />
+                <Contact />
+            </main>
+            <Footer />
+        </div>
+    );
+}
+
 /* ── App ── */
 export default function App() {
     const [done, setDone] = useState(false);
@@ -175,27 +216,20 @@ export default function App() {
     }, []);
 
     return (
-        <SmoothScroll>
+        <BrowserRouter>
+            <ScrollToTop />
             <div style={{ minHeight: '100vh' }}>
                 {showLoader && <Loader isExiting={exiting} onComplete={handleComplete} />}
                 {done && <Cursor />}
                 {done && <ScrollProgress />}
                 {done && (
-                    <div style={{ opacity: 0, animation: 'fadeIn 0.8s ease 0.15s forwards' }}>
-                        <Navbar />
-                        <main>
-                            <Hero />
-                            <About />
-                            <Skills />
-                            <Project />
-                            <Certificates />
-                            <Contact />
-                        </main>
-                        <Footer />
-                    </div>
+                    <Routes>
+                        <Route path="/" element={<Home />} />
+                        <Route path="/project/:id" element={<ProjectDetails />} />
+                    </Routes>
                 )}
                 {done && <MusicPlayer />}
             </div>
-        </SmoothScroll>
+        </BrowserRouter>
     );
 }

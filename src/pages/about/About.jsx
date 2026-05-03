@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import { StyledHeading } from '../../components/StyledWord';
+import { AnimatedNumber } from '../../components/AnimatedNumber';
 
 export default function About() {
     const ref = useRef(null);
@@ -48,7 +49,7 @@ export default function About() {
             <div style={{ maxWidth: 1440, margin: '0 auto', padding: '0 40px' }}>
                 {/* Section label */}
                 <div style={{ ...a(0), display: 'flex', alignItems: 'center', gap: 16, marginBottom: 80 }}>
-                    <span style={{ fontSize: 10, fontWeight: 500, letterSpacing: '0.25em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.45)' }}>01</span>
+                    <span style={{ fontSize: 10, fontWeight: 500, letterSpacing: '0.25em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.45)' }}><AnimatedNumber value={1} pad={2} trigger={vis} /></span>
                     <div style={{ width: 40, height: 1, background: 'rgba(255,255,255,0.1)' }} />
                     <span style={{ fontSize: 10, fontWeight: 500, letterSpacing: '0.25em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.25)' }}>About Me</span>
                 </div>
