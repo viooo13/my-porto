@@ -50,227 +50,220 @@ export default function Hero() {
                 minHeight: '600px',
                 display: 'flex',
                 flexDirection: 'column',
-                background: '#0a0a0a',
+                background: '#030305',
                 overflow: 'hidden',
                 width: '100%',
-                paddingTop: 'clamp(60px, 12vh, 100px)',
                 zIndex: 0,
             }}>
 
-                {/* ── Background Master visual ── */}
-                <div style={{ position: 'absolute', inset: 0, zIndex: 0, pointerEvents: 'none' }}>
-                    {/* Aurora */}
-                    <div style={{
-                        position: 'absolute', top: '20%', left: '20%',
-                        width: '70vw', height: '70vw',
-                        background: 'radial-gradient(circle, rgba(30,58,95,0.15) 0%, transparent 70%)',
-                        transform: `translate3d(${mouse.x * 1.5}px, ${mouse.y * 1.5}px, 0)`,
-                        transition: 'transform 1.5s var(--ease)',
-                        filter: 'blur(100px)',
-                    }} />
+                {/* ── Background Elements ── */}
+                
+                {/* Dynamic Mouse Glow */}
+                <div style={{
+                    position: 'absolute', top: '50%', left: '50%',
+                    width: '80vw', height: '80vw',
+                    background: 'radial-gradient(circle, rgba(74, 144, 217, 0.15) 0%, transparent 60%)',
+                    transform: `translate(calc(-50% + ${mouse.x * 3}px), calc(-50% + ${mouse.y * 3}px))`,
+                    transition: 'transform 0.2s cubic-bezier(0.16, 1, 0.3, 1)',
+                    filter: 'blur(80px)',
+                    zIndex: 0, pointerEvents: 'none'
+                }} />
 
-                    {/* Kinetic Grid */}
+                {/* Subtle Grid */}
+                <div style={{
+                    position: 'absolute', inset: 0, zIndex: 0, pointerEvents: 'none',
+                    backgroundImage: 'linear-gradient(rgba(255,255,255,0.02) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.02) 1px, transparent 1px)',
+                    backgroundSize: '100px 100px',
+                    transform: `translate3d(${mouse.x * 0.5}px, ${mouse.y * 0.5}px, 0)`,
+                }} />
+
+                {/* Massive Typography Background */}
+                <div style={{
+                    position: 'absolute', top: '45%', left: '50%', transform: 'translate(-50%, -50%)',
+                    zIndex: 1, display: 'flex', flexDirection: 'column', alignItems: 'flex-start', pointerEvents: 'none',
+                    width: '100vw', overflow: 'hidden'
+                }}>
                     <div style={{
-                        position: 'absolute', inset: 0,
-                        backgroundImage: 'linear-gradient(rgba(255,255,255,0.02) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.02) 1px, transparent 1px)',
-                        backgroundSize: '100px 100px',
-                        opacity: 0.5,
-                    }} />
+                        display: 'flex', whiteSpace: 'nowrap', width: 'max-content',
+                    }}>
+                        <div className="marquee-left" style={{ display: 'flex', width: 'max-content' }}>
+                            <div style={{ display: 'flex', gap: '8vw', paddingRight: '8vw', flexShrink: 0 }}>
+                                {[...Array(8)].map((_, i) => (
+                                    <h1 key={i} style={{
+                                        fontFamily: '"Inter Display", "Inter", sans-serif', fontWeight: 900,
+                                        fontSize: 'clamp(100px, 22vw, 400px)', lineHeight: 0.8,
+                                        color: 'rgba(255, 255, 255, 0.05)',
+                                        margin: 0, letterSpacing: '-0.02em'
+                                    }}>FRONTEND</h1>
+                                ))}
+                            </div>
+                            <div style={{ display: 'flex', gap: '8vw', paddingRight: '8vw', flexShrink: 0 }}>
+                                {[...Array(8)].map((_, i) => (
+                                    <h1 key={i} style={{
+                                        fontFamily: '"Inter Display", "Inter", sans-serif', fontWeight: 900,
+                                        fontSize: 'clamp(100px, 22vw, 400px)', lineHeight: 0.8,
+                                        color: 'rgba(255, 255, 255, 0.05)',
+                                        margin: 0, letterSpacing: '-0.02em'
+                                    }}>FRONTEND</h1>
+                                ))}
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div style={{
+                        display: 'flex', whiteSpace: 'nowrap', width: 'max-content',
+                    }}>
+                        <div className="marquee-right" style={{ display: 'flex', width: 'max-content' }}>
+                            <div style={{ display: 'flex', gap: '8vw', paddingRight: '8vw', flexShrink: 0 }}>
+                                {[...Array(8)].map((_, i) => (
+                                    <h1 key={i} style={{
+                                        fontFamily: '"Inter Display", "Inter", sans-serif', fontWeight: 900,
+                                        fontSize: 'clamp(100px, 22vw, 400px)', lineHeight: 0.8,
+                                        color: 'rgba(74, 144, 217, 0.07)',
+                                        margin: 0, letterSpacing: '-0.02em'
+                                    }}>DEVELOPER</h1>
+                                ))}
+                            </div>
+                            <div style={{ display: 'flex', gap: '8vw', paddingRight: '8vw', flexShrink: 0 }}>
+                                {[...Array(8)].map((_, i) => (
+                                    <h1 key={i} style={{
+                                        fontFamily: '"Inter Display", "Inter", sans-serif', fontWeight: 900,
+                                        fontSize: 'clamp(100px, 22vw, 400px)', lineHeight: 0.8,
+                                        color: 'rgba(74, 144, 217, 0.07)',
+                                        margin: 0, letterSpacing: '-0.02em'
+                                    }}>DEVELOPER</h1>
+                                ))}
+                            </div>
+                        </div>
+                    </div>
                 </div>
 
-                {/* ── Main Layout Container ── */}
+                {/* ── Center Character (The Illustration) ── */}
                 <div style={{
-                    maxWidth: '100%',
-                    margin: '0 auto',
-                    padding: '0 6vw',
-                    flex: 1,
-                    display: 'flex',
-                    flexDirection: 'column',
-                    position: 'relative',
-                    zIndex: 10
+                    position: 'absolute', bottom: 0, left: '50%', transform: 'translateX(-50%)',
+                    zIndex: 2, height: '100dvh', width: '100%',
+                    display: 'flex', justifyContent: 'center', alignItems: 'flex-end',
+                    pointerEvents: 'none'
                 }}>
+                    <img src="/my-photo-transparent.png" alt="Vio Adytia Illustration" style={{
+                        height: '195dvh', width: 'auto', objectFit: 'contain',
+                        filter: 'drop-shadow(3px 0 0 #fff) drop-shadow(0 3px 0 #fff) drop-shadow(-3px 0 0 #fff) drop-shadow(0 -3px 0 #fff) drop-shadow(0 -20px 40px rgba(0,0,0,0.8)) drop-shadow(0 0 30px rgba(74, 144, 217, 0.2))',
+                        pointerEvents: 'none',
+                        transform: 'translateY(97dvh)'
+                    }} 
+                    />
+                </div>
 
-                    <div className="grid grid-cols-1 lg:grid-cols-12 gap-x-12 items-center flex-1 pt-12 pb-12 lg:pt-24 lg:pb-24 gap-y-12">
-
-                        {/* Left Side: Typography (Col 1-8) */}
-                        <div className="lg:col-span-8 flex flex-col justify-center"
-                            style={{ opacity: loaded ? 1 : 0, transform: loaded ? 'none' : 'translateY(40px)', transition: 'all 1s var(--ease) 0.2s' }}>
-
-                            <div style={{ display: 'flex', alignItems: 'center', gap: 20, marginBottom: 32 }}>
-                                <div style={{ height: 1, width: 30, background: '#1e3a5f' }} />
+                {/* ── Foreground UI Layer ── */}
+                <div style={{
+                    position: 'relative', zIndex: 3, width: '100%', height: '100%',
+                    padding: 'clamp(80px, 12vh, 120px) 6vw clamp(40px, 6vh, 60px) 6vw',
+                    display: 'flex', flexDirection: 'column', justifyContent: 'space-between',
+                    pointerEvents: 'none'
+                }}>
+                    
+                    {/* Top Header */}
+                    <div style={{
+                        display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start',
+                        opacity: loaded ? 1 : 0, transform: loaded ? 'none' : 'translateY(20px)',
+                        transition: 'all 1.2s cubic-bezier(0.16, 1, 0.3, 1) 0.2s'
+                    }}>
+                        <div style={{ pointerEvents: 'auto' }}>
+                            <div style={{ display: 'flex', alignItems: 'center', gap: 16, marginBottom: 12 }}>
+                                <div style={{ height: 1, width: 40, background: '#4a90d9' }} />
                                 <p style={{
-                                    fontFamily: 'Inter, sans-serif', fontSize: 'clamp(9px, 1vw, 11px)', fontWeight: 600,
-                                    letterSpacing: 'clamp(0.2em, 0.6vw, 0.6em)', textTransform: 'uppercase',
-                                    color: 'rgba(255,255,255,0.3)',
-                                }}>
-                                    CREATIVE FRONTEND DEVELOPER
-                                </p>
+                                    fontFamily: 'Inter, sans-serif', fontSize: 12, fontWeight: 600,
+                                    letterSpacing: '0.4em', color: '#4a90d9', margin: 0
+                                }}>PORTFOLIO 2026</p>
                             </div>
-
-                            <h1 style={{
-                                fontFamily: 'Plus Jakarta Sans, sans-serif', fontWeight: 800,
-                                fontSize: 'clamp(40px, 14vw, 190px)',
-                                lineHeight: 0.75, letterSpacing: '-0.02em',
-                                color: '#fff', marginBottom: 56,
-                                textTransform: 'uppercase',
+                            <h2 style={{
+                                fontFamily: '"Inter Display", "Inter", sans-serif', fontWeight: 800,
+                                fontSize: 'clamp(40px, 6vw, 80px)', color: '#fff', margin: 0,
+                                lineHeight: 1, letterSpacing: '-0.02em',
+                                display: 'flex', flexWrap: 'wrap', gap: '16px'
                             }}>
-                                <div style={{ overflow: 'hidden' }}>
-                                    <StyledWord text="VIO" color="#ffff" animDelay={0.1} />
-                                </div>
-                                <div style={{ overflow: 'hidden', marginTop: 10 }}>
-                                    <StyledWord text="ADYTIA" color="#1e3a5f" animDelay={0.2} />
-                                </div>
-                            </h1>
-
-                            <div className="max-w-[480px]" style={{ width: '100%' }}>
-                                <p style={{
-                                    fontFamily: 'Inter, sans-serif', fontSize: 'clamp(14px, 1.2vw, 18px)', fontWeight: 300,
-                                    color: 'rgba(255,255,255,0.4)', lineHeight: 1.8, marginBottom: 'clamp(24px, 4vh, 48px)'
-                                }}>
-                                    Building <span style={{ color: '#fff', fontWeight: 500 }}>immersive digital solutions</span> where precision code meets premium editorial design.
-                                </p>
-
-                                <div className="hero-social-links" style={{ display: 'flex', gap: 'clamp(16px, 2vw, 24px)', marginBottom: 'clamp(24px, 4vh, 56px)', flexWrap: 'wrap' }}>
-                                    {[
-                                        { name: 'GITHUB', icon: FaGithub, link: '#' },
-                                        { name: 'LINKEDIN', icon: FaLinkedin, link: '#' },
-                                        { name: 'VIEW CV', icon: FaImage, onClick: () => setShowCvModal(true) }
-                                    ].map((item, i) => (
-                                        <a key={i} href={item.link || '#'} {...(item.download ? { download: true } : {})} {...(item.target ? { target: item.target } : {})} style={{
-                                            display: 'flex', alignItems: 'center', gap: 10,
-                                            textDecoration: 'none', color: 'rgba(255,255,255,0.3)',
-                                            fontSize: 10, letterSpacing: '0.15em', fontWeight: 600,
-                                            transition: 'all 0.4s',
-                                            cursor: 'pointer'
-                                        }}
-                                            onClick={item.onClick}
-                                            onMouseEnter={e => { e.currentTarget.style.color = '#fff'; e.currentTarget.style.transform = 'translateX(5px)'; }}
-                                            onMouseLeave={e => { e.currentTarget.style.color = 'rgba(255,255,255,0.3)'; e.currentTarget.style.transform = 'translateX(0)'; }}>
-                                            <item.icon size={16} style={{ color: '#1e3a5f' }} />
-                                            {item.name}
-                                        </a>
-                                    ))}
-                                </div>
-                                <div className="flex items-center gap-10" style={{ flexWrap: 'wrap', gap: 'clamp(12px, 2vw, 40px)' }}>
-                                    <HeroButton href="#projects">VIEW PROJECTS</HeroButton>
-                                    <a href="#about" style={{
-                                        fontSize: 'clamp(8px, 0.8vw, 9px)', letterSpacing: '0.3em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.3)', textDecoration: 'none',
-                                        display: 'flex', alignItems: 'center', gap: 12, transition: 'all 0.4s'
-                                    }}
-                                        onMouseEnter={e => { e.currentTarget.style.color = '#fff'; e.currentTarget.style.transform = 'translateX(5px)'; }}
-                                        onMouseLeave={e => { e.currentTarget.style.color = 'rgba(255,255,255,0.3)'; e.currentTarget.style.transform = 'translateX(0)'; }}>
-                                        <div style={{ width: 12, height: 1, background: '#1e3a5f' }} />
-                                        DISCOVER
-                                    </a>
-                                </div>
-                            </div>
+                                <div style={{ overflow: 'hidden' }}><StyledWord text="VIO" color="#fff" animDelay={0.1} /></div>
+                                <div style={{ overflow: 'hidden' }}><StyledWord text="ADYTIA" color="#4a90d9" animDelay={0.2} /></div>
+                            </h2>
                         </div>
 
-                        {/* Right Side: Visual (Col 9-12) */}
-                        <div className="lg:col-span-4 flex justify-center lg:justify-end"
-                            style={{ opacity: loaded ? 1 : 0, transform: loaded ? 'none' : 'scale(0.95)', transition: 'all 1s var(--ease) 0.4s' }}>
-
-                            <div style={{ position: 'relative', width: '100%', maxWidth: 'clamp(280px, 40vw, 420px)', margin: '0 auto' }}>
-
-                                {/* Outer Decorative Frame */}
-                                <div style={{
-                                    position: 'absolute', inset: -20,
-                                    border: '1px solid rgba(30,58,95,0.2)',
-                                    borderRadius: '8px',
-                                    transform: `translate3d(${mouse.x * 0.2}px, ${mouse.y * 0.2}px, 0)`,
-                                    transition: 'transform 1.8s var(--ease)',
-                                    pointerEvents: 'none',
-                                    opacity: 0.6
-                                }} />
-
-                                {/* Glow Effect */}
-                                <div style={{
-                                    position: 'absolute', inset: -30,
-                                    background: 'radial-gradient(circle at center, rgba(30,58,95,0.15) 0%, transparent 70%)',
-                                    transform: `translate3d(${mouse.x * 0.08}px, ${mouse.y * 0.08}px, 0)`,
-                                    transition: 'transform 2s var(--ease)',
-                                    pointerEvents: 'none',
-                                    filter: 'blur(20px)'
-                                }} />
-
-                                <div
-                                    data-hover="VIEW PROFILE"
-                                    style={{
-                                        position: 'relative',
-                                        width: '100%', aspectRatio: '4/5',
-                                        overflow: 'hidden',
-                                        background: 'linear-gradient(135deg, #111 0%, #1a1a1a 100%)',
-                                        transform: `translate3d(${mouse.x * 0.1}px, ${mouse.y * 0.1}px, 0)`,
-                                        transition: 'transform 1.2s var(--ease)',
-                                        borderRadius: '4px',
-                                        boxShadow: '0 25px 50px rgba(0,0,0,0.5), 0 0 40px rgba(30,58,95,0.1)',
-                                        cursor: 'none'
-                                    }}
-                                    onMouseEnter={() => setIsPhotoHovered(true)}
-                                    onMouseLeave={() => setIsPhotoHovered(false)}
-                                >
-
-
-                                    {/* Image Overlay Gradient */}
-                                    <div style={{
-                                        position: 'absolute', inset: 0,
-                                        background: isPhotoHovered ? 'rgba(0,0,0,0.2)' : 'linear-gradient(180deg, transparent 0%, rgba(0,0,0,0.3) 100%)',
-                                        zIndex: 5,
-                                        pointerEvents: 'none',
-                                        transition: 'background 0.4s ease'
-                                    }} />
-
-                                    <img
-                                        src="my-photo.png"
-                                        alt="Vio Adytia Portrait"
-                                        style={{
-                                            width: '100%', height: '100%', objectFit: 'cover',
-                                            filter: isPhotoHovered ? 'grayscale(0) contrast(1.15) saturate(1.1)' : 'grayscale(1) contrast(1.1)',
-                                            transform: `scale(1.15) translate3d(${mouse.x * -0.05}px, ${mouse.y * -0.05}px, 0)`,
-                                            transition: 'transform 1.5s var(--ease), filter 0.5s ease',
-                                        }}
-                                    />
-                                </div>
-
-                                {/* Status Chip - Moved to top-left outside photo */}
-                                <div style={{
-                                    position: 'absolute', top: '-15px', left: '-10px',
-                                    background: 'linear-gradient(135deg, #1e3a5f 0%, #2a5a8f 100%)',
-                                    padding: '8px 16px',
-                                    transform: `translate3d(${mouse.x * -0.08}px, ${mouse.y * -0.08}px, 0)`,
-                                    transition: 'transform 1.8s var(--ease)',
-                                    zIndex: 20,
-                                    boxShadow: '0 10px 30px rgba(30,58,95,0.4)',
-                                    borderRadius: '2px',
-                                    border: '1px solid rgba(255,255,255,0.1)'
-                                }}>
-                                    <span style={{ fontSize: 8, color: '#fff', letterSpacing: '0.2em', fontWeight: 800 }}>V.A / 2026</span>
-                                </div>
-
-                                {/* Location tag */}
-                                <div style={{
-                                    position: 'absolute', bottom: -32, right: 0,
-                                    display: 'flex', alignItems: 'center', gap: 12,
-                                    transform: `translate3d(${mouse.x * 0.1}px, ${mouse.y * 0.1}px, 0)`,
-                                    transition: 'transform 1s var(--ease)',
-                                }}>
-                                    <div style={{ width: 5, height: 5, background: '#1e3a5f', borderRadius: '50%' }} />
-                                    <span style={{ fontSize: 8, letterSpacing: '0.3em', color: 'rgba(255,255,255,0.2)' }}>BOGOR, IDN</span>
-                                </div>
-                            </div>
+                        <div className="hide-mobile" style={{ textAlign: 'right', pointerEvents: 'auto', marginTop: 10 }}>
+                            <p style={{ fontFamily: 'Inter, sans-serif', fontSize: 10, color: 'rgba(255,255,255,0.4)', letterSpacing: '0.2em', margin: '0 0 8px 0' }}>CURRENTLY BASED IN</p>
+                            <p style={{ fontFamily: 'Inter, sans-serif', fontSize: 14, color: '#fff', fontWeight: 600, letterSpacing: '0.2em', margin: 0 }}>BOGOR, IDN</p>
                         </div>
-
                     </div>
 
-                    {/* Editorial Footer */}
+                    {/* Bottom Details */}
                     <div style={{
-                        padding: 'clamp(24px, 4vh, 48px) 0',
-                        opacity: loaded ? 1 : 0, transition: 'all 1s var(--ease) 0.8s'
+                        display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end',
+                        opacity: loaded ? 1 : 0, transform: loaded ? 'none' : 'translateY(-20px)',
+                        transition: 'all 1.2s cubic-bezier(0.16, 1, 0.3, 1) 0.4s'
                     }}>
+                        
+                        {/* Info Text */}
+                        <div style={{
+                            maxWidth: '480px',
+                            pointerEvents: 'auto'
+                        }}>
+                            <p style={{
+                                fontFamily: 'Inter, sans-serif', fontSize: 'clamp(14px, 1.2vw, 16px)', fontWeight: 300,
+                                color: 'rgba(255,255,255,0.7)', lineHeight: 1.8, margin: '0 0 32px 0'
+                            }}>
+                                Building <span style={{ color: '#fff', fontWeight: 500 }}>immersive digital solutions</span> where precision code meets premium editorial design. Exploring the limits of modern web technologies to create unforgettable experiences.
+                            </p>
+                            
+                           
+                        </div>
+
+                        {/* Social Links */}
+                        <div className="hide-mobile" style={{ display: 'flex', flexDirection: 'column', gap: 16, pointerEvents: 'auto' }}>
+                            {[
+                                { name: 'Github', icon: FaGithub, link: '#' },
+                                { name: 'LinkedIn', icon: FaLinkedin, link: '#' },
+                            ].map((item, i) => (
+                                <a key={i} href={item.link} aria-label={item.name} style={{
+                                    width: 50, height: 50, borderRadius: '50%',
+                                    border: '1px solid rgba(255,255,255,0.1)',
+                                    display: 'flex', alignItems: 'center', justifyContent: 'center',
+                                    color: 'rgba(255,255,255,0.5)', textDecoration: 'none',
+                                    transition: 'all 0.4s cubic-bezier(0.16, 1, 0.3, 1)',
+                                    background: 'rgba(255,255,255,0.02)',
+                                    backdropFilter: 'blur(10px)'
+                                }}
+                                onMouseEnter={e => {
+                                    e.currentTarget.style.color = '#fff';
+                                    e.currentTarget.style.background = '#4a90d9';
+                                    e.currentTarget.style.borderColor = '#4a90d9';
+                                    e.currentTarget.style.transform = 'scale(1.1) rotate(10deg)';
+                                }}
+                                onMouseLeave={e => {
+                                    e.currentTarget.style.color = 'rgba(255,255,255,0.5)';
+                                    e.currentTarget.style.background = 'rgba(255,255,255,0.02)';
+                                    e.currentTarget.style.borderColor = 'rgba(255,255,255,0.1)';
+                                    e.currentTarget.style.transform = 'scale(1) rotate(0deg)';
+                                }}>
+                                    <item.icon size={20} />
+                                </a>
+                            ))}
+                        </div>
                     </div>
                 </div>
 
                 <style>{`
+                .marquee-left {
+                    animation: marqueeLeft 50s linear infinite;
+                }
+                .marquee-right {
+                    animation: marqueeRight 50s linear infinite;
+                }
+                @keyframes marqueeLeft {
+                    0% { transform: translateX(0); }
+                    100% { transform: translateX(-50%); }
+                }
+                @keyframes marqueeRight {
+                    0% { transform: translateX(-50%); }
+                    100% { transform: translateX(0); }
+                }
                 @keyframes slideUp {
                     from { transform: translateY(100%); opacity: 0; }
                     to { transform: translateY(0); opacity: 1; }
@@ -278,20 +271,6 @@ export default function Hero() {
                 @keyframes clipLeft {
                     from { clip-path: inset(0 0 0 0); }
                     to { clip-path: inset(0 100% 0 0); }
-                }
-                @keyframes blobMorph {
-                    0%, 100% { border-radius: 60% 40% 30% 70% / 60% 30% 70% 40%; }
-                    25% { border-radius: 30% 60% 70% 40% / 50% 60% 30% 60%; }
-                    50% { border-radius: 50% 60% 30% 60% / 30% 60% 70% 40%; }
-                    75% { border-radius: 60% 40% 60% 30% / 70% 30% 50% 60%; }
-                }
-                @keyframes scaleIn {
-                    from { transform: scale(1.2); }
-                    to { transform: scale(1.1); }
-                }
-                @keyframes framePulse {
-                    0%, 100% { opacity: 0.5; box-shadow: 0 0 30px rgba(30,58,95,0.2); }
-                    50% { opacity: 1; box-shadow: 0 0 50px rgba(30,58,95,0.4); }
                 }
             `}</style>
             </section>

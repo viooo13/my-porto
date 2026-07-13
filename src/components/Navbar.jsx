@@ -27,32 +27,49 @@ export default function Navbar() {
         const sectionElements = links.map(l => document.getElementById(l.href.substring(1))).filter(Boolean);
         if (sectionElements.length === 0) return;
 
+        // We use IntersectionObserver just as an efficient way to trigger recalculation on scroll
         const observer = new IntersectionObserver(
-            (entries) => {
-                const visible = entries
-                    .filter(e => e.isIntersecting)
-                    .sort((a, b) => a.boundingClientRect.top - b.boundingClientRect.top);
-
-                if (visible.length > 0) {
-                    const topmost = visible[0];
-                    // Prefer section that occupies more viewport (tie-breaker)
-                    let best = topmost;
-                    for (const entry of visible) {
-                        if (entry.intersectionRatio > best.intersectionRatio) {
-                            best = entry;
-                        }
+            () => {
+                let bestId = 'hero';
+                const threshold = window.innerHeight * 0.3; // 30% from top of viewport
+                
+                for (const el of sectionElements) {
+                    const rect = el.getBoundingClientRect();
+                    if (rect.top <= threshold && rect.bottom >= threshold) {
+                        bestId = el.id;
                     }
-                    setActiveSection(best.target.id);
                 }
+                
+                setActiveSection(bestId);
             },
             {
-                rootMargin: '-120px 0px -40% 0px',
-                threshold: [0, 0.25, 0.5, 0.75, 1],
+                rootMargin: '0px 0px 0px 0px',
+                threshold: Array.from({ length: 11 }, (_, i) => i * 0.1), // Trigger frequently as it intersects
             }
         );
 
         sectionElements.forEach(el => observer.observe(el));
-        return () => observer.disconnect();
+        
+        // Also add a scroll listener as fallback since IntersectionObserver might not fire for sticky elements that don't change intersection ratio
+        const handleScroll = () => {
+            let bestId = 'hero';
+            const threshold = window.innerHeight * 0.3;
+            
+            for (const el of sectionElements) {
+                const rect = el.getBoundingClientRect();
+                if (rect.top <= threshold && rect.bottom > threshold) {
+                    bestId = el.id;
+                }
+            }
+            setActiveSection(bestId);
+        };
+        
+        window.addEventListener('scroll', handleScroll, { passive: true });
+
+        return () => {
+            observer.disconnect();
+            window.removeEventListener('scroll', handleScroll);
+        };
     }, []);
 
     // ─── SCROLL HIDE/SHOW ────────────────────────────────────────────────

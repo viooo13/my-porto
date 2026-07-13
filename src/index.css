@@ -574,7 +574,10 @@ body::after {
    ======================================== */
 @media (max-width: 1024px) {
   #hero {
-    overflow-y: auto !important;
+    position: relative !important;
+    height: auto !important;
+    min-height: 100dvh !important;
+    overflow: hidden !important;
   }
 
   #hero h1 {
