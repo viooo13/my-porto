@@ -20,25 +20,29 @@ function HeroButton({ children, href, className }) {
 }
 
 export default function Hero() {
-    const [mouse, setMouse] = useState({ x: 0, y: 0 });
     const [loaded, setLoaded] = useState(false);
     const [showCvModal, setShowCvModal] = useState(false);
     const [isPhotoHovered, setIsPhotoHovered] = useState(false);
+    
     useEffect(() => {
         setLoaded(true);
+        let isHovering = false;
+        
         const onMouse = (e) => {
-            const { clientX, clientY } = e;
+            const { clientX } = e;
             const centerX = window.innerWidth / 2;
-            const centerY = window.innerHeight / 2;
-            setMouse({
-                x: (clientX - centerX) / centerX * 40,
-                y: (clientY - centerY) / centerY * 40,
-            });
+            const xPercentage = ((clientX - centerX) / centerX) * 40;
+            const currentHover = Math.abs(xPercentage) < 8;
+            
+            // Only trigger re-render if the state actually changes!
+            if (currentHover !== isHovering) {
+                isHovering = currentHover;
+                setIsPhotoHovered(currentHover);
+            }
         };
-        window.addEventListener('mousemove', onMouse);
-        return () => {
-            window.removeEventListener('mousemove', onMouse);
-        };
+        
+        window.addEventListener('mousemove', onMouse, { passive: true });
+        return () => window.removeEventListener('mousemove', onMouse);
     }, []);
 
     return (
@@ -148,13 +152,10 @@ export default function Hero() {
                     <img src="/my-photo-transparent.png" alt="Vio Adytia Illustration" style={{
                         height: '195dvh', width: 'auto', objectFit: 'contain',
                         filter: `${isPhotoHovered ? 'grayscale(0%)' : 'grayscale(100%)'} drop-shadow(3px 0 0 #fff) drop-shadow(0 3px 0 #fff) drop-shadow(-3px 0 0 #fff) drop-shadow(0 -3px 0 #fff) drop-shadow(0 -20px 40px rgba(0,0,0,0.8)) drop-shadow(0 0 30px rgba(74, 144, 217, 0.2))`,
-                        pointerEvents: 'auto',
+                        pointerEvents: 'none',
                         transform: 'translateY(97dvh)',
                         transition: 'filter 0.5s ease',
-                        cursor: 'crosshair'
                     }} 
-                    onMouseEnter={() => setIsPhotoHovered(true)}
-                    onMouseLeave={() => setIsPhotoHovered(false)}
                     />
                 </div>
 

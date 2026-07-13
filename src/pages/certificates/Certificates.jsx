@@ -179,6 +179,7 @@ export default function Certificates() {
             >
                 {/* Close Button */}
                 <button
+                    aria-label="Close"
                     onClick={() => setSelectedCert(null)}
                     style={{
                         position: 'absolute', top: 40, right: 40,

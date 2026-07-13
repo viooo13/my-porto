@@ -61,7 +61,7 @@ export default function Footer() {
                             background: 'transparent',
                             border: '1px solid rgba(255,255,255,0.08)',
                             padding: '12px 20px',
-                            color: 'rgba(255,255,255,0.4)',
+                            color: 'rgba(255,255,255,0.6)',
                             fontSize: 10, fontWeight: 700,
                             letterSpacing: '0.25em', textTransform: 'uppercase',
                             cursor: 'pointer',
@@ -74,7 +74,7 @@ export default function Footer() {
                         }}
                         onMouseLeave={e => {
                             e.currentTarget.style.borderColor = 'rgba(255,255,255,0.08)';
-                            e.currentTarget.style.color = 'rgba(255,255,255,0.4)';
+                            e.currentTarget.style.color = 'rgba(255,255,255,0.6)';
                             e.currentTarget.style.transform = 'translateY(0)';
                         }}
                     >
@@ -97,7 +97,7 @@ export default function Footer() {
                         <nav style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
                             {links.map(link => (
                                 <a key={link.label} href={link.href} style={{
-                                    fontSize: 14, color: 'rgba(255,255,255,0.4)',
+                                    fontSize: 14, color: 'rgba(255,255,255,0.6)',
                                     textDecoration: 'none', fontWeight: 400,
                                     transition: 'all 0.3s ease',
                                     display: 'inline-block', width: 'fit-content',
@@ -107,7 +107,7 @@ export default function Footer() {
                                     e.currentTarget.style.transform = 'translateX(6px)';
                                 }}
                                 onMouseLeave={e => {
-                                    e.currentTarget.style.color = 'rgba(255,255,255,0.4)';
+                                    e.currentTarget.style.color = 'rgba(255,255,255,0.6)';
                                     e.currentTarget.style.transform = 'translateX(0)';
                                 }}
                                 >{link.label}</a>
@@ -124,18 +124,18 @@ export default function Footer() {
                         }}>Contact</p>
                         <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
                             <a href="mailto:vioadytia30@gmail.com" style={{
-                                fontSize: 14, color: 'rgba(255,255,255,0.4)',
+                                fontSize: 14, color: 'rgba(255,255,255,0.6)',
                                 textDecoration: 'none', transition: 'color 0.3s',
                             }}
                             onMouseEnter={e => e.currentTarget.style.color = '#fff'}
-                            onMouseLeave={e => e.currentTarget.style.color = 'rgba(255,255,255,0.4)'}
+                            onMouseLeave={e => e.currentTarget.style.color = 'rgba(255,255,255,0.6)'}
                             >vioadytia30@gmail.com</a>
                             <a href="https://wa.me/6282146495055" style={{
-                                fontSize: 14, color: 'rgba(255,255,255,0.4)',
+                                fontSize: 14, color: 'rgba(255,255,255,0.6)',
                                 textDecoration: 'none', transition: 'color 0.3s',
                             }}
                             onMouseEnter={e => e.currentTarget.style.color = '#fff'}
-                            onMouseLeave={e => e.currentTarget.style.color = 'rgba(255,255,255,0.4)'}
+                            onMouseLeave={e => e.currentTarget.style.color = 'rgba(255,255,255,0.6)'}
                             >+62 821 4649 5055</a>
                         </div>
                     </div>
@@ -147,7 +147,7 @@ export default function Footer() {
                             color: 'rgba(255,255,255,0.15)', textTransform: 'uppercase',
                             marginBottom: 20,
                         }}>Location</p>
-                        <p style={{ fontSize: 14, color: 'rgba(255,255,255,0.4)', lineHeight: 1.8, margin: 0 }}>
+                        <p style={{ fontSize: 14, color: 'rgba(255,255,255,0.6)', lineHeight: 1.8, margin: 0 }}>
                             Bogor, Indonesia<br />
                             <span style={{ color: 'rgba(255,255,255,0.2)' }}>Available Worldwide</span>
                         </p>
