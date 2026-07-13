@@ -88,7 +88,7 @@ export default function Hero() {
                     }}>
                         <div className="marquee-left" style={{ display: 'flex', width: 'max-content' }}>
                             <div style={{ display: 'flex', gap: '8vw', paddingRight: '8vw', flexShrink: 0 }}>
-                                {[...Array(8)].map((_, i) => (
+                                {[...Array(4)].map((_, i) => (
                                     <h1 key={i} style={{
                                         fontFamily: '"Inter Display", "Inter", sans-serif', fontWeight: 900,
                                         fontSize: 'clamp(100px, 22vw, 400px)', lineHeight: 0.8,
@@ -98,7 +98,7 @@ export default function Hero() {
                                 ))}
                             </div>
                             <div style={{ display: 'flex', gap: '8vw', paddingRight: '8vw', flexShrink: 0 }}>
-                                {[...Array(8)].map((_, i) => (
+                                {[...Array(4)].map((_, i) => (
                                     <h1 key={i} style={{
                                         fontFamily: '"Inter Display", "Inter", sans-serif', fontWeight: 900,
                                         fontSize: 'clamp(100px, 22vw, 400px)', lineHeight: 0.8,
@@ -115,7 +115,7 @@ export default function Hero() {
                     }}>
                         <div className="marquee-right" style={{ display: 'flex', width: 'max-content' }}>
                             <div style={{ display: 'flex', gap: '8vw', paddingRight: '8vw', flexShrink: 0 }}>
-                                {[...Array(8)].map((_, i) => (
+                                {[...Array(4)].map((_, i) => (
                                     <h1 key={i} style={{
                                         fontFamily: '"Inter Display", "Inter", sans-serif', fontWeight: 900,
                                         fontSize: 'clamp(100px, 22vw, 400px)', lineHeight: 0.8,
@@ -125,7 +125,7 @@ export default function Hero() {
                                 ))}
                             </div>
                             <div style={{ display: 'flex', gap: '8vw', paddingRight: '8vw', flexShrink: 0 }}>
-                                {[...Array(8)].map((_, i) => (
+                                {[...Array(4)].map((_, i) => (
                                     <h1 key={i} style={{
                                         fontFamily: '"Inter Display", "Inter", sans-serif', fontWeight: 900,
                                         fontSize: 'clamp(100px, 22vw, 400px)', lineHeight: 0.8,
@@ -147,10 +147,14 @@ export default function Hero() {
                 }}>
                     <img src="/my-photo-transparent.png" alt="Vio Adytia Illustration" style={{
                         height: '195dvh', width: 'auto', objectFit: 'contain',
-                        filter: 'drop-shadow(3px 0 0 #fff) drop-shadow(0 3px 0 #fff) drop-shadow(-3px 0 0 #fff) drop-shadow(0 -3px 0 #fff) drop-shadow(0 -20px 40px rgba(0,0,0,0.8)) drop-shadow(0 0 30px rgba(74, 144, 217, 0.2))',
-                        pointerEvents: 'none',
-                        transform: 'translateY(97dvh)'
+                        filter: `${isPhotoHovered ? 'grayscale(0%)' : 'grayscale(100%)'} drop-shadow(3px 0 0 #fff) drop-shadow(0 3px 0 #fff) drop-shadow(-3px 0 0 #fff) drop-shadow(0 -3px 0 #fff) drop-shadow(0 -20px 40px rgba(0,0,0,0.8)) drop-shadow(0 0 30px rgba(74, 144, 217, 0.2))`,
+                        pointerEvents: 'auto',
+                        transform: 'translateY(97dvh)',
+                        transition: 'filter 0.5s ease',
+                        cursor: 'crosshair'
                     }} 
+                    onMouseEnter={() => setIsPhotoHovered(true)}
+                    onMouseLeave={() => setIsPhotoHovered(false)}
                     />
                 </div>
 
@@ -252,17 +256,19 @@ export default function Hero() {
                 <style>{`
                 .marquee-left {
                     animation: marqueeLeft 50s linear infinite;
+                    will-change: transform;
                 }
                 .marquee-right {
                     animation: marqueeRight 50s linear infinite;
+                    will-change: transform;
                 }
                 @keyframes marqueeLeft {
-                    0% { transform: translateX(0); }
-                    100% { transform: translateX(-50%); }
+                    0% { transform: translate3d(0, 0, 0); }
+                    100% { transform: translate3d(-50%, 0, 0); }
                 }
                 @keyframes marqueeRight {
-                    0% { transform: translateX(-50%); }
-                    100% { transform: translateX(0); }
+                    0% { transform: translate3d(-50%, 0, 0); }
+                    100% { transform: translate3d(0, 0, 0); }
                 }
                 @keyframes slideUp {
                     from { transform: translateY(100%); opacity: 0; }

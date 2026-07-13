@@ -310,28 +310,16 @@ export default function MusicPlayer() {
                             </>
                         )}
                         {isPlaying ? (
-                            <div style={{ position: 'relative', width: 44, height: 44 }}>
-                                {/* Center Icon */}
-                                <div style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', zIndex: 2 }}>
-                                    <FaMusic size={14} color='#4a90d9' />
-                                </div>
-                                {/* Radial Bars */}
-                                {[...Array(12)].map((_, i) => (
+                            <div style={{ display: 'flex', alignItems: 'flex-end', gap: 2, height: 16 }}>
+                                {[0, 1, 2].map(i => (
                                     <div key={i} style={{
-                                        position: 'absolute', top: 0, left: 0, width: '100%', height: '100%',
-                                        transform: `rotate(${i * 30}deg)`
-                                    }}>
-                                        <div style={{
-                                            position: 'absolute', top: 2, left: '50%', transform: 'translateX(-50%)',
-                                            width: 3, height: 6, background: '#4a90d9', borderRadius: 2,
-                                            animation: `eqRadial ${0.3 + (i%5)*0.1}s ease-in-out infinite alternate`,
-                                            transformOrigin: 'bottom center'
-                                        }} />
-                                    </div>
+                                        width: 3, borderRadius: 1.5, background: '#4a90d9',
+                                        animation: `eqBounce ${0.4 + i * 0.1}s ease-in-out infinite alternate`,
+                                    }} />
                                 ))}
                             </div>
                         ) : (
-                            <FaMusic size={20} color='#4a90d9'/>
+                            <FaMusic size={20} color='#4a90d9' />
                         )}
                         {/* Drag indicator dots */}
                         <div style={{ position: 'absolute', bottom: 8, display: 'flex', gap: 3, opacity: 0.6 }}>
@@ -371,13 +359,12 @@ export default function MusicPlayer() {
                             </div>
 
                             {/* Equalizer bars */}
-                            <div style={{ display: 'flex', alignItems: 'center', gap: 3, height: 24, marginTop: 4 }}>
-                                {[...Array(5)].map((_, i) => (
+                            <div style={{ display: 'flex', alignItems: 'flex-end', gap: 3, height: 16, marginTop: 4 }}>
+                                {[0, 1, 2, 3].map(i => (
                                     <div key={i} style={{
                                         width: 4, borderRadius: 2, background: '#4a90d9',
-                                        animation: isPlaying ? `eqBounce ${0.4 + (i%3) * 0.15}s ease-in-out infinite alternate` : 'none',
-                                        animationDelay: `${i * 0.1}s`,
-                                        height: isPlaying ? '24px' : '4px',
+                                        animation: isPlaying ? `eqBounce ${0.35 + i * 0.1}s ease-in-out infinite alternate` : 'none',
+                                        height: isPlaying ? '16px' : '4px',
                                     }} />
                                 ))}
                             </div>
@@ -444,13 +431,9 @@ export default function MusicPlayer() {
             </div>
 
             <style>{`
-                @keyframes eqRadial {
-                    0% { transform: translateX(-50%) scaleY(0.5); opacity: 0.4; }
-                    100% { transform: translateX(-50%) scaleY(2.5); opacity: 1; }
-                }
                 @keyframes eqBounce {
-                    0% { height: 4px; opacity: 0.6; }
-                    100% { height: 24px; opacity: 1; }
+                    0% { height: 4px; }
+                    100% { height: 16px; }
                 }
                 @keyframes speakerPulse {
                     0%, 100% { 
