@@ -5,7 +5,11 @@ import tailwindcss from '@tailwindcss/vite'
 
 // https://vite.dev/config/
 export default defineConfig({
-  plugins: [react(),
+  plugins: [
+    react(),
     tailwindcss(),
   ],
+  optimizeDeps: {
+    include: ['react-icons/fa', 'react-icons/hi', 'react-icons/si']
+  }
 })

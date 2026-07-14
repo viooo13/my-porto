@@ -7,7 +7,7 @@ const overlayVariants = {
     exit: {
         y: '-100%',
         transition: {
-            duration: 1.0,
+            duration: 0.6,
             ease: [0.76, 0, 0.24, 1],
         },
     },
@@ -17,7 +17,7 @@ export default function Loader({ onComplete, isExiting = false }) {
     useEffect(() => {
         const timer = setTimeout(() => {
             onComplete?.();
-        }, 3200);
+        }, 500);
         return () => clearTimeout(timer);
     }, [onComplete]);
 
@@ -56,6 +56,7 @@ export default function Loader({ onComplete, isExiting = false }) {
                         <motion.img
                             src="/logo.png"
                             alt="Loading"
+                            fetchPriority="high"
                             initial={{ y: '110%', opacity: 0 }}
                             animate={{ y: '0%', opacity: 1 }}
                             transition={{
@@ -88,7 +89,7 @@ export default function Loader({ onComplete, isExiting = false }) {
                             initial={{ scaleX: 0 }}
                             animate={{ scaleX: 1 }}
                             transition={{
-                                duration: 3.0,
+                                duration: 0.5,
                                 ease: [0.16, 1, 0.3, 1],
                             }}
                             style={{

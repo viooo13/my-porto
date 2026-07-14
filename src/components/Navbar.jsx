@@ -190,6 +190,8 @@ export default function Navbar() {
                         <img
                             src="/logo.png"
                             alt="Vio Adytia"
+                            width="512"
+                            height="512"
                             style={{
                                 width: 40, height: 'auto', display: 'block',
                                 transition: 'transform 0.4s cubic-bezier(0.16,1,0.3,1)',

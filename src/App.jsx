@@ -212,7 +212,7 @@ export default function App() {
         setTimeout(() => {
             setDone(true);
             setShow(false);
-        }, 1200);
+        }, 600);
     }, []);
 
     return (

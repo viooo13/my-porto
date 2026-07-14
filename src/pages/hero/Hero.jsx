@@ -67,7 +67,7 @@ export default function Hero() {
                     position: 'absolute', top: '50%', left: '50%',
                     width: '80vw', height: '80vw',
                     background: 'radial-gradient(circle, rgba(74, 144, 217, 0.15) 0%, transparent 60%)',
-                    transform: `translate(calc(-50% + ${mouse.x * 3}px), calc(-50% + ${mouse.y * 3}px))`,
+                    transform: 'translate(-50%, -50%)',
                     transition: 'transform 0.2s cubic-bezier(0.16, 1, 0.3, 1)',
                     filter: 'blur(80px)',
                     zIndex: 0, pointerEvents: 'none'
@@ -78,7 +78,7 @@ export default function Hero() {
                     position: 'absolute', inset: 0, zIndex: 0, pointerEvents: 'none',
                     backgroundImage: 'linear-gradient(rgba(255,255,255,0.02) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.02) 1px, transparent 1px)',
                     backgroundSize: '100px 100px',
-                    transform: `translate3d(${mouse.x * 0.5}px, ${mouse.y * 0.5}px, 0)`,
+                    transform: 'translate3d(0, 0, 0)',
                 }} />
 
                 {/* Massive Typography Background */}
@@ -149,11 +149,12 @@ export default function Hero() {
                     display: 'flex', justifyContent: 'center', alignItems: 'flex-end',
                     pointerEvents: 'none'
                 }}>
-                    <img src="/my-photo-transparent.png" alt="Vio Adytia Illustration" style={{
+                    <img src="/my-photo-bordered.png" alt="Vio Adytia Illustration" width="1792" height="2394" style={{
                         height: '195dvh', width: 'auto', objectFit: 'contain',
-                        filter: `${isPhotoHovered ? 'grayscale(0%)' : 'grayscale(100%)'} drop-shadow(3px 0 0 #fff) drop-shadow(0 3px 0 #fff) drop-shadow(-3px 0 0 #fff) drop-shadow(0 -3px 0 #fff) drop-shadow(0 -20px 40px rgba(0,0,0,0.8)) drop-shadow(0 0 30px rgba(74, 144, 217, 0.2))`,
+                        filter: `${isPhotoHovered ? 'grayscale(0%)' : 'grayscale(100%)'} drop-shadow(0 0 40px rgba(74, 144, 217, 0.25))`,
                         pointerEvents: 'none',
-                        transform: 'translateY(97dvh)',
+                        transform: 'translateY(97dvh) translateZ(0)',
+                        willChange: 'filter, transform',
                         transition: 'filter 0.5s ease',
                     }} 
                     />

@@ -45,6 +45,8 @@ export default function Footer() {
                         <img
                             src="/logo.png"
                             alt="Vio Adytia"
+                            width="512"
+                            height="512"
                             style={{
                                 width: 'clamp(40px, 5vw, 52px)',
                                 height: 'auto',
