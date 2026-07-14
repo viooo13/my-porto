@@ -202,33 +202,17 @@ function Home() {
 
 /* ── App ── */
 export default function App() {
-    const [done, setDone] = useState(false);
-    const [exiting, setExiting] = useState(false);
-    const [showLoader, setShow] = useState(true);
-
-    const handleComplete = useCallback(() => {
-        setExiting(true);
-        // Wait for exit animation to finish before removing loader
-        setTimeout(() => {
-            setDone(true);
-            setShow(false);
-        }, 600);
-    }, []);
-
     return (
         <BrowserRouter>
             <ScrollToTop />
             <div style={{ minHeight: '100vh' }}>
-                {showLoader && <Loader isExiting={exiting} onComplete={handleComplete} />}
-                {done && <Cursor />}
-                {done && <ScrollProgress />}
-                {done && (
-                    <Routes>
-                        <Route path="/" element={<Home />} />
-                        <Route path="/project/:id" element={<ProjectDetails />} />
-                    </Routes>
-                )}
-                {done && <MusicPlayer />}
+                <Cursor />
+                <ScrollProgress />
+                <Routes>
+                    <Route path="/" element={<Home />} />
+                    <Route path="/project/:id" element={<ProjectDetails />} />
+                </Routes>
+                <MusicPlayer />
             </div>
         </BrowserRouter>
     );

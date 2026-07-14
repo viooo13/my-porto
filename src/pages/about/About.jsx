@@ -82,10 +82,17 @@ export default function About() {
                                     animation: 'fadeIn 1s ease 0.8s both',
                                 }} />
                             ))}
-                            <div style={{ position: 'absolute', inset: 0, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 16 }}>
-                                <span style={{ fontFamily: 'Plus Jakarta Sans, sans-serif', fontWeight: 800, fontSize: 80, color: 'rgba(255,255,255,0.03)', lineHeight: 1 }}>VA</span>
-                                <span style={{ fontFamily: 'Inter, sans-serif', fontSize: 10, letterSpacing: '0.3em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.15)' }}>Frontend Developer</span>
-                            </div>
+                            <img 
+                                src="/about.jpeg" 
+                                alt="Vio Adytia"
+                                style={{
+                                    width: '100%', height: '100%', objectFit: 'cover',
+                                    filter: 'grayscale(100%) brightness(0.8)',
+                                    transition: 'filter 0.6s cubic-bezier(0.16, 1, 0.3, 1)',
+                                }}
+                                onMouseEnter={e => e.currentTarget.style.filter = 'grayscale(0%) brightness(1)'}
+                                onMouseLeave={e => e.currentTarget.style.filter = 'grayscale(100%) brightness(0.8)'}
+                            />
                             {/* Bottom accent line */}
                             <div style={{
                                 position: 'absolute', bottom: 0, left: 0, right: 0, height: 2,

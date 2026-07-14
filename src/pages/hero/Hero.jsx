@@ -149,7 +149,7 @@ export default function Hero() {
                     display: 'flex', justifyContent: 'center', alignItems: 'flex-end',
                     pointerEvents: 'none'
                 }}>
-                    <img src="/my-photo-bordered.png" alt="Vio Adytia Illustration" width="1792" height="2394" style={{
+                    <img src="/my-photo-bordered.webp" alt="Vio Adytia Illustration" width="1792" height="2394" style={{
                         height: '195dvh', width: 'auto', objectFit: 'contain',
                         filter: `${isPhotoHovered ? 'grayscale(0%)' : 'grayscale(100%)'} drop-shadow(0 0 40px rgba(74, 144, 217, 0.25))`,
                         pointerEvents: 'none',
