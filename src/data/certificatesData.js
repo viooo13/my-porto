@@ -4,7 +4,7 @@ export const certificatesData = [
         title: "Frontend\nDevelopment",
         issuer: "Google DeepMind Academy",
         year: "2025",
-        image: "/certificates/certif1.png",
+        image: "/certificates/certif1.webp",
         tags: ["React", "Architecture", "Web Performance"]
     },
     {
@@ -12,7 +12,7 @@ export const certificatesData = [
         title: "UI/UX\nAdvanced Design",
         issuer: "Awwwards Learning",
         year: "2026",
-        image: "/certificates/certif2.png",
+        image: "/certificates/certif2.webp",
         tags: ["Visual Design", "User Research", "Prototyping"]
     },
     {
@@ -20,7 +20,7 @@ export const certificatesData = [
         title: "Advanced\nJavascript",
         issuer: "Meta Engineering",
         year: "2024",
-        image: "https://images.unsplash.com/photo-1517694712202-14dd9538aa97?auto=format&fit=crop&q=80&w=1200",
+        image: "https://images.unsplash.com/photo-1517694712202-14dd9538aa97?auto=format&fit=crop&q=80&w=526",
         tags: ["Engines", "Algorithms", "Real-time"]
     }
 ];

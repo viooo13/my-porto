@@ -83,7 +83,7 @@ export default function About() {
                                 }} />
                             ))}
                             <img 
-                                src="/about.jpeg" 
+                                src="/about.webp" 
                                 alt="Vio Adytia"
                                 style={{
                                     width: '100%', height: '100%', objectFit: 'cover',

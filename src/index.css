@@ -572,12 +572,6 @@ body::after {
    HERO RESPONSIVE — Prevent cutoff on sticky viewport
    ======================================== */
 @media (max-width: 1024px) {
-  #hero {
-    position: relative !important;
-    height: auto !important;
-    min-height: 100dvh !important;
-    overflow: hidden !important;
-  }
 
   #hero h1 {
     font-size: clamp(28px, 10vw, 80px) !important;
@@ -632,9 +626,6 @@ section {
 
   #hero {
     padding-top: 70px !important;
-    min-height: unset !important;
-    height: auto !important;
-    min-height: 100dvh !important;
   }
 
   #hero h1 {

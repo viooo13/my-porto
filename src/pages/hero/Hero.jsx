@@ -149,13 +149,9 @@ export default function Hero() {
                     display: 'flex', justifyContent: 'center', alignItems: 'flex-end',
                     pointerEvents: 'none'
                 }}>
-                    <img src="/my-photo-bordered.webp" alt="Vio Adytia Illustration" width="1792" height="2394" style={{
-                        height: '195dvh', width: 'auto', objectFit: 'contain',
+                    <img className="hero-photo" src="/my-photo-bordered.webp" alt="Vio Adytia Illustration" width="1792" height="2394" style={{
                         filter: `${isPhotoHovered ? 'grayscale(0%)' : 'grayscale(100%)'} drop-shadow(0 0 40px rgba(74, 144, 217, 0.25))`,
-                        pointerEvents: 'none',
-                        transform: 'translateY(97dvh) translateZ(0)',
-                        willChange: 'filter, transform',
-                        transition: 'filter 0.5s ease',
+                        maxWidth: 'none',
                     }} 
                     />
                 </div>
@@ -279,6 +275,35 @@ export default function Hero() {
                 @keyframes clipLeft {
                     from { clip-path: inset(0 0 0 0); }
                     to { clip-path: inset(0 100% 0 0); }
+                }
+
+                .hero-photo {
+                    height: 195dvh;
+                    width: auto;
+                    object-fit: contain;
+                    pointer-events: none;
+                    transform: translateY(97dvh) translateZ(0) scale(1);
+                    transform-origin: top center;
+                    will-change: filter, transform;
+                    transition: filter 0.5s ease, transform 0.5s ease;
+                }
+                
+                @media (max-width: 1024px) {
+                    .hero-photo {
+                        transform: translateY(97dvh) translateZ(0) scale(1.3);
+                    }
+                }
+                
+                @media (max-width: 768px) {
+                    .hero-photo {
+                        transform: translateY(97dvh) translateZ(0) scale(1.6);
+                    }
+                }
+                
+                @media (max-width: 480px) {
+                    .hero-photo {
+                        transform: translateY(97dvh) translateZ(0) scale(2.2);
+                    }
                 }
             `}</style>
             </section>

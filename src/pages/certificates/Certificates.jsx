@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
+import { createPortal } from 'react-dom';
 import { certificatesData as certs } from '../../data/certificatesData';
 import { StyledWord } from '../../components/StyledWord';
 import { AnimatedNumber } from '../../components/AnimatedNumber';
@@ -29,9 +30,16 @@ export default function Certificates() {
     useEffect(() => {
         if (selectedCert) {
             document.body.style.overflow = 'hidden';
+            document.documentElement.style.overflow = 'hidden';
         } else {
             document.body.style.overflow = '';
+            document.documentElement.style.overflow = '';
         }
+        
+        return () => {
+            document.body.style.overflow = '';
+            document.documentElement.style.overflow = '';
+        };
     }, [selectedCert]);
 
     const a = (d = 0) => ({
@@ -165,54 +173,63 @@ export default function Certificates() {
             </div>
 
             {/* LIGHTBOX MODAL */}
-            <div style={{
-                position: 'fixed', inset: 0, zIndex: 1000,
-                background: 'rgba(10,10,10,0.95)',
-                backdropFilter: 'blur(20px)',
-                display: 'flex', alignItems: 'center', justifyContent: 'center',
-                padding: 40,
-                opacity: selectedCert ? 1 : 0,
-                pointerEvents: selectedCert ? 'auto' : 'none',
-                transition: 'opacity 0.5s ease',
-            }}
-                onClick={() => setSelectedCert(null)}
-            >
-                {/* Close Button */}
-                <button
-                    aria-label="Close"
-                    onClick={() => setSelectedCert(null)}
-                    style={{
-                        position: 'absolute', top: 40, right: 40,
-                        background: 'none', border: 'none', color: '#fff',
-                        cursor: 'none', padding: 10, zIndex: 1010
-                    }}
-                >
-                    <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-                        <line x1="18" y1="6" x2="6" y2="18"></line>
-                        <line x1="6" y1="6" x2="18" y2="18"></line>
-                    </svg>
-                </button>
-
+            {typeof document !== 'undefined' && createPortal(
                 <div style={{
-                    maxWidth: 1000, width: '100%',
-                    transform: selectedCert ? 'scale(1) translateY(0)' : 'scale(0.9) translateY(40px)',
-                    transition: 'all 0.6s cubic-bezier(0.16,1,0.3,1)',
-                }}>
-                    {selectedCert && (
-                        <>
-                            <img
-                                src={selectedCert.image}
-                                alt={selectedCert.title}
-                                style={{ width: '100%', height: 'auto', borderRadius: 4, boxShadow: '0 40px 100px rgba(0,0,0,0.5)', border: '1px solid rgba(255,255,255,0.1)' }}
-                            />
-                            <div style={{ marginTop: 24, textAlign: 'center' }}>
-                                <h4 style={{ fontFamily: 'Plus Jakarta Sans, sans-serif', fontWeight: 800, fontSize: 32, color: '#fff', marginBottom: 8 }}>{selectedCert.title.replace('\n', ' ')}</h4>
-                                <p style={{ fontSize: 14, color: 'rgba(255,255,255,0.4)', letterSpacing: '0.1em', textTransform: 'uppercase' }}>{selectedCert.issuer} — {selectedCert.year}</p>
-                            </div>
-                        </>
-                    )}
-                </div>
-            </div>
+                    position: 'fixed', inset: 0, zIndex: 1000,
+                    background: 'rgba(10,10,10,0.95)',
+                    backdropFilter: 'blur(20px)',
+                    display: 'flex', alignItems: 'center', justifyContent: 'center',
+                    padding: 40,
+                    opacity: selectedCert ? 1 : 0,
+                    pointerEvents: selectedCert ? 'auto' : 'none',
+                    transition: 'opacity 0.5s ease',
+                }}
+                    onClick={() => setSelectedCert(null)}
+                >
+                    {/* Close Button */}
+                    <button
+                        aria-label="Close"
+                        onClick={() => setSelectedCert(null)}
+                        style={{
+                            position: 'absolute', top: 40, right: 40,
+                            background: 'none', border: 'none', color: '#fff',
+                            cursor: 'none', padding: 10, zIndex: 1010
+                        }}
+                    >
+                        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                            <line x1="18" y1="6" x2="6" y2="18"></line>
+                            <line x1="6" y1="6" x2="18" y2="18"></line>
+                        </svg>
+                    </button>
+
+                    <div style={{
+                        maxWidth: 1000, width: '100%',
+                        transform: selectedCert ? 'scale(1) translateY(0)' : 'scale(0.9) translateY(40px)',
+                        transition: 'all 0.6s cubic-bezier(0.16,1,0.3,1)',
+                        maxHeight: '90vh',
+                        display: 'flex',
+                        flexDirection: 'column',
+                        alignItems: 'center'
+                    }}
+                         onClick={(e) => e.stopPropagation()}
+                    >
+                        {selectedCert && (
+                            <>
+                                <img
+                                    src={selectedCert.image}
+                                    alt={selectedCert.title}
+                                    style={{ width: '100%', maxHeight: '70vh', objectFit: 'contain', borderRadius: 4, boxShadow: '0 40px 100px rgba(0,0,0,0.5)', border: '1px solid rgba(255,255,255,0.1)' }}
+                                />
+                                <div style={{ marginTop: 24, textAlign: 'center' }}>
+                                    <h4 style={{ fontFamily: 'Plus Jakarta Sans, sans-serif', fontWeight: 800, fontSize: 32, color: '#fff', marginBottom: 8 }}>{selectedCert.title.replace('\n', ' ')}</h4>
+                                    <p style={{ fontSize: 14, color: 'rgba(255,255,255,0.4)', letterSpacing: '0.1em', textTransform: 'uppercase' }}>{selectedCert.issuer} — {selectedCert.year}</p>
+                                </div>
+                            </>
+                        )}
+                    </div>
+                </div>,
+                document.body
+            )}
         </section>
     );
 }

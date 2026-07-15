@@ -54,7 +54,7 @@ export default function Loader({ onComplete, isExiting = false }) {
                     {/* Photo loader */}
                     <div style={{ overflow: 'hidden', padding: '10px 20px' }}>
                         <motion.img
-                            src="/logo.png"
+                            src="/logo.webp"
                             alt="Loading"
                             fetchPriority="high"
                             initial={{ y: '110%', opacity: 0 }}

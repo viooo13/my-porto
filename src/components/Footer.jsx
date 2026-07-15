@@ -43,7 +43,7 @@ export default function Footer() {
                     {/* Logo */}
                     <a href="#hero" style={{ display: 'block', flexShrink: 0 }}>
                         <img
-                            src="/logo.png"
+                            src="/logo.webp"
                             alt="Vio Adytia"
                             width="512"
                             height="512"
