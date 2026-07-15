@@ -188,7 +188,7 @@ export default function Navbar() {
                     {/* Logo */}
                     <a href="#hero" data-hover style={{ textDecoration: 'none', display: 'flex', alignItems: 'center', flexShrink: 0 }}>
                         <img
-                            src="public/logo.webp"
+                            src="/logo.webp"
                             alt="Vio Adytia"
                             width="512"
                             height="512"
