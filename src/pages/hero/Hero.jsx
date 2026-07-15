@@ -157,6 +157,13 @@ export default function Hero() {
                     />
                 </div>
 
+                {/* ── Gradient Overlay for Text Readability ── */}
+                <div style={{
+                    position: 'absolute', bottom: 0, left: 0, width: '100%', height: '40dvh',
+                    background: 'linear-gradient(to top, rgba(3,3,5,1) 0%, rgba(3,3,5,0.7) 40%, transparent 100%)',
+                    zIndex: 2, pointerEvents: 'none'
+                }} />
+
                 {/* ── Foreground UI Layer ── */}
                 <div style={{
                     position: 'relative', zIndex: 3, width: '100%', height: '100%',
@@ -209,42 +216,22 @@ export default function Hero() {
                             pointerEvents: 'auto'
                         }}>
                             {/* Buttons */}
-                            <div style={{ display: 'flex', flexDirection: 'column', gap: 16, marginBottom: 24 }}>
+                            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start', gap: 16, marginBottom: 24 }}>
                                 {[
                                     { name: 'View Projects', icon: FaBriefcase, action: (e) => { e.preventDefault(); window.location.href = '#projects'; } },
                                     { name: 'View CV', icon: FaFileAlt, action: (e) => { e.preventDefault(); setShowCvModal(true); } }
                                 ].map((item, i) => (
-                                    <a key={i} href="#" onClick={item.action} aria-label={item.name} title={item.name} style={{
-                                        width: 50, height: 50, borderRadius: '50%',
-                                        border: '1px solid rgba(255,255,255,0.1)',
-                                        display: 'flex', alignItems: 'center', justifyContent: 'center',
-                                        color: 'rgba(255,255,255,0.5)', textDecoration: 'none',
-                                        transition: 'all 0.4s cubic-bezier(0.16, 1, 0.3, 1)',
-                                        background: 'rgba(255,255,255,0.02)',
-                                        backdropFilter: 'blur(10px)',
-                                        cursor: 'pointer',
-                                        padding: 0
-                                    }}
-                                    onMouseEnter={e => {
-                                        e.currentTarget.style.color = '#fff';
-                                        e.currentTarget.style.background = '#4a90d9';
-                                        e.currentTarget.style.borderColor = '#4a90d9';
-                                        e.currentTarget.style.transform = 'scale(1.1) rotate(10deg)';
-                                    }}
-                                    onMouseLeave={e => {
-                                        e.currentTarget.style.color = 'rgba(255,255,255,0.5)';
-                                        e.currentTarget.style.background = 'rgba(255,255,255,0.02)';
-                                        e.currentTarget.style.borderColor = 'rgba(255,255,255,0.1)';
-                                        e.currentTarget.style.transform = 'scale(1) rotate(0deg)';
-                                    }}>
+                                    <a key={i} href="#" onClick={item.action} aria-label={item.name} title={item.name} className="hero-action-btn">
                                         <item.icon size={20} />
+                                        <span className="hero-action-text">{item.name}</span>
                                     </a>
                                 ))}
                             </div>
 
                             <p style={{
                                 fontFamily: 'Inter, sans-serif', fontSize: 'clamp(14px, 1.2vw, 16px)', fontWeight: 300,
-                                color: 'rgba(255,255,255,0.7)', lineHeight: 1.8, margin: 0
+                                color: 'rgba(255,255,255,0.9)', lineHeight: 1.8, margin: 0,
+                                textShadow: '0 2px 10px rgba(0,0,0,0.8)'
                             }}>
                                 Building <span style={{ color: '#fff', fontWeight: 500 }}>immersive digital solutions</span> where precision code meets premium editorial design. Exploring the limits of modern web technologies to create unforgettable experiences.
                             </p>
@@ -308,6 +295,52 @@ export default function Hero() {
                 @keyframes clipLeft {
                     from { clip-path: inset(0 0 0 0); }
                     to { clip-path: inset(0 100% 0 0); }
+                }
+
+                .hero-action-btn {
+                    height: 50px;
+                    border-radius: 25px;
+                    border: 1px solid rgba(255,255,255,0.1);
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    gap: 12px;
+                    color: rgba(255,255,255,0.5);
+                    text-decoration: none;
+                    transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+                    background: rgba(255,255,255,0.02);
+                    backdrop-filter: blur(10px);
+                    cursor: pointer;
+                    padding: 0 24px;
+                }
+                .hero-action-btn:hover {
+                    color: #fff;
+                    background: #4a90d9;
+                    border-color: #4a90d9;
+                    transform: scale(1.05) translateY(-2px);
+                }
+                .hero-action-text {
+                    font-family: 'Inter', sans-serif;
+                    font-size: 14px;
+                    font-weight: 500;
+                    letter-spacing: 0.05em;
+                    white-space: nowrap;
+                }
+                
+                @media (max-width: 768px) {
+                    .hero-action-text {
+                        display: none;
+                    }
+                    .hero-action-btn {
+                        width: 50px;
+                        padding: 0;
+                        border-radius: 50%;
+                        justify-content: center;
+                        gap: 0;
+                    }
+                    .hero-action-btn:hover {
+                        transform: scale(1.1) rotate(10deg);
+                    }
                 }
 
                 .hero-photo {
