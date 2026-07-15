@@ -1,11 +1,12 @@
 import { useEffect, useState, useRef } from 'react';
-import { FaGithub, FaLinkedin, FaImage } from 'react-icons/fa';
+import { FaGithub, FaLinkedin, FaImage, FaBriefcase, FaFileAlt } from 'react-icons/fa';
 import { StyledWord } from '../../components/StyledWord';
 
-function HeroButton({ children, href, className }) {
+function HeroButton({ children, href, className, onClick }) {
     return (
         <a
-            href={href}
+            href={href || '#'}
+            onClick={onClick}
             className={`btn-hero ${className || ''}`}
         >
             <div className="btn-text">
@@ -207,14 +208,46 @@ export default function Hero() {
                             maxWidth: '480px',
                             pointerEvents: 'auto'
                         }}>
+                            {/* Buttons */}
+                            <div style={{ display: 'flex', flexDirection: 'column', gap: 16, marginBottom: 24 }}>
+                                {[
+                                    { name: 'View Projects', icon: FaBriefcase, action: (e) => { e.preventDefault(); window.location.href = '#projects'; } },
+                                    { name: 'View CV', icon: FaFileAlt, action: (e) => { e.preventDefault(); setShowCvModal(true); } }
+                                ].map((item, i) => (
+                                    <a key={i} href="#" onClick={item.action} aria-label={item.name} title={item.name} style={{
+                                        width: 50, height: 50, borderRadius: '50%',
+                                        border: '1px solid rgba(255,255,255,0.1)',
+                                        display: 'flex', alignItems: 'center', justifyContent: 'center',
+                                        color: 'rgba(255,255,255,0.5)', textDecoration: 'none',
+                                        transition: 'all 0.4s cubic-bezier(0.16, 1, 0.3, 1)',
+                                        background: 'rgba(255,255,255,0.02)',
+                                        backdropFilter: 'blur(10px)',
+                                        cursor: 'pointer',
+                                        padding: 0
+                                    }}
+                                    onMouseEnter={e => {
+                                        e.currentTarget.style.color = '#fff';
+                                        e.currentTarget.style.background = '#4a90d9';
+                                        e.currentTarget.style.borderColor = '#4a90d9';
+                                        e.currentTarget.style.transform = 'scale(1.1) rotate(10deg)';
+                                    }}
+                                    onMouseLeave={e => {
+                                        e.currentTarget.style.color = 'rgba(255,255,255,0.5)';
+                                        e.currentTarget.style.background = 'rgba(255,255,255,0.02)';
+                                        e.currentTarget.style.borderColor = 'rgba(255,255,255,0.1)';
+                                        e.currentTarget.style.transform = 'scale(1) rotate(0deg)';
+                                    }}>
+                                        <item.icon size={20} />
+                                    </a>
+                                ))}
+                            </div>
+
                             <p style={{
                                 fontFamily: 'Inter, sans-serif', fontSize: 'clamp(14px, 1.2vw, 16px)', fontWeight: 300,
-                                color: 'rgba(255,255,255,0.7)', lineHeight: 1.8, margin: '0 0 32px 0'
+                                color: 'rgba(255,255,255,0.7)', lineHeight: 1.8, margin: 0
                             }}>
                                 Building <span style={{ color: '#fff', fontWeight: 500 }}>immersive digital solutions</span> where precision code meets premium editorial design. Exploring the limits of modern web technologies to create unforgettable experiences.
                             </p>
-                            
-                           
                         </div>
 
                         {/* Social Links */}
@@ -302,7 +335,7 @@ export default function Hero() {
                 
                 @media (max-width: 480px) {
                     .hero-photo {
-                        transform: translateY(97dvh) translateZ(0) scale(0.8);
+                        transform: translateY(107dvh) translateZ(0) scale(0.9);
                     }
                 }
             `}</style>
