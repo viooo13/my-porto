@@ -290,19 +290,19 @@ export default function Hero() {
                 
                 @media (max-width: 1024px) {
                     .hero-photo {
-                        transform: translateY(97dvh) translateZ(0) scale(1.3);
+                        transform: translateY(97dvh) translateZ(0) scale(1.1);
                     }
                 }
                 
                 @media (max-width: 768px) {
                     .hero-photo {
-                        transform: translateY(97dvh) translateZ(0) scale(1.6);
+                        transform: translateY(97dvh) translateZ(0) scale(1.25);
                     }
                 }
                 
                 @media (max-width: 480px) {
                     .hero-photo {
-                        transform: translateY(97dvh) translateZ(0) scale(2.2);
+                        transform: translateY(97dvh) translateZ(0) scale(0.8);
                     }
                 }
             `}</style>
