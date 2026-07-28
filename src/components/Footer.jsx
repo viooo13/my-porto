@@ -23,7 +23,7 @@ export default function Footer() {
 
     return (
         <footer style={{
-            background: '#080808',
+            background: '#0a0a0a',
             position: 'relative',
             overflow: 'hidden',
         }}>

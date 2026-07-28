@@ -4,6 +4,7 @@ import { AnimatedNumber } from '../../components/AnimatedNumber';
 
 export default function About() {
     const ref = useRef(null);
+    const textRef = useRef(null);
     const [vis, setVis] = useState(false);
 
     useEffect(() => {
@@ -11,6 +12,8 @@ export default function About() {
         if (ref.current) obs.observe(ref.current);
         return () => obs.disconnect();
     }, []);
+
+    // Scroll listener dihapus sesuai permintaan
 
     const a = (d = 0) => ({
         opacity: vis ? 1 : 0,
@@ -31,31 +34,44 @@ export default function About() {
     const tags = ['FRONTEND SPECIALIST ', 'LARAVEL ENTHUSIAST', 'UI/UX FOCUSED', 'CLEAN CODE ADVOCATE'];
 
     return (
-        <section id="about" ref={ref} style={{ background: '#0a0a0a', padding: 'clamp(100px, 15vh, 160px) 0', overflow: 'hidden', position: 'relative', scrollMarginTop: 80, zIndex: 1 }}>
-            {/* Ambient glow */}
-            <div style={{ position: 'absolute', bottom: '10%', right: '-5%', width: 500, height: 500, borderRadius: '50%', background: 'radial-gradient(circle, rgba(30,58,95,0.06) 0%, transparent 70%)', pointerEvents: 'none' }} />
+        <section id="about" ref={ref} style={{ background: '#0a0a0a', position: 'relative', scrollMarginTop: 80, zIndex: 1 }}>
+            
+            {/* Overlay Screen (Tidak mengikuti scroll, langsung fade out otomatis) */}
+            <div style={{ 
+                position: 'absolute', top: 0, left: 0, right: 0, height: '100vh', 
+                zIndex: 50, pointerEvents: 'none', background: '#0a0a0a',
+                display: 'flex', alignItems: 'center', justifyContent: 'center',
+                opacity: vis ? 0 : 1,
+                transition: 'opacity 2s ease-in-out 0.3s'
+            }}>
+                <h2 className="ruthie-regular" style={{
+                    fontSize: 'clamp(80px, 20vw, 300px)',
+                    color: 'rgba(255,255,255,0.05)',
+                    margin: 0, lineHeight: 1
+                }}>
+                    About
+                </h2>
+            </div>
 
-            {/* Floating dots */}
-            {[...Array(4)].map((_, i) => (
-                <div key={i} style={{
-                    position: 'absolute', width: 3, height: 3, borderRadius: '50%',
-                    background: 'rgba(30,58,95,0.3)',
-                    right: `${10 + i * 8}%`, top: `${15 + i * 20}%`,
-                    animation: `floatSlow ${4 + i}s ease-in-out infinite`,
-                    animationDelay: `${i * 0.5}s`, pointerEvents: 'none',
-                }} />
-            ))}
+            {/* Content Container */}
+            <div style={{ position: 'relative', zIndex: 1, padding: 'clamp(100px, 15vh, 160px) 0', overflow: 'hidden' }}>
+                {/* Ambient glow */}
+                <div style={{ position: 'absolute', bottom: '10%', right: '-5%', width: 500, height: 500, borderRadius: '50%', background: 'radial-gradient(circle, rgba(30,58,95,0.06) 0%, transparent 70%)', pointerEvents: 'none' }} />
 
-            <div style={{ maxWidth: 1440, margin: '0 auto', padding: '0 40px' }}>
-                {/* Section label */}
-                <div style={{ ...a(0), display: 'flex', alignItems: 'center', gap: 16, marginBottom: 80 }}>
-                    <span style={{ fontSize: 10, fontWeight: 500, letterSpacing: '0.25em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.45)' }}><AnimatedNumber value={1} pad={2} trigger={vis} /></span>
-                    <div style={{ width: 40, height: 1, background: 'rgba(255,255,255,0.1)' }} />
-                    <span style={{ fontSize: 10, fontWeight: 500, letterSpacing: '0.25em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.25)' }}>About Me</span>
-                </div>
+                {/* Floating dots */}
+                {[...Array(4)].map((_, i) => (
+                    <div key={i} style={{
+                        position: 'absolute', width: 3, height: 3, borderRadius: '50%',
+                        background: 'rgba(30,58,95,0.3)',
+                        right: `${10 + i * 8}%`, top: `${15 + i * 20}%`,
+                        animation: `floatSlow ${4 + i}s ease-in-out infinite`,
+                        animationDelay: `${i * 0.5}s`, pointerEvents: 'none',
+                    }} />
+                ))}
 
-                {/* Two columns */}
-                <div className="grid grid-cols-1 lg:grid-cols-12 gap-16 lg:gap-24">
+                <div style={{ maxWidth: 1440, margin: '0 auto', padding: '0 40px' }}>
+                    {/* Two columns */}
+                    <div className="grid grid-cols-1 lg:grid-cols-12 gap-16 lg:gap-24">
                     {/* Left — visual */}
                     <div className="lg:col-span-5" style={aLeft(100)}>
                         <div style={{
@@ -154,6 +170,7 @@ export default function About() {
                 </div>
 
 
+            </div>
             </div>
         </section>
     );

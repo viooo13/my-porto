@@ -6,6 +6,7 @@ import { AnimatedNumber } from '../../components/AnimatedNumber';
 
 export default function Certificates() {
     const ref = useRef(null);
+    const textRef = useRef(null);
     const [vis, setVis] = useState(false);
     const [hov, setHov] = useState(null);
     const [selectedCert, setSelectedCert] = useState(null);
@@ -49,17 +50,32 @@ export default function Certificates() {
     });
 
     return (
-        <section id="certificates" ref={ref} style={{ background: '#0a0a0a', padding: 'clamp(100px, 15vh, 160px) 0', position: 'relative', overflow: 'hidden', scrollMarginTop: 80, zIndex: 1 }}>
+        <section id="certificates" ref={ref} style={{ background: '#0a0a0a', position: 'relative', overflow: 'hidden', scrollMarginTop: 80, zIndex: 1 }}>
+            
+            {/* Overlay Screen (Tidak mengikuti scroll, langsung fade out otomatis) */}
+            <div style={{ 
+                position: 'absolute', top: 0, left: 0, right: 0, height: '100vh', 
+                zIndex: 50, pointerEvents: 'none', background: '#0a0a0a',
+                display: 'flex', alignItems: 'center', justifyContent: 'center',
+                opacity: vis ? 0 : 1,
+                transition: 'opacity 2s ease-in-out 0.3s'
+            }}>
+                <h2 className="ruthie-regular" style={{
+                    fontSize: 'clamp(80px, 20vw, 300px)',
+                    color: 'rgba(255,255,255,0.05)',
+                    margin: 0, lineHeight: 1
+                }}>
+                    Certificates
+                </h2>
+            </div>
+
+            {/* Content Container */}
+            <div style={{ position: 'relative', zIndex: 1, padding: 'clamp(100px, 15vh, 160px) 0', overflow: 'hidden' }}>
             {/* Ambient Ambient */}
             <div style={{ position: 'absolute', top: '15%', left: '-10%', width: 600, height: 600, borderRadius: '50%', background: 'radial-gradient(circle, rgba(30,58,95,0.05) 0%, transparent 70%)', pointerEvents: 'none' }} />
             <div style={{ position: 'absolute', bottom: '5%', right: '-5%', width: 400, height: 400, borderRadius: '50%', background: 'radial-gradient(circle, rgba(30,58,95,0.03) 0%, transparent 70%)', pointerEvents: 'none' }} />
 
             <div style={{ maxWidth: 1440, margin: '0 auto', padding: '0 40px' }}>
-                {/* Section label */}
-                <div style={{ ...a(0), display: 'flex', alignItems: 'center', gap: 16, marginBottom: 24 }}>
-                    <span style={{ fontSize: 10, fontWeight: 500, letterSpacing: '0.25em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.45)' }}><AnimatedNumber value={4} pad={2} trigger={vis} /></span>
-                    <span style={{ fontSize: 10, fontWeight: 500, letterSpacing: '0.25em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.45)' }}>Achievements</span>
-                </div>
 
                 <h2 style={{ ...a(50), fontFamily: 'Plus Jakarta Sans, sans-serif', fontWeight: 400, fontSize: 'clamp(48px, 6vw, 96px)', lineHeight: 0.95, color: '#fff', marginBottom: 80, letterSpacing: '-0.02em' }}>
                     <StyledWord text="Certifi" color="#fff" /><StyledWord text="cates" color="#1e3a5f" />
@@ -170,6 +186,7 @@ export default function Certificates() {
                         GET IN TOUCH ↗
                     </a>
                 </div>
+            </div>
             </div>
 
             {/* LIGHTBOX MODAL */}

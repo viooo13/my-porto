@@ -8,15 +8,18 @@ import { projectsData as projects } from '../../data/projectsData';
 
 export default function Project() {
     const ref = useRef(null);
+    const textRef = useRef(null);
     const navigate = useNavigate();
     const [vis, setVis] = useState(false);
     const [hov, setHov] = useState(null);
 
     useEffect(() => {
-        const obs = new IntersectionObserver(([e]) => { setVis(e.isIntersecting); }, { threshold: 0.03 });
+        const obs = new IntersectionObserver(([e]) => { setVis(e.isIntersecting); }, { threshold: 0.1 });
         if (ref.current) obs.observe(ref.current);
         return () => obs.disconnect();
     }, []);
+
+    // Scroll listener dihapus sesuai permintaan
 
     const a = (d = 0) => ({
         opacity: vis ? 1 : 0,
@@ -25,18 +28,32 @@ export default function Project() {
     });
 
     return (
-        <section id="projects" ref={ref} style={{ background: '#0a0a0a', padding: 'clamp(100px, 15vh, 160px) 0', position: 'relative', overflow: 'hidden', scrollMarginTop: 80, zIndex: 1 }}>
+        <section id="projects" ref={ref} style={{ background: '#0a0a0a', position: 'relative', overflow: 'hidden', scrollMarginTop: 80, zIndex: 1 }}>
+            
+            {/* Overlay Screen (Tidak mengikuti scroll, langsung fade out otomatis) */}
+            <div style={{ 
+                position: 'absolute', top: 0, left: 0, right: 0, height: '100vh', 
+                zIndex: 50, pointerEvents: 'none', background: '#0a0a0a',
+                display: 'flex', alignItems: 'center', justifyContent: 'center',
+                opacity: vis ? 0 : 1,
+                transition: 'opacity 2s ease-in-out 0.3s'
+            }}>
+                <h2 className="ruthie-regular" style={{
+                    fontSize: 'clamp(80px, 20vw, 300px)',
+                    color: 'rgba(255,255,255,0.05)',
+                    margin: 0, lineHeight: 1
+                }}>
+                    Projects
+                </h2>
+            </div>
+
+            {/* Content Container */}
+            <div style={{ position: 'relative', zIndex: 1, padding: 'clamp(100px, 15vh, 160px) 0', overflow: 'hidden' }}>
             {/* Ambient */}
             <div style={{ position: 'absolute', top: '20%', right: '-8%', width: 500, height: 500, borderRadius: '50%', background: 'radial-gradient(circle, rgba(30,58,95,0.06) 0%, transparent 70%)', pointerEvents: 'none' }} />
             <div style={{ position: 'absolute', bottom: '10%', left: '-5%', width: 400, height: 400, borderRadius: '50%', background: 'radial-gradient(circle, rgba(30,58,95,0.04) 0%, transparent 70%)', pointerEvents: 'none' }} />
 
             <div style={{ maxWidth: 1440, margin: '0 auto', padding: '0 40px' }}>
-                {/* Label */}
-                <div style={{ ...a(0), display: 'flex', alignItems: 'center', gap: 16, marginBottom: 24 }}>
-                    <span style={{ fontSize: 10, fontWeight: 500, letterSpacing: '0.25em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.45)' }}><AnimatedNumber value={3} pad={2} trigger={vis} /></span>
-                    <div style={{ width: 40, height: 1, background: 'rgba(255,255,255,0.1)' }} />
-                    <span style={{ fontSize: 10, fontWeight: 500, letterSpacing: '0.25em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.45)' }}>Selected Work</span>
-                </div>
 
                 <h2 style={{ ...a(50), fontFamily: 'Plus Jakarta Sans, sans-serif', fontWeight: 400, fontSize: 'clamp(48px, 6vw, 96px)', lineHeight: 0.95, color: '#fff', marginBottom: 80, letterSpacing: '-0.02em' }}>
                     <StyledWord text="Projects" color="#fff" /><br /><StyledWord text="Portfolio" color="#1e3a5f" />
@@ -186,6 +203,7 @@ export default function Project() {
                         View All Projects <HiArrowUpRight style={{ marginLeft: 8 }} />
                     </a>
                 </div>
+            </div>
             </div>
         </section>
     );

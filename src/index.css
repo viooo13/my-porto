@@ -23,6 +23,13 @@
 /* ========================================
    RESET
    ======================================== */
+
+.ruthie-regular {
+  font-family: "Ruthie", cursive;
+  font-weight: 400;
+  font-style: normal;
+}
+
 *,
 *::before,
 *::after {
@@ -616,7 +623,7 @@ body::after {
 
 section {
   will-change: transform;
-  contain: paint;
+  margin-bottom: -1px;
 }
 
 @media (max-width: 768px) {

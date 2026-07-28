@@ -125,7 +125,7 @@ export default function Hero() {
                 minHeight: '600px',
                 display: 'flex',
                 flexDirection: 'column',
-                background: '#030305',
+                background: '#0a0a0a',
                 overflow: 'hidden',
                 width: '100%',
                 zIndex: 0,
@@ -230,7 +230,7 @@ export default function Hero() {
                 {/* ── Gradient Overlay for Text Readability ── */}
                 <div style={{
                     position: 'absolute', bottom: 0, left: 0, width: '100%', height: '40dvh',
-                    background: 'linear-gradient(to top, rgba(3,3,5,1) 0%, rgba(3,3,5,0.7) 40%, transparent 100%)',
+                    background: 'linear-gradient(to top, rgba(10,10,10,1) 0%, rgba(10,10,10,0.7) 40%, transparent 100%)',
                     zIndex: 2, pointerEvents: 'none'
                 }} />
 

@@ -5,6 +5,7 @@ import { AnimatedNumber } from '../../components/AnimatedNumber';
 
 export default function Contact() {
     const ref = useRef(null);
+    const textRef = useRef(null);
     const [vis, setVis] = useState(false);
     const [time, setTime] = useState('');
     const [copied, setCopied] = useState(false);
@@ -19,6 +20,8 @@ export default function Contact() {
         }, 1000);
         return () => { obs.disconnect(); clearInterval(t); };
     }, []);
+
+    // Scroll listener dihapus sesuai permintaan
 
     const r = (d = 0) => ({
         opacity: vis ? 1 : 0,
@@ -89,15 +92,30 @@ export default function Contact() {
         <section id="contact" ref={ref} style={{
             background: '#0a0a0a', position: 'relative', overflow: 'hidden',
             scrollMarginTop: 80, zIndex: 1,
-            padding: 'clamp(120px, 18vh, 220px) 0',
         }}>
-            <div style={{ maxWidth: 1440, margin: '0 auto', padding: '0 6vw' }}>
+            {/* Overlay Screen (Tidak mengikuti scroll, langsung fade out otomatis) */}
+            <div style={{ 
+                position: 'absolute', top: 0, left: 0, right: 0, height: '100vh', 
+                zIndex: 50, pointerEvents: 'none', background: '#0a0a0a',
+                display: 'flex', alignItems: 'center', justifyContent: 'center',
+                opacity: vis ? 0 : 1,
+                transition: 'opacity 2s ease-in-out 0.3s'
+            }}>
+                <h2 className="ruthie-regular" style={{
+                    fontSize: 'clamp(80px, 20vw, 300px)',
+                    color: 'rgba(255,255,255,0.05)',
+                    margin: 0, lineHeight: 1
+                }}>
+                    Contact
+                </h2>
+            </div>
 
-                {/* Section Label */}
-                <div style={{ ...r(0), display: 'flex', alignItems: 'center', gap: 20, marginBottom: 'clamp(60px, 10vh, 100px)' }}>
-                    <span style={{ fontSize: 11, fontWeight: 500, letterSpacing: '0.3em', color: 'rgba(255,255,255,0.25)', fontFamily: 'monospace' }}><AnimatedNumber value={5} pad={2} trigger={vis} /></span>
-                    <span style={{ fontSize: 11, fontWeight: 500, letterSpacing: '0.3em', color: 'rgba(255,255,255,0.25)' }}>CONTACT</span>
-                </div>
+            {/* Content Container */}
+            <div style={{
+                position: 'relative', zIndex: 1,
+                padding: 'clamp(120px, 18vh, 220px) 0', overflow: 'hidden'
+            }}>
+            <div style={{ maxWidth: 1440, margin: '0 auto', padding: '0 6vw' }}>
 
                 {/* Two Column Layout */}
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 lg:gap-24" style={{ alignItems: 'start' }}>
@@ -271,6 +289,7 @@ export default function Contact() {
                         ))}
                     </div>
                 </div>
+            </div>
             </div>
         </section>
     );
