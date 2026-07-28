@@ -8,7 +8,7 @@ export default function About() {
     const [vis, setVis] = useState(false);
 
     useEffect(() => {
-        const obs = new IntersectionObserver(([e]) => { if (e.isIntersecting) setVis(true); }, { threshold: 0.08 });
+        const obs = new IntersectionObserver(([e]) => { setVis(e.isIntersecting); }, { threshold: 0.08 });
         if (ref.current) obs.observe(ref.current);
         return () => obs.disconnect();
     }, []);

@@ -11,7 +11,7 @@ export default function Contact() {
     const [copied, setCopied] = useState(false);
 
     useEffect(() => {
-        const obs = new IntersectionObserver(([e]) => { if (e.isIntersecting) setVis(true); }, { threshold: 0.1 });
+        const obs = new IntersectionObserver(([e]) => setVis(e.isIntersecting), { threshold: 0.1 });
         if (ref.current) obs.observe(ref.current);
         const t = setInterval(() => {
             setTime(new Intl.DateTimeFormat('en-US', {

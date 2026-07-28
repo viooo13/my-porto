@@ -12,7 +12,7 @@ export default function Certificates() {
     const [selectedCert, setSelectedCert] = useState(null);
 
     useEffect(() => {
-        const obs = new IntersectionObserver(([e]) => { if (e.isIntersecting) setVis(true); }, { threshold: 0.05 });
+        const obs = new IntersectionObserver(([e]) => { setVis(e.isIntersecting); }, { threshold: 0.05 });
         if (ref.current) obs.observe(ref.current);
         return () => obs.disconnect();
     }, []);
