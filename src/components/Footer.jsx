@@ -104,14 +104,14 @@ export default function Footer() {
                                     transition: 'all 0.3s ease',
                                     display: 'inline-block', width: 'fit-content',
                                 }}
-                                onMouseEnter={e => {
-                                    e.currentTarget.style.color = '#fff';
-                                    e.currentTarget.style.transform = 'translateX(6px)';
-                                }}
-                                onMouseLeave={e => {
-                                    e.currentTarget.style.color = 'rgba(255,255,255,0.6)';
-                                    e.currentTarget.style.transform = 'translateX(0)';
-                                }}
+                                    onMouseEnter={e => {
+                                        e.currentTarget.style.color = '#fff';
+                                        e.currentTarget.style.transform = 'translateX(6px)';
+                                    }}
+                                    onMouseLeave={e => {
+                                        e.currentTarget.style.color = 'rgba(255,255,255,0.6)';
+                                        e.currentTarget.style.transform = 'translateX(0)';
+                                    }}
                                 >{link.label}</a>
                             ))}
                         </nav>
@@ -129,15 +129,15 @@ export default function Footer() {
                                 fontSize: 14, color: 'rgba(255,255,255,0.6)',
                                 textDecoration: 'none', transition: 'color 0.3s',
                             }}
-                            onMouseEnter={e => e.currentTarget.style.color = '#fff'}
-                            onMouseLeave={e => e.currentTarget.style.color = 'rgba(255,255,255,0.6)'}
+                                onMouseEnter={e => e.currentTarget.style.color = '#fff'}
+                                onMouseLeave={e => e.currentTarget.style.color = 'rgba(255,255,255,0.6)'}
                             >vioadytia30@gmail.com</a>
                             <a href="https://wa.me/6282146495055" style={{
                                 fontSize: 14, color: 'rgba(255,255,255,0.6)',
                                 textDecoration: 'none', transition: 'color 0.3s',
                             }}
-                            onMouseEnter={e => e.currentTarget.style.color = '#fff'}
-                            onMouseLeave={e => e.currentTarget.style.color = 'rgba(255,255,255,0.6)'}
+                                onMouseEnter={e => e.currentTarget.style.color = '#fff'}
+                                onMouseLeave={e => e.currentTarget.style.color = 'rgba(255,255,255,0.6)'}
                             >+62 821 4649 5055</a>
                         </div>
                     </div>

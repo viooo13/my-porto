@@ -2,6 +2,7 @@ import { useEffect, useState, useRef } from 'react';
 import { FaGithub, FaLinkedin, FaImage, FaBriefcase, FaFileAlt } from 'react-icons/fa';
 import { StyledWord } from '../../components/StyledWord';
 
+
 function HeroButton({ children, href, className, onClick }) {
     return (
         <a
@@ -24,6 +25,7 @@ export default function Hero() {
     const [loaded, setLoaded] = useState(false);
     const [showCvModal, setShowCvModal] = useState(false);
     const [isPhotoHovered, setIsPhotoHovered] = useState(false);
+    const photoRef = useRef(null);
     
     useEffect(() => {
         setLoaded(true);
@@ -44,6 +46,74 @@ export default function Hero() {
         
         window.addEventListener('mousemove', onMouse, { passive: true });
         return () => window.removeEventListener('mousemove', onMouse);
+    }, []);
+
+    // Mobile scroll parallax: foto bergerak ke atas sedikit lalu freeze
+    useEffect(() => {
+        const photo = photoRef.current;
+        if (!photo) return;
+
+        // Nilai awal translateY untuk mobile ≤480px
+        // (sesuai CSS: translateY(107dvh) scale(0.9))
+        const getBaseTranslate = () => {
+            const w = window.innerWidth;
+            if (w <= 480) return 107;
+            if (w <= 768) return 97;
+            return null; // Desktop: tidak dihandle JS
+        };
+
+        // Seberapa jauh foto naik ke atas (dalam dvh) sebelum freeze
+        const LIFT_AMOUNT = 8; // dvh — foto naik 8dvh lalu berhenti
+        // Seberapa cepat foto mengikuti scroll sebelum freeze
+        const SCROLL_SENSITIVITY = 0.06; // semakin besar, semakin cepat naik
+
+        let frozenTranslate = null;
+        let isFrozen = false;
+        let rafId = null;
+
+        const onScroll = () => {
+            if (rafId) return;
+            rafId = requestAnimationFrame(() => {
+                rafId = null;
+                const w = window.innerWidth;
+                const base = getBaseTranslate();
+
+                // Hanya jalankan di mobile
+                if (base === null) return;
+
+                const scrollY = window.scrollY;
+                const vhUnit = window.innerHeight / 100;
+                const scale = w <= 480 ? 0.9 : 1.25;
+
+                // Hitung translateY: dari base, turun sesuai scroll
+                // Makin scroll → makin kecil translateY → foto naik
+                const moved = base - scrollY * SCROLL_SENSITIVITY;
+                const minTranslate = base - LIFT_AMOUNT; // batas atas (freeze point)
+
+                const finalTranslate = Math.max(moved, minTranslate);
+
+                photo.style.transform = `translateY(${finalTranslate}dvh) translateZ(0) scale(${scale})`;
+            });
+        };
+
+        const onResize = () => {
+            // Reset saat resize agar CSS mengambil alih jika tidak mobile
+            const base = getBaseTranslate();
+            if (base === null && photo) {
+                photo.style.transform = '';
+            }
+        };
+
+        window.addEventListener('scroll', onScroll, { passive: true });
+        window.addEventListener('resize', onResize, { passive: true });
+        // Trigger sekali agar posisi awal benar
+        onScroll();
+
+        return () => {
+            window.removeEventListener('scroll', onScroll);
+            window.removeEventListener('resize', onResize);
+            if (rafId) cancelAnimationFrame(rafId);
+        };
     }, []);
 
     return (
@@ -150,7 +220,7 @@ export default function Hero() {
                     display: 'flex', justifyContent: 'center', alignItems: 'flex-end',
                     pointerEvents: 'none'
                 }}>
-                    <img className="hero-photo" src="/my-photo-bordered.webp" alt="Vio Adytia Illustration" width="1792" height="2394" style={{
+                    <img ref={photoRef} className="hero-photo" src="/my-photo-bordered.webp" alt="Vio Adytia Illustration" width="1792" height="2394" style={{
                         filter: `${isPhotoHovered ? 'grayscale(0%)' : 'grayscale(100%)'} drop-shadow(0 0 40px rgba(74, 144, 217, 0.25))`,
                         maxWidth: 'none',
                     }} 
@@ -363,12 +433,14 @@ export default function Hero() {
                 @media (max-width: 768px) {
                     .hero-photo {
                         transform: translateY(97dvh) translateZ(0) scale(1.25);
+                        transition: filter 0.5s ease; /* transform dikontrol JS */
                     }
                 }
                 
                 @media (max-width: 480px) {
                     .hero-photo {
                         transform: translateY(107dvh) translateZ(0) scale(0.9);
+                        transition: filter 0.5s ease; /* transform dikontrol JS */
                     }
                 }
             `}</style>
