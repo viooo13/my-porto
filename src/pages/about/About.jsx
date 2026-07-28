@@ -8,12 +8,14 @@ export default function About() {
     const [vis, setVis] = useState(false);
 
     useEffect(() => {
-        const obs = new IntersectionObserver(([e]) => { setVis(e.isIntersecting); }, { threshold: 0.08 });
+        const obs = new IntersectionObserver(([e]) => { if (e.isIntersecting) setVis(true); }, { threshold: 0.08 });
         if (ref.current) obs.observe(ref.current);
         return () => obs.disconnect();
     }, []);
 
-    // Scroll listener dihapus sesuai permintaan
+
+
+    // Scroll listener tidak lagi digunakan untuk overlay, digantikan oleh CSS transition
 
     const a = (d = 0) => ({
         opacity: vis ? 1 : 0,
@@ -36,21 +38,27 @@ export default function About() {
     return (
         <section id="about" ref={ref} style={{ background: '#0a0a0a', position: 'relative', scrollMarginTop: 80, zIndex: 1 }}>
             
-            {/* Overlay Screen (Tidak mengikuti scroll, langsung fade out otomatis) */}
-            <div style={{ 
-                position: 'absolute', top: 0, left: 0, right: 0, height: '100vh', 
-                zIndex: 50, pointerEvents: 'none', background: '#0a0a0a',
-                display: 'flex', alignItems: 'center', justifyContent: 'center',
-                opacity: vis ? 0 : 1,
-                transition: 'opacity 2s ease-in-out 0.3s'
-            }}>
-                <h2 className="ruthie-regular" style={{
-                    fontSize: 'clamp(80px, 20vw, 300px)',
-                    color: 'rgba(255,255,255,0.05)',
-                    margin: 0, lineHeight: 1
+            {/* Overlay Screen */}
+            <div style={{ position: 'absolute', inset: 0, zIndex: 50, pointerEvents: 'none' }}>
+                <div ref={textRef} style={{ 
+                    position: 'sticky', top: 0, height: '100vh', 
+                    background: '#0a0a0a',
+                    display: 'flex', alignItems: 'center', justifyContent: 'center',
+                    opacity: vis ? 0 : 1,
+                    transition: 'opacity 1.5s ease-in-out',
+                    overflow: 'hidden'
                 }}>
-                    About
-                </h2>
+                    <div style={{ position: 'absolute', width: '50vw', height: '50vw', background: 'radial-gradient(circle, rgba(30,58,95,0.15) 0%, transparent 60%)', borderRadius: '50%', pointerEvents: 'none' }} />
+                    <h2 className="ruthie-regular" style={{
+                        fontSize: 'clamp(100px, 25vw, 400px)',
+                        margin: 0, lineHeight: 1,
+                        color: 'rgba(255,255,255,0.15)',
+                        textShadow: '0 0 40px rgba(255,255,255,0.1)',
+                        position: 'relative', zIndex: 1
+                    }}>
+                        About
+                    </h2>
+                </div>
             </div>
 
             {/* Content Container */}

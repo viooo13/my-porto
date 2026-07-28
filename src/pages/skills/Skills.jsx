@@ -41,12 +41,14 @@ export default function Skills() {
     const [hovIcon, setHovIcon] = useState(null);
 
     useEffect(() => {
-        const obs = new IntersectionObserver(([e]) => { setVis(e.isIntersecting); }, { threshold: 0.1 });
+        const obs = new IntersectionObserver(([e]) => { if (e.isIntersecting) setVis(true); }, { threshold: 0.1 });
         if (ref.current) obs.observe(ref.current);
         return () => obs.disconnect();
     }, []);
 
-    // Scroll listener dihapus sesuai permintaan
+
+
+    // Scroll listener tidak lagi digunakan untuk overlay, digantikan oleh CSS transition
 
     const primary = [
         { icon: FaReact, name: 'React', desc: 'Component Architecture' },
@@ -70,21 +72,27 @@ export default function Skills() {
     return (
         <section id="skills" ref={ref} style={{ background: '#0a0a0a', position: 'relative', overflow: 'hidden', zIndex: 1 }}>
             
-            {/* Overlay Screen (Tidak mengikuti scroll, langsung fade out otomatis) */}
-            <div style={{ 
-                position: 'absolute', top: 0, left: 0, right: 0, height: '100vh', 
-                zIndex: 50, pointerEvents: 'none', background: '#0a0a0a',
-                display: 'flex', alignItems: 'center', justifyContent: 'center',
-                opacity: vis ? 0 : 1,
-                transition: 'opacity 2s ease-in-out 0.3s'
-            }}>
-                <h2 className="ruthie-regular" style={{
-                    fontSize: 'clamp(80px, 20vw, 300px)',
-                    color: 'rgba(255,255,255,0.05)',
-                    margin: 0, lineHeight: 1
+            {/* Overlay Screen */}
+            <div style={{ position: 'absolute', inset: 0, zIndex: 50, pointerEvents: 'none' }}>
+                <div ref={textRef} style={{ 
+                    position: 'sticky', top: 0, height: '100vh', 
+                    background: '#0a0a0a',
+                    display: 'flex', alignItems: 'center', justifyContent: 'center',
+                    opacity: vis ? 0 : 1,
+                    transition: 'opacity 1.5s ease-in-out',
+                    overflow: 'hidden'
                 }}>
-                    Capabilities
-                </h2>
+                    <div style={{ position: 'absolute', width: '50vw', height: '50vw', background: 'radial-gradient(circle, rgba(30,58,95,0.15) 0%, transparent 60%)', borderRadius: '50%', pointerEvents: 'none' }} />
+                    <h2 className="ruthie-regular" style={{
+                        fontSize: 'clamp(80px, 20vw, 350px)',
+                        margin: 0, lineHeight: 1,
+                        color: 'rgba(255,255,255,0.15)',
+                        textShadow: '0 0 40px rgba(255,255,255,0.1)',
+                        position: 'relative', zIndex: 1
+                    }}>
+                        Capabilities
+                    </h2>
+                </div>
             </div>
 
             {/* Content Container */}
