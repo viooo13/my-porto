@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from 'react';
-import { FaPlay, FaPause, FaStepForward, FaStepBackward, FaMusic, FaTimes } from 'react-icons/fa';
+import { FaPlay, FaPause, FaStepForward, FaStepBackward, FaMusic, FaTimes, FaVolumeUp, FaVolumeMute } from 'react-icons/fa';
 
 const tracks = [
     { id: 1, title: '33x', artist: 'Perunggu', src: '/music/33x.mp3' },
@@ -25,6 +25,7 @@ export default function MusicPlayer() {
     const [isHovered, setIsHovered] = useState(false);
     const [isOpen, setIsOpen] = useState(false);
     const [isIconHovered, setIsIconHovered] = useState(false);
+    const [isMuted, setIsMuted] = useState(false);
 
     // Drag state — position is stored as {left, top} in px from viewport edges
     const [initialized, setInitialized] = useState(false);
@@ -192,6 +193,13 @@ export default function MusicPlayer() {
     const handleNext = () => changeTrack((currentTrackIndex + 1) % tracks.length);
     const handlePrev = () => changeTrack((currentTrackIndex - 1 + tracks.length) % tracks.length);
     const togglePlay = () => setIsPlaying(!isPlaying);
+    const toggleMute = (e) => {
+        e.stopPropagation();
+        if (audioRef.current) {
+            audioRef.current.muted = !isMuted;
+            setIsMuted(!isMuted);
+        }
+    };
 
     const handleSeek = (e) => {
         const r = e.currentTarget.getBoundingClientRect();
@@ -387,8 +395,8 @@ export default function MusicPlayer() {
                         {/* Bottom: Controls */}
                         <div style={{ marginTop: 'auto', display: 'flex', alignItems: 'center', justifyContent: 'center', position: 'relative' }} onMouseDown={e => e.stopPropagation()} onTouchStart={e => e.stopPropagation()}>
                             {/* Volume Icon */}
-                            <div style={{ position: 'absolute', left: 0, color: 'rgba(255,255,255,0.5)', fontSize: 16, cursor: 'pointer', transition: 'color 0.2s' }} onMouseEnter={e => e.currentTarget.style.color = '#fff'} onMouseLeave={e => e.currentTarget.style.color = 'rgba(255,255,255,0.5)'}>
-                                <svg stroke="currentColor" fill="currentColor" strokeWidth="0" viewBox="0 0 16 16" height="1.2em" width="1.2em" xmlns="http://www.w3.org/2000/svg"><path d="M11.536 14.01A8.473 8.473 0 0 0 14.026 8a8.473 8.473 0 0 0-2.49-6.01l-.708.707A7.476 7.476 0 0 1 13.025 8c0 2.071-.84 3.946-2.197 5.303l.708.707z"></path><path d="M10.121 12.596A6.48 6.48 0 0 0 12.025 8a6.48 6.48 0 0 0-1.904-4.596l-.707.707A5.483 5.483 0 0 1 11.025 8a5.483 5.483 0 0 1-1.61 3.89l.706.706z"></path><path d="M8.707 11.182A4.486 4.486 0 0 0 10.025 8a4.486 4.486 0 0 0-1.318-3.182L8 5.525A3.489 3.489 0 0 1 9.025 8 3.49 3.49 0 0 1 8 10.475l.707.707zM6.717 3.55A.5.5 0 0 1 7 4v8a.5.5 0 0 1-.812.39L3.825 10.5H1.5A.5.5 0 0 1 1 10V6a.5.5 0 0 1 .5-.5h2.325l2.363-1.89a.5.5 0 0 1 .529-.06z"></path></svg>
+                            <div onClick={toggleMute} style={{ position: 'absolute', left: 0, color: 'rgba(255,255,255,0.5)', fontSize: 16, cursor: 'pointer', transition: 'color 0.2s', display: 'flex', alignItems: 'center', justifyContent: 'center' }} onMouseEnter={e => e.currentTarget.style.color = '#fff'} onMouseLeave={e => e.currentTarget.style.color = 'rgba(255,255,255,0.5)'}>
+                                {isMuted ? <FaVolumeMute /> : <FaVolumeUp />}
                             </div>
 
                             <FaStepBackward
