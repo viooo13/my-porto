@@ -6,10 +6,19 @@ export default function Footer() {
     const year = new Date().getFullYear();
     
     // Topographic lines generated as SVG to precisely match the wavy lines on the dark background of the image
-    const topographicSVG = `data:image/svg+xml,%3Csvg viewBox='0 0 1000 300' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M-100,50 Q200,150 400,80 T800,120 T1100,50' fill='none' stroke='rgba(255,255,255,0.06)' stroke-width='1.5'/%3E%3Cpath d='M-100,120 Q150,220 350,150 T700,200 T1100,120' fill='none' stroke='rgba(255,255,255,0.06)' stroke-width='1.5'/%3E%3Cpath d='M-100,200 Q250,300 450,220 T850,280 T1100,200' fill='none' stroke='rgba(255,255,255,0.06)' stroke-width='1.5'/%3E%3Cpath d='M100,0 Q300,100 500,50 T900,100 T1000,0' fill='none' stroke='rgba(255,255,255,0.04)' stroke-width='1'/%3E%3C/svg%3E`;
+    // These paths are designed to loop perfectly (start and end at same Y, using smooth T curves)
+    const topographicSVG = `data:image/svg+xml,%3Csvg viewBox='0 0 1000 300' preserveAspectRatio='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M0,50 Q250,150 500,50 T1000,50' fill='none' stroke='rgba(255,255,255,0.06)' stroke-width='1.5'/%3E%3Cpath d='M0,120 Q250,220 500,120 T1000,120' fill='none' stroke='rgba(255,255,255,0.06)' stroke-width='1.5'/%3E%3Cpath d='M0,200 Q250,300 500,200 T1000,200' fill='none' stroke='rgba(255,255,255,0.06)' stroke-width='1.5'/%3E%3Cpath d='M0,10 Q250,110 500,10 T1000,10' fill='none' stroke='rgba(255,255,255,0.04)' stroke-width='1'/%3E%3C/svg%3E`;
 
     return (
         <div style={{ position: 'relative', marginTop: '-80px', zIndex: 10 }}>
+            <style>
+                {`
+                @keyframes footerWaves {
+                    0% { background-position: 0 0; }
+                    100% { background-position: -100vw 0; }
+                }
+                `}
+            </style>
             <footer
                 style={{
                     position: 'relative',
@@ -21,8 +30,9 @@ export default function Footer() {
                     alignItems: 'center',
                     boxShadow: '0 20px 40px rgba(0,0,0,0.5)',
                     backgroundImage: `url("${topographicSVG}")`,
-                    backgroundSize: 'cover',
-                    backgroundPosition: 'center',
+                    backgroundSize: '100vw 100%',
+                    backgroundRepeat: 'repeat-x',
+                    animation: 'footerWaves 25s linear infinite',
                     fontFamily: 'var(--font-display)',
                 }}
             >
