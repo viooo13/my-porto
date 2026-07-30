@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
-import { FaReact, FaNodeJs, FaGitAlt, FaDocker, FaFigma, FaHtml5, FaCss3Alt, FaJs, FaPhp, FaLaravel } from 'react-icons/fa';
-import { SiTypescript, SiNextdotjs, SiTailwindcss, SiMongodb, SiExpress, SiVite, SiWebpack, SiRedux, SiJest, SiMysql, SiPostman } from 'react-icons/si';
+import { FaReact, FaGitAlt, FaHtml5, FaCss3Alt, FaJs, FaPhp, FaLaravel, FaGithub } from 'react-icons/fa';
+import { SiTailwindcss, SiMysql, SiDotnet, SiThreedotjs, SiPostgresql } from 'react-icons/si';
+import { TbBrandCSharp, TbBrandVscode, TbBrandVisualStudio } from 'react-icons/tb';
 import { StyledWord } from '../../components/StyledWord';
 import { AnimatedNumber, useCounter } from '../../components/AnimatedNumber';
 
@@ -39,6 +40,7 @@ export default function Skills() {
     const textRef = useRef(null);
     const [vis, setVis] = useState(false);
     const [hovIcon, setHovIcon] = useState(null);
+    const [hovTool, setHovTool] = useState(null);
 
     useEffect(() => {
         const obs = new IntersectionObserver(([e]) => { setVis(e.isIntersecting); }, { threshold: 0.1 });
@@ -51,20 +53,21 @@ export default function Skills() {
     // Scroll listener tidak lagi digunakan untuk overlay, digantikan oleh CSS transition
 
     const primary = [
-        { icon: FaReact, name: 'React', desc: 'Component Architecture' },
-        { icon: SiNextdotjs, name: 'Next.js', desc: 'SSR & Static Sites' },
-        { icon: FaLaravel, name: 'Laravel', desc: 'MVC Ecosystem' },
-        { icon: SiTypescript, name: 'TypeScript', desc: 'Type Safety' },
-        { icon: FaJs, name: 'JavaScript', desc: 'Core ES6+' },
-        { icon: SiTailwindcss, name: 'Tailwind', desc: 'Utility Design' },
-        { icon: FaPhp, name: 'PHP', desc: 'Backend Logic' },
-        { icon: SiMysql, name: 'MySQL', desc: 'Relational Data' },
+        { icon: FaJs, name: 'JavaScript', desc: 'Core ES6+', color: '#F7DF1E' },
+        { icon: TbBrandCSharp, name: 'C#', desc: 'Object-Oriented', color: '#9B4F96' },
+        { icon: FaPhp, name: 'PHP', desc: 'Backend Logic', color: '#777BB4' },
+        { icon: FaReact, name: 'React', desc: 'UI Architecture', color: '#61DAFB' },
+        { icon: SiDotnet, name: '.NET', desc: 'Framework', color: '#512BD4' },
+        { icon: FaLaravel, name: 'Laravel', desc: 'MVC Ecosystem', color: '#FF2D20' },
+        { icon: SiThreedotjs, name: 'Three.js', desc: '3D WebGL', color: '#ffffff' },
+        { icon: SiTailwindcss, name: 'Tailwind CSS', desc: 'Utility Design', color: '#06B6D4' },
     ];
 
     const tools = [
-        { icon: FaFigma, name: 'Figma' }, { icon: FaGitAlt, name: 'Git' },
-        { icon: SiPostman, name: 'Postman' }, { icon: SiVite, name: 'Vite' },
-        { icon: FaDocker, name: 'Docker' }, { icon: SiJest, name: 'Jest' }
+        { icon: FaHtml5, name: 'HTML5', color: '#E34F26' }, { icon: FaCss3Alt, name: 'CSS3', color: '#1572B6' },
+        { icon: SiMysql, name: 'MySQL', color: '#4479A1' }, { icon: SiPostgresql, name: 'PostgreSQL', color: '#336791' },
+        { icon: FaGitAlt, name: 'Git', color: '#F05032' }, { icon: FaGithub, name: 'GitHub', color: '#ffffff' },
+        { icon: TbBrandVscode, name: 'VS Code', color: '#007ACC' }, { icon: TbBrandVisualStudio, name: 'Visual Studio', color: '#5C2D91' }
     ];
 
     const soft = ['Logic Thinking', 'Creative Strategy', 'Problem Solving', 'Team Lead', 'Adaptive Learning'];
@@ -139,13 +142,11 @@ export default function Skills() {
                                     <div style={{
                                         width: 52, height: 52, borderRadius: 14,
                                         border: '1px solid rgba(255,255,255,0.06)',
-                                        background: hovIcon === i ? 'rgba(30,58,95,0.15)' : 'rgba(255,255,255,0.02)',
+                                        background: 'rgba(255,255,255,0.02)',
                                         display: 'flex', alignItems: 'center', justifyContent: 'center',
                                         transition: 'all 0.4s cubic-bezier(0.34,1.56,0.64,1)',
-                                        transform: hovIcon === i ? 'scale(1.1) rotate(5deg)' : 'scale(1) rotate(0)',
-                                        borderColor: hovIcon === i ? 'rgba(30,58,95,0.4)' : 'rgba(255,255,255,0.06)',
                                     }}>
-                                        <s.icon size={22} color={hovIcon === i ? '#fff' : 'rgba(255,255,255,0.4)'} />
+                                        <s.icon size={22} color={hovIcon === i ? s.color : 'rgba(255,255,255,0.4)'} style={{ transition: 'color 0.4s' }} />
                                     </div>
                                     <div>
                                         <p style={{ fontSize: 12, fontWeight: 600, color: '#fff', marginBottom: 2 }}>{s.name}</p>
@@ -171,7 +172,7 @@ export default function Skills() {
                             </div>
                             <div onMouseEnter={e => e.currentTarget.querySelector('span').style.color = '#1e3a5f'} onMouseLeave={e => e.currentTarget.querySelector('span').style.color = '#fff'}>
                                 <p style={{ fontSize: 10, textTransform: 'uppercase', letterSpacing: '0.2em', color: 'rgba(255,255,255,0.2)', marginBottom: 12 }}>Projects Done</p>
-                                <span style={{ fontSize: 80, fontWeight: 800, color: '#fff', lineHeight: 1, transition: 'color 0.4s' }}><AnimatedNumber value={15} pad={2} trigger={vis} duration={2500} />+</span>
+                                <span style={{ fontSize: 80, fontWeight: 800, color: '#fff', lineHeight: 1, transition: 'color 0.4s' }}><AnimatedNumber value={3} pad={2} trigger={vis} duration={2500} /></span>
                                 <div style={{ height: 1, width: 40, background: '#1e3a5f', marginTop: 16 }} />
                             </div>
                         </div>
@@ -186,17 +187,17 @@ export default function Skills() {
                             <span style={{ fontSize: 10, fontFamily: 'monospace', color: 'rgba(30,58,95,0.5)' }}>[ <AnimatedNumber value={3} pad={2} trigger={vis} /> ]</span>
                         </div>
                         <div style={{ display: 'flex', flexWrap: 'wrap', gap: 10 }}>
-                            {tools.map(t => (
+                            {tools.map((t, i) => (
                                 <div key={t.name} style={{
                                     padding: '12px 20px', border: '1px solid rgba(255,255,255,0.05)',
                                     background: 'rgba(255,255,255,0.01)', borderRadius: 4,
                                     display: 'flex', alignItems: 'center', gap: 10,
                                     transition: 'all 0.3s'
                                 }}
-                                    onMouseEnter={e => { e.currentTarget.style.borderColor = 'rgba(30,58,95,0.5)'; e.currentTarget.style.background = 'rgba(30,58,95,0.05)'; }}
-                                    onMouseLeave={e => { e.currentTarget.style.borderColor = 'rgba(255,255,255,0.05)'; e.currentTarget.style.background = 'rgba(255,255,255,0.01)'; }}
+                                    onMouseEnter={() => setHovTool(i)}
+                                    onMouseLeave={() => setHovTool(null)}
                                 >
-                                    <t.icon size={16} color="rgba(255,255,255,0.3)" />
+                                    <t.icon size={16} color={hovTool === i ? t.color : 'rgba(255,255,255,0.3)'} style={{ transition: 'color 0.3s' }} />
                                     <span style={{ fontSize: 10, fontWeight: 500, color: 'rgba(255,255,255,0.4)', textTransform: 'uppercase', letterSpacing: '0.1em' }}>{t.name}</span>
                                 </div>
                             ))}
