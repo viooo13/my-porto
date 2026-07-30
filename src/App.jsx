@@ -61,12 +61,10 @@ function Cursor() {
         const move = (e) => {
             window.requestAnimationFrame(() => {
                 if (dot.current) {
-                    dot.current.style.left = `${e.clientX}px`;
-                    dot.current.style.top = `${e.clientY}px`;
+                    dot.current.style.transform = `translate3d(calc(${e.clientX}px - 50%), calc(${e.clientY}px - 50%), 0)`;
                 }
                 if (aimRef.current) {
-                    aimRef.current.style.left = `${e.clientX}px`;
-                    aimRef.current.style.top = `${e.clientY}px`;
+                    aimRef.current.style.transform = `translate3d(calc(${e.clientX}px - 50%), calc(${e.clientY}px - 50%), 0)`;
                 }
             });
         };
@@ -116,7 +114,8 @@ function Cursor() {
                     position: 'fixed',
                     zIndex: 99997,
                     pointerEvents: 'none',
-                    transform: 'translate(-50%, -50%)',
+                    left: 0, top: 0,
+                    transform: 'translate3d(-50%, -50%, 0)',
                     transition: 'opacity 0.1s ease',
                 }}
             >
@@ -134,7 +133,8 @@ function Cursor() {
                     position: 'fixed',
                     zIndex: 99999,
                     pointerEvents: 'none',
-                    transform: 'translate(-50%, -50%)',
+                    left: 0, top: 0,
+                    transform: 'translate3d(-50%, -50%, 0)',
                 }}
             />
             <div
