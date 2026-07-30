@@ -43,14 +43,18 @@ function Cursor() {
     }, [pathname]);
 
     useEffect(() => {
+        let rafId;
         const updateBrackets = () => {
             if (activeTarget.current && bracketsRef.current) {
-                const rect = activeTarget.current.getBoundingClientRect();
-                const pad = 4;
-                bracketsRef.current.style.width = `${rect.width + pad * 2}px`;
-                bracketsRef.current.style.height = `${rect.height + pad * 2}px`;
-                bracketsRef.current.style.left = `${rect.left + rect.width / 2}px`;
-                bracketsRef.current.style.top = `${rect.top + rect.height / 2}px`;
+                rafId = requestAnimationFrame(() => {
+                    if (!activeTarget.current) return;
+                    const rect = activeTarget.current.getBoundingClientRect();
+                    const pad = 4;
+                    bracketsRef.current.style.width = `${rect.width + pad * 2}px`;
+                    bracketsRef.current.style.height = `${rect.height + pad * 2}px`;
+                    bracketsRef.current.style.left = `${rect.left + rect.width / 2}px`;
+                    bracketsRef.current.style.top = `${rect.top + rect.height / 2}px`;
+                });
             }
         };
 
@@ -99,6 +103,7 @@ function Cursor() {
             document.removeEventListener('mouseover', over);
             document.removeEventListener('mouseout', out);
             window.removeEventListener('scroll', updateBrackets);
+            if (rafId) cancelAnimationFrame(rafId);
         };
     }, []);
 
@@ -152,15 +157,51 @@ function Cursor() {
     );
 }
 
+/* ── Smooth Scroll (Lenis) ── */
+function SmoothScroll() {
+  useEffect(() => {
+    const lenis = new Lenis({
+      lerp: 0.08,
+      wheelMultiplier: 0.7,
+      smoothTouch: false,
+      touchMultiplier: 2,
+    });
+
+    window.lenis = lenis;
+    let rafId;
+
+    function raf(time) {
+      lenis.raf(time);
+      rafId = requestAnimationFrame(raf);
+    }
+    rafId = requestAnimationFrame(raf);
+
+    return () => {
+      cancelAnimationFrame(rafId);
+      lenis.destroy();
+      window.lenis = null;
+    };
+  }, []);
+  return null;
+}
+
 /* ── Scroll Progress ── */
 function ScrollProgress() {
     const barRef = useRef(null);
     useEffect(() => {
+        let ticking = false;
         const fn = () => {
-            if (!barRef.current) return;
-            const h = document.documentElement.scrollHeight - window.innerHeight;
-            const progress = h > 0 ? (window.scrollY / h) * 100 : 0;
-            barRef.current.style.width = `${progress}%`;
+            if (!ticking) {
+                requestAnimationFrame(() => {
+                    if (barRef.current) {
+                        const h = document.documentElement.scrollHeight - window.innerHeight;
+                        const progress = h > 0 ? (window.scrollY / h) * 100 : 0;
+                        barRef.current.style.width = `${progress}%`;
+                    }
+                    ticking = false;
+                });
+                ticking = true;
+            }
         };
         window.addEventListener('scroll', fn, { passive: true });
         return () => window.removeEventListener('scroll', fn);
