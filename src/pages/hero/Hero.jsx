@@ -25,7 +25,19 @@ export default function Hero() {
     const [loaded, setLoaded] = useState(false);
     const [showCvModal, setShowCvModal] = useState(false);
     const [isPhotoHovered, setIsPhotoHovered] = useState(false);
+    const [cylinderRadius, setCylinderRadius] = useState(450);
     const photoRef = useRef(null);
+
+    // Compute cylinder radius based on viewport
+    useEffect(() => {
+        const updateRadius = () => {
+            const vw = window.innerWidth;
+            setCylinderRadius(Math.min(vw * 0.34, 500));
+        };
+        updateRadius();
+        window.addEventListener('resize', updateRadius, { passive: true });
+        return () => window.removeEventListener('resize', updateRadius);
+    }, []);
     
     useEffect(() => {
         setLoaded(true);
@@ -152,56 +164,104 @@ export default function Hero() {
                     transform: 'translate3d(0, 0, 0)',
                 }} />
 
-                {/* Massive Typography Background - Behind Photo (Back of Cylinder) */}
+                {/* ── Glowing Orbit Ring Line (Behind Photo) ── */}
                 <div style={{
-                    position: 'absolute', top: '45%', left: '50%',
-                    transform: 'translate(-50%, -50%)',
-                    perspective: '1500px',
+                    position: 'absolute', top: '42%', left: '50%',
+                    transform: 'translate(-50%, -50%) perspective(1200px) rotateX(85deg)',
                     zIndex: 1, pointerEvents: 'none',
-                    width: '100%', height: '100%',
-                    display: 'flex', justifyContent: 'center', alignItems: 'center'
                 }}>
-                    <div className="cylinder-ring">
-                        {"FRONTEND DEVELOPER • FRONTEND DEVELOPER • ".split('').map((char, i) => (
-                            <div key={i} className="char-back" style={{
-                                transform: `translate(-50%, -50%) rotateY(${i * (360/42)}deg) translateZ(35vw) rotateY(180deg)`,
-                                fontFamily: '"Inter Display", "Inter", sans-serif',
-                                fontWeight: 900,
-                                fontSize: 'clamp(30px, 7vw, 90px)',
-                                color: 'rgba(255, 255, 255, 0.05)',
-                                WebkitTextStroke: '1px rgba(255, 255, 255, 0.2)'
-                            }}>
-                                {char === ' ' ? '\u00A0' : char}
-                            </div>
-                        ))}
-                    </div>
+                    <div className="orbit-glow" style={{
+                        width: cylinderRadius * 2,
+                        height: cylinderRadius * 2,
+                        borderRadius: '50%',
+                        border: '1px solid rgba(74, 144, 217, 0.08)',
+                        boxShadow: '0 0 30px 2px rgba(74, 144, 217, 0.06), inset 0 0 30px 2px rgba(74, 144, 217, 0.04)',
+                        transform: 'translate(-50%, -50%)',
+                    }} />
                 </div>
 
-                {/* Massive Typography Foreground - In Front of Photo (Front of Cylinder) */}
+                {/* ── Glowing Orbit Ring Line (In Front of Photo) ── */}
                 <div style={{
-                    position: 'absolute', top: '45%', left: '50%',
-                    transform: 'translate(-50%, -50%)',
-                    perspective: '1500px',
+                    position: 'absolute', top: '42%', left: '50%',
+                    transform: 'translate(-50%, -50%) perspective(1200px) rotateX(85deg)',
                     zIndex: 3, pointerEvents: 'none',
-                    width: '100%', height: '100%',
-                    display: 'flex', justifyContent: 'center', alignItems: 'center'
+                    clipPath: 'polygon(0 50%, 100% 50%, 100% 100%, 0 100%)',
                 }}>
-                    <div className="cylinder-ring">
-                        {"FRONTEND DEVELOPER • FRONTEND DEVELOPER • ".split('').map((char, i) => (
-                            <div key={i} className="char-front" style={{
-                                transform: `translate(-50%, -50%) rotateY(${i * (360/42)}deg) translateZ(35vw)`,
-                                fontFamily: '"Inter Display", "Inter", sans-serif',
-                                fontWeight: 900,
-                                fontSize: 'clamp(30px, 7vw, 90px)',
-                                color: 'transparent',
-                                WebkitTextStroke: '2px rgba(74, 144, 217, 0.6)',
-                                textShadow: '0 0 20px rgba(74, 144, 217, 0.2)'
-                            }}>
-                                {char === ' ' ? '\u00A0' : char}
-                            </div>
-                        ))}
-                    </div>
+                    <div className="orbit-glow" style={{
+                        width: cylinderRadius * 2,
+                        height: cylinderRadius * 2,
+                        borderRadius: '50%',
+                        border: '1px solid rgba(74, 144, 217, 0.15)',
+                        boxShadow: '0 0 40px 4px rgba(74, 144, 217, 0.1), inset 0 0 40px 4px rgba(74, 144, 217, 0.06)',
+                        transform: 'translate(-50%, -50%)',
+                    }} />
                 </div>
+
+                {/* ── 3D Typography Cylinder - Back Half (Behind Photo) ── */}
+                {(() => {
+                    const text = 'FRONTEND DEVELOPER  ✦  FRONTEND DEVELOPER  ✦  ';
+                    const chars = text.split('');
+                    const totalChars = chars.length;
+                    return (
+                        <div style={{
+                            position: 'absolute', top: '42%', left: '50%',
+                            transform: 'translate(-50%, -50%)',
+                            perspective: '1200px',
+                            zIndex: 1, pointerEvents: 'none',
+                            width: 0, height: 0,
+                        }}>
+                            <div className="cylinder-ring">
+                                {chars.map((char, i) => {
+                                    const isDiamond = char === '✦';
+                                    return (
+                                        <span key={`b-${i}`} className="char-back" style={{
+                                            transform: `rotateY(${i * (360 / totalChars)}deg) translateZ(${cylinderRadius}px) rotateY(180deg)`,
+                                            fontSize: 'clamp(28px, 5.5vw, 72px)',
+                                            color: isDiamond ? 'rgba(74, 144, 217, 0.06)' : 'rgba(255, 255, 255, 0.025)',
+                                            WebkitTextStroke: isDiamond ? '1px rgba(74, 144, 217, 0.1)' : '1px rgba(255, 255, 255, 0.06)',
+                                            filter: 'blur(2px)',
+                                        }}>
+                                            {char === ' ' ? '\u00A0' : char}
+                                        </span>
+                                    );
+                                })}
+                            </div>
+                        </div>
+                    );
+                })()}
+
+                {/* ── 3D Typography Cylinder - Front Half (In Front of Photo) ── */}
+                {(() => {
+                    const text = 'FRONTEND DEVELOPER  ✦  FRONTEND DEVELOPER  ✦  ';
+                    const chars = text.split('');
+                    const totalChars = chars.length;
+                    return (
+                        <div style={{
+                            position: 'absolute', top: '42%', left: '50%',
+                            transform: 'translate(-50%, -50%)',
+                            perspective: '1200px',
+                            zIndex: 3, pointerEvents: 'none',
+                            width: 0, height: 0,
+                        }}>
+                            <div className="cylinder-ring">
+                                {chars.map((char, i) => {
+                                    const isDiamond = char === '✦';
+                                    return (
+                                        <span key={`f-${i}`} className={`char-front ${isDiamond ? 'char-diamond' : ''}`} style={{
+                                            transform: `rotateY(${i * (360 / totalChars)}deg) translateZ(${cylinderRadius}px)`,
+                                            fontSize: 'clamp(28px, 5.5vw, 72px)',
+                                            color: isDiamond ? 'rgba(74, 144, 217, 1)' : 'transparent',
+                                            WebkitTextStroke: isDiamond ? 'none' : '1.5px rgba(74, 144, 217, 0.6)',
+                                            textShadow: isDiamond ? '0 0 20px rgba(74, 144, 217, 0.8), 0 0 60px rgba(74, 144, 217, 0.3)' : '0 0 15px rgba(74, 144, 217, 0.15)',
+                                        }}>
+                                            {char === ' ' ? '\u00A0' : char}
+                                        </span>
+                                    );
+                                })}
+                            </div>
+                        </div>
+                    );
+                })()}
 
                 {/* ── Center Character (The Illustration) ── */}
                 <div style={{
@@ -332,25 +392,38 @@ export default function Hero() {
                 </div>
 
                 <style>{`
+                .orbit-glow {
+                    animation: orbitPulse 4s ease-in-out infinite;
+                }
+                @keyframes orbitPulse {
+                    0%, 100% { opacity: 0.6; }
+                    50% { opacity: 1; }
+                }
                 .cylinder-ring {
-                    position: absolute;
-                    top: 50%; left: 50%;
+                    position: relative;
                     transform-style: preserve-3d;
                     animation: spinY 30s linear infinite;
+                    will-change: transform;
                 }
                 @keyframes spinY {
-                    from { transform: rotateY(0deg); }
-                    to { transform: rotateY(-360deg); }
+                    from { transform: rotateX(-8deg) rotateY(0deg); }
+                    to { transform: rotateX(-8deg) rotateY(-360deg); }
                 }
-                .char-front {
-                    position: absolute;
-                    backface-visibility: hidden;
-                    white-space: pre;
-                }
+                .char-front,
                 .char-back {
                     position: absolute;
+                    top: 0; left: 0;
                     backface-visibility: hidden;
                     white-space: pre;
+                    font-family: 'Inter Display', 'Inter', sans-serif;
+                    font-weight: 900;
+                }
+                .char-diamond {
+                    animation: diamondGlow 3s ease-in-out infinite;
+                }
+                @keyframes diamondGlow {
+                    0%, 100% { filter: drop-shadow(0 0 6px rgba(74, 144, 217, 0.4)); }
+                    50% { filter: drop-shadow(0 0 18px rgba(74, 144, 217, 0.9)); }
                 }
                 @keyframes slideUp {
                     from { transform: translateY(100%); opacity: 0; }
