@@ -218,10 +218,14 @@ export default function Hero() {
                                             transform: `rotateY(${i * (360 / totalChars)}deg) translateZ(${cylinderRadius}px) rotateY(180deg)`,
                                             fontSize: 'clamp(28px, 5.5vw, 72px)',
                                             color: isDiamond ? 'rgba(74, 144, 217, 0.06)' : 'rgba(255, 255, 255, 0.025)',
-                                            WebkitTextStroke: isDiamond ? '1px rgba(74, 144, 217, 0.1)' : '1px rgba(255, 255, 255, 0.06)',
+                                            WebkitTextStroke: isDiamond ? 'none' : '1px rgba(255, 255, 255, 0.06)',
                                             filter: 'blur(2px)',
                                         }}>
-                                            {char === ' ' ? '\u00A0' : char}
+                                            {isDiamond ? (
+                                                <img src="/logo.webp" alt="logo" style={{ height: '0.8em', opacity: 0.1, verticalAlign: 'middle' }} />
+                                            ) : (
+                                                char === ' ' ? '\u00A0' : char
+                                            )}
                                         </span>
                                     );
                                 })}
@@ -254,7 +258,11 @@ export default function Hero() {
                                             WebkitTextStroke: isDiamond ? 'none' : '1.5px rgba(74, 144, 217, 0.6)',
                                             textShadow: isDiamond ? '0 0 20px rgba(74, 144, 217, 0.8), 0 0 60px rgba(74, 144, 217, 0.3)' : '0 0 15px rgba(74, 144, 217, 0.15)',
                                         }}>
-                                            {char === ' ' ? '\u00A0' : char}
+                                            {isDiamond ? (
+                                                <img src="/logo.webp" alt="logo" style={{ height: '0.8em', verticalAlign: 'middle', filter: 'drop-shadow(0 0 10px rgba(74, 144, 217, 0.8))' }} />
+                                            ) : (
+                                                char === ' ' ? '\u00A0' : char
+                                            )}
                                         </span>
                                     );
                                 })}
@@ -415,8 +423,8 @@ export default function Hero() {
                     top: 0; left: 0;
                     backface-visibility: hidden;
                     white-space: pre;
-                    font-family: 'Inter Display', 'Inter', sans-serif;
-                    font-weight: 900;
+                    font-family: 'BBH Bogle', 'Inter Display', sans-serif;
+                    font-weight: 400;
                 }
                 .char-diamond {
                     animation: diamondGlow 3s ease-in-out infinite;
