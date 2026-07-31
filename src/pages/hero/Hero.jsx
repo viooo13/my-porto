@@ -152,64 +152,54 @@ export default function Hero() {
                     transform: 'translate3d(0, 0, 0)',
                 }} />
 
-                {/* Massive Typography Background */}
+                {/* Massive Typography Background - Behind Photo (Back of Cylinder) */}
                 <div style={{
-                    position: 'absolute', top: '45%', left: '50%', transform: 'translate(-50%, -50%)',
-                    zIndex: 1, display: 'flex', flexDirection: 'column', alignItems: 'flex-start', pointerEvents: 'none',
-                    width: '100vw', overflow: 'hidden'
+                    position: 'absolute', top: '45%', left: '50%',
+                    transform: 'translate(-50%, -50%)',
+                    perspective: '1500px',
+                    zIndex: 1, pointerEvents: 'none',
+                    width: '100%', height: '100%',
+                    display: 'flex', justifyContent: 'center', alignItems: 'center'
                 }}>
-                    <div style={{
-                        display: 'flex', whiteSpace: 'nowrap', width: 'max-content',
-                    }}>
-                        <div className="marquee-left" style={{ display: 'flex', width: 'max-content' }}>
-                            <div style={{ display: 'flex', gap: '8vw', paddingRight: '8vw', flexShrink: 0 }}>
-                                {[...Array(4)].map((_, i) => (
-                                    <h1 key={i} style={{
-                                        fontFamily: '"Inter Display", "Inter", sans-serif', fontWeight: 900,
-                                        fontSize: 'clamp(100px, 22vw, 400px)', lineHeight: 0.8,
-                                        color: 'rgba(255, 255, 255, 0.05)',
-                                        margin: 0, letterSpacing: '-0.02em'
-                                    }}>FRONTEND</h1>
-                                ))}
+                    <div className="cylinder-ring">
+                        {"FRONTEND DEVELOPER • FRONTEND DEVELOPER • ".split('').map((char, i) => (
+                            <div key={i} className="char-back" style={{
+                                transform: `translate(-50%, -50%) rotateY(${i * (360/42)}deg) translateZ(35vw) rotateY(180deg)`,
+                                fontFamily: '"Inter Display", "Inter", sans-serif',
+                                fontWeight: 900,
+                                fontSize: 'clamp(30px, 7vw, 90px)',
+                                color: 'rgba(255, 255, 255, 0.05)',
+                                WebkitTextStroke: '1px rgba(255, 255, 255, 0.2)'
+                            }}>
+                                {char === ' ' ? '\u00A0' : char}
                             </div>
-                            <div style={{ display: 'flex', gap: '8vw', paddingRight: '8vw', flexShrink: 0 }}>
-                                {[...Array(4)].map((_, i) => (
-                                    <h1 key={i} style={{
-                                        fontFamily: '"Inter Display", "Inter", sans-serif', fontWeight: 900,
-                                        fontSize: 'clamp(100px, 22vw, 400px)', lineHeight: 0.8,
-                                        color: 'rgba(255, 255, 255, 0.05)',
-                                        margin: 0, letterSpacing: '-0.02em'
-                                    }}>FRONTEND</h1>
-                                ))}
-                            </div>
-                        </div>
+                        ))}
                     </div>
-                    
-                    <div style={{
-                        display: 'flex', whiteSpace: 'nowrap', width: 'max-content',
-                    }}>
-                        <div className="marquee-right" style={{ display: 'flex', width: 'max-content' }}>
-                            <div style={{ display: 'flex', gap: '8vw', paddingRight: '8vw', flexShrink: 0 }}>
-                                {[...Array(4)].map((_, i) => (
-                                    <h1 key={i} style={{
-                                        fontFamily: '"Inter Display", "Inter", sans-serif', fontWeight: 900,
-                                        fontSize: 'clamp(100px, 22vw, 400px)', lineHeight: 0.8,
-                                        color: 'rgba(74, 144, 217, 0.07)',
-                                        margin: 0, letterSpacing: '-0.02em'
-                                    }}>DEVELOPER</h1>
-                                ))}
+                </div>
+
+                {/* Massive Typography Foreground - In Front of Photo (Front of Cylinder) */}
+                <div style={{
+                    position: 'absolute', top: '45%', left: '50%',
+                    transform: 'translate(-50%, -50%)',
+                    perspective: '1500px',
+                    zIndex: 3, pointerEvents: 'none',
+                    width: '100%', height: '100%',
+                    display: 'flex', justifyContent: 'center', alignItems: 'center'
+                }}>
+                    <div className="cylinder-ring">
+                        {"FRONTEND DEVELOPER • FRONTEND DEVELOPER • ".split('').map((char, i) => (
+                            <div key={i} className="char-front" style={{
+                                transform: `translate(-50%, -50%) rotateY(${i * (360/42)}deg) translateZ(35vw)`,
+                                fontFamily: '"Inter Display", "Inter", sans-serif',
+                                fontWeight: 900,
+                                fontSize: 'clamp(30px, 7vw, 90px)',
+                                color: 'transparent',
+                                WebkitTextStroke: '2px rgba(74, 144, 217, 0.6)',
+                                textShadow: '0 0 20px rgba(74, 144, 217, 0.2)'
+                            }}>
+                                {char === ' ' ? '\u00A0' : char}
                             </div>
-                            <div style={{ display: 'flex', gap: '8vw', paddingRight: '8vw', flexShrink: 0 }}>
-                                {[...Array(4)].map((_, i) => (
-                                    <h1 key={i} style={{
-                                        fontFamily: '"Inter Display", "Inter", sans-serif', fontWeight: 900,
-                                        fontSize: 'clamp(100px, 22vw, 400px)', lineHeight: 0.8,
-                                        color: 'rgba(74, 144, 217, 0.07)',
-                                        margin: 0, letterSpacing: '-0.02em'
-                                    }}>DEVELOPER</h1>
-                                ))}
-                            </div>
-                        </div>
+                        ))}
                     </div>
                 </div>
 
@@ -231,12 +221,12 @@ export default function Hero() {
                 <div style={{
                     position: 'absolute', bottom: 0, left: 0, width: '100%', height: '40dvh',
                     background: 'linear-gradient(to top, rgba(10,10,10,1) 0%, rgba(10,10,10,0.7) 40%, transparent 100%)',
-                    zIndex: 2, pointerEvents: 'none'
+                    zIndex: 4, pointerEvents: 'none'
                 }} />
 
                 {/* ── Foreground UI Layer ── */}
                 <div style={{
-                    position: 'relative', zIndex: 3, width: '100%', height: '100%',
+                    position: 'relative', zIndex: 5, width: '100%', height: '100%',
                     padding: 'clamp(80px, 12vh, 120px) 6vw clamp(40px, 6vh, 60px) 6vw',
                     display: 'flex', flexDirection: 'column', justifyContent: 'space-between',
                     pointerEvents: 'none'
@@ -342,21 +332,25 @@ export default function Hero() {
                 </div>
 
                 <style>{`
-                .marquee-left {
-                    animation: marqueeLeft 50s linear infinite;
-                    will-change: transform;
+                .cylinder-ring {
+                    position: absolute;
+                    top: 50%; left: 50%;
+                    transform-style: preserve-3d;
+                    animation: spinY 30s linear infinite;
                 }
-                .marquee-right {
-                    animation: marqueeRight 50s linear infinite;
-                    will-change: transform;
+                @keyframes spinY {
+                    from { transform: rotateY(0deg); }
+                    to { transform: rotateY(-360deg); }
                 }
-                @keyframes marqueeLeft {
-                    0% { transform: translate3d(0, 0, 0); }
-                    100% { transform: translate3d(-50%, 0, 0); }
+                .char-front {
+                    position: absolute;
+                    backface-visibility: hidden;
+                    white-space: pre;
                 }
-                @keyframes marqueeRight {
-                    0% { transform: translate3d(-50%, 0, 0); }
-                    100% { transform: translate3d(0, 0, 0); }
+                .char-back {
+                    position: absolute;
+                    backface-visibility: hidden;
+                    white-space: pre;
                 }
                 @keyframes slideUp {
                     from { transform: translateY(100%); opacity: 0; }
