@@ -199,12 +199,12 @@ export default function Hero() {
 
                 {/* ── 3D Typography Cylinder - Back Half (Behind Photo) ── */}
                 {(() => {
-                    const text = 'FRONTEND DEVELOPER  ✦  FRONTEND DEVELOPER  ✦  ';
+                    const text = 'FULLSTACK DEVELOPER  ✦  FULLSTACK DEVELOPER  ✦  ';
                     const chars = text.split('');
                     const totalChars = chars.length;
                     return (
                         <div style={{
-                            position: 'absolute', top: '42%', left: '50%',
+                            position: 'absolute', top: '50%', left: '50%',
                             transform: 'translate(-50%, -50%)',
                             perspective: '1200px',
                             zIndex: 1, pointerEvents: 'none',
@@ -217,8 +217,8 @@ export default function Hero() {
                                         <span key={`b-${i}`} className="char-back" style={{
                                             transform: `rotateY(${i * (360 / totalChars)}deg) translateZ(${cylinderRadius}px) rotateY(180deg)`,
                                             fontSize: 'clamp(28px, 5.5vw, 72px)',
-                                            color: isDiamond ? 'rgba(74, 144, 217, 0.06)' : 'rgba(255, 255, 255, 0.025)',
-                                            WebkitTextStroke: isDiamond ? 'none' : '1px rgba(255, 255, 255, 0.06)',
+                                            color: isDiamond ? 'rgba(74, 144, 217, 0.06)' : 'rgba(255, 255, 255, 0.06)',
+                                            WebkitTextStroke: isDiamond ? 'none' : '1px rgba(255, 255, 255, 0.08)',
                                             filter: 'blur(2px)',
                                         }}>
                                             {isDiamond ? (
@@ -236,12 +236,12 @@ export default function Hero() {
 
                 {/* ── 3D Typography Cylinder - Front Half (In Front of Photo) ── */}
                 {(() => {
-                    const text = 'FRONTEND DEVELOPER  ✦  FRONTEND DEVELOPER  ✦  ';
+                    const text = 'FULLSTACK DEVELOPER  ✦  FRONTEND DEVELOPER  ✦  ';
                     const chars = text.split('');
                     const totalChars = chars.length;
                     return (
                         <div style={{
-                            position: 'absolute', top: '42%', left: '50%',
+                            position: 'absolute', top: '50%', left: '50%',
                             transform: 'translate(-50%, -50%)',
                             perspective: '1200px',
                             zIndex: 3, pointerEvents: 'none',
@@ -254,9 +254,9 @@ export default function Hero() {
                                         <span key={`f-${i}`} className={`char-front ${isDiamond ? 'char-diamond' : ''}`} style={{
                                             transform: `rotateY(${i * (360 / totalChars)}deg) translateZ(${cylinderRadius}px)`,
                                             fontSize: 'clamp(28px, 5.5vw, 72px)',
-                                            color: isDiamond ? 'rgba(74, 144, 217, 1)' : 'transparent',
-                                            WebkitTextStroke: isDiamond ? 'none' : '1.5px rgba(74, 144, 217, 0.6)',
-                                            textShadow: isDiamond ? '0 0 20px rgba(74, 144, 217, 0.8), 0 0 60px rgba(74, 144, 217, 0.3)' : '0 0 15px rgba(74, 144, 217, 0.15)',
+                                            color: isDiamond ? 'rgba(74, 144, 217, 1)' : 'rgba(255, 255, 255, 0.95)',
+                                            WebkitTextStroke: isDiamond ? 'none' : 'none',
+                                            textShadow: isDiamond ? '0 0 20px rgba(74, 144, 217, 0.8), 0 0 60px rgba(74, 144, 217, 0.3)' : '0 0 20px rgba(74, 144, 217, 0.3), 0 0 40px rgba(74, 144, 217, 0.1)',
                                         }}>
                                             {isDiamond ? (
                                                 <img src="/logo.webp" alt="logo" style={{ height: '0.8em', verticalAlign: 'middle', filter: 'drop-shadow(0 0 10px rgba(74, 144, 217, 0.8))' }} />
