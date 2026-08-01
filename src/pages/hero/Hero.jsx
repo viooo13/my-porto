@@ -25,14 +25,14 @@ export default function Hero() {
     const [loaded, setLoaded] = useState(false);
     const [showCvModal, setShowCvModal] = useState(false);
     const [isPhotoHovered, setIsPhotoHovered] = useState(false);
-    const [cylinderRadius, setCylinderRadius] = useState(450);
+    const [cylinderRadius, setCylinderRadius] = useState(250);
     const photoRef = useRef(null);
 
     // Compute cylinder radius based on viewport
     useEffect(() => {
         const updateRadius = () => {
             const vw = window.innerWidth;
-            setCylinderRadius(Math.min(vw * 0.34, 500));
+            setCylinderRadius(Math.min(vw * 0.22, 300));
         };
         updateRadius();
         window.addEventListener('resize', updateRadius, { passive: true });
@@ -166,7 +166,7 @@ export default function Hero() {
 
                 {/* ── Glowing Orbit Ring Line (Behind Photo) ── */}
                 <div style={{
-                    position: 'absolute', top: '42%', left: '50%',
+                    position: 'absolute', top: '50%', left: '50%',
                     transform: 'translate(-50%, -50%) perspective(1200px) rotateX(85deg)',
                     zIndex: 1, pointerEvents: 'none',
                 }}>
@@ -182,7 +182,7 @@ export default function Hero() {
 
                 {/* ── Glowing Orbit Ring Line (In Front of Photo) ── */}
                 <div style={{
-                    position: 'absolute', top: '42%', left: '50%',
+                    position: 'absolute', top: '50%', left: '50%',
                     transform: 'translate(-50%, -50%) perspective(1200px) rotateX(85deg)',
                     zIndex: 3, pointerEvents: 'none',
                     clipPath: 'polygon(0 50%, 100% 50%, 100% 100%, 0 100%)',
@@ -199,7 +199,7 @@ export default function Hero() {
 
                 {/* ── 3D Typography Cylinder - Back Half (Behind Photo) ── */}
                 {(() => {
-                    const text = 'FULLSTACK DEVELOPER ✦ FULLSTACK DEVELOPER ✦ FULLSTACK DEVELOPER ✦ ';
+                    const text = 'FULLSTACK DEVELOPER  FULLSTACK DEVELOPER  ';
                     const chars = text.split('');
                     const totalChars = chars.length;
                     return (
@@ -208,9 +208,11 @@ export default function Hero() {
                             transform: 'translate(-50%, -50%)',
                             perspective: '1200px',
                             zIndex: 1, pointerEvents: 'none',
-                            width: 0, height: 0,
+                            width: cylinderRadius * 2, height: cylinderRadius * 2,
+                            maskImage: 'linear-gradient(to right, transparent 0%, black 15%, black 85%, transparent 100%)',
+                            WebkitMaskImage: 'linear-gradient(to right, transparent 0%, black 15%, black 85%, transparent 100%)',
                         }}>
-                            <div className="cylinder-ring">
+                            <div className="cylinder-ring" style={{ position: 'absolute', top: '50%', left: '50%' }}>
                                 {chars.map((char, i) => {
                                     const isDiamond = char === '✦';
                                     return (
@@ -236,7 +238,7 @@ export default function Hero() {
 
                 {/* ── 3D Typography Cylinder - Front Half (In Front of Photo) ── */}
                 {(() => {
-                    const text = 'FULLSTACK DEVELOPER ✦ FRONTEND DEVELOPER ✦ FULLSTACK DEVELOPER ✦ ';
+                    const text = 'FULLSTACK DEVELOPER  FULLSTACK DEVELOPER  ';
                     const chars = text.split('');
                     const totalChars = chars.length;
                     return (
@@ -245,9 +247,11 @@ export default function Hero() {
                             transform: 'translate(-50%, -50%)',
                             perspective: '1200px',
                             zIndex: 3, pointerEvents: 'none',
-                            width: 0, height: 0,
+                            width: cylinderRadius * 2, height: cylinderRadius * 2,
+                            maskImage: 'linear-gradient(to right, transparent 0%, black 15%, black 85%, transparent 100%)',
+                            WebkitMaskImage: 'linear-gradient(to right, transparent 0%, black 15%, black 85%, transparent 100%)',
                         }}>
-                            <div className="cylinder-ring">
+                            <div className="cylinder-ring" style={{ position: 'absolute', top: '50%', left: '50%' }}>
                                 {chars.map((char, i) => {
                                     const isDiamond = char === '✦';
                                     return (
@@ -256,7 +260,7 @@ export default function Hero() {
                                             fontSize: 'clamp(28px, 5.5vw, 72px)',
                                             color: isDiamond ? 'rgba(74, 144, 217, 1)' : 'rgba(255, 255, 255, 0.95)',
                                             WebkitTextStroke: isDiamond ? 'none' : 'none',
-                                            textShadow: isDiamond ? '0 0 20px rgba(74, 144, 217, 0.8), 0 0 60px rgba(74, 144, 217, 0.3)' : '0 0 20px rgba(74, 144, 217, 0.3), 0 0 40px rgba(74, 144, 217, 0.1)',
+                                            textShadow: 'none',
                                         }}>
                                             {isDiamond ? (
                                                 <img src="/logo.webp" alt="logo" style={{ height: '0.8em', verticalAlign: 'middle', filter: 'drop-shadow(0 0 10px rgba(74, 144, 217, 0.8))' }} />
