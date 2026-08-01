@@ -199,7 +199,7 @@ export default function Hero() {
 
                 {/* ── 3D Typography Cylinder - Back Half (Behind Photo) ── */}
                 {(() => {
-                    const text = 'FULLSTACK DEVELOPER  ✦  FULLSTACK DEVELOPER  ✦  ';
+                    const text = 'FULLSTACK DEVELOPER ✦ FULLSTACK DEVELOPER ✦ FULLSTACK DEVELOPER ✦ ';
                     const chars = text.split('');
                     const totalChars = chars.length;
                     return (
@@ -236,7 +236,7 @@ export default function Hero() {
 
                 {/* ── 3D Typography Cylinder - Front Half (In Front of Photo) ── */}
                 {(() => {
-                    const text = 'FULLSTACK DEVELOPER  ✦  FRONTEND DEVELOPER  ✦  ';
+                    const text = 'FULLSTACK DEVELOPER ✦ FRONTEND DEVELOPER ✦ FULLSTACK DEVELOPER ✦ ';
                     const chars = text.split('');
                     const totalChars = chars.length;
                     return (
