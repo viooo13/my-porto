@@ -59,122 +59,89 @@ export default function Footer() {
 
                 {/* ── MAIN TITLE REMOVED ── */}
 
-                {/* ── BOTTOM GRID (Contact + Socials Left, Navigation Right) ── */}
-                <div style={{
-                    width: '100%',
-                    display: 'flex',
-                    flexWrap: 'wrap',
-                    justifyContent: 'space-between',
-                    alignItems: 'flex-start',
-                    gap: '20px',
-                    position: 'relative',
-                    zIndex: 10,
-                    marginTop: '20px'
-                }}>
+                {/* ── BOTTOM GRID (2x2 on Mobile, Flex Row on Desktop) ── */}
+                <div className="w-full grid grid-cols-2 lg:flex lg:flex-row lg:justify-between items-start gap-y-12 gap-x-6 lg:gap-8 relative z-10 mt-8">
                     
-                    {/* LEFT GROUP: Contact and Socials side-by-side */}
-                    <div style={{ display: 'flex', flexWrap: 'wrap', gap: '40px', flex: '1 1 0', minWidth: '300px' }}>
-                        {/* LEFT: CONTACT */}
-                        <div style={{ width: '200px' }}>
-                            <h4 style={{ fontSize: '18px', color: '#fff', fontWeight: 500, marginBottom: '20px' }}>Contact</h4>
-                            <p style={{ fontSize: '14px', color: '#d1d5db', lineHeight: 1.6, margin: 0 }}>
-                                Bogor, Indonesia<br/>
-                                Worldwide Available<br/>
-                                +62 821 4649 5055<br/>
-                                <a href="mailto:vioadytia30@gmail.com" style={{ color: '#d1d5db', textDecoration: 'none' }}>vioadytia30@gmail.com</a>
-                            </p>
-                            
-                            <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginTop: '24px' }}>
-                                <div style={{ 
-                                    padding: '4px 10px', backgroundColor: 'var(--blue-light)', 
-                                    borderRadius: '12px', fontSize: '11px', color: '#fff', fontWeight: 600
-                                }}>
-                                    100%
-                                </div>
-                                <span style={{ fontSize: '12px', color: '#d1d5db' }}>Available for work</span>
+                    {/* 1: CONTACT (Top Left on mobile) */}
+                    <div className="w-full">
+                        <h4 style={{ fontSize: '18px', color: '#fff', fontWeight: 500, marginBottom: '20px' }}>Contact</h4>
+                        <p style={{ fontSize: '14px', color: '#d1d5db', lineHeight: 1.6, margin: 0 }}>
+                            Bogor, Indonesia<br/>
+                            Worldwide<br/>
+                            +62 821 4649 5055<br/>
+                            <a href="mailto:vioadytia30@gmail.com" className="hover:text-white transition-colors block mt-1" style={{ color: '#d1d5db', textDecoration: 'none', wordBreak: 'break-all' }}>vioadytia30@gmail.com</a>
+                        </p>
+                        
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginTop: '24px' }}>
+                            <div style={{ 
+                                padding: '4px 8px', backgroundColor: 'var(--blue-light)', 
+                                borderRadius: '12px', fontSize: '11px', color: '#fff', fontWeight: 600
+                            }}>
+                                100%
                             </div>
-                        </div>
-
-                        {/* MIDDLE-LEFT: SOCIALS */}
-                        <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', marginTop: '42px', width: '120px' }}>
-                            <a href="#" style={{ fontSize: '14px', color: '#d1d5db', textDecoration: 'none', display: 'flex', alignItems: 'center', gap: '6px' }}>
-                                Facebook <HiArrowUp style={{ transform: 'rotate(45deg)' }} size={12} />
-                            </a>
-                            <a href="#" style={{ fontSize: '14px', color: '#d1d5db', textDecoration: 'none', display: 'flex', alignItems: 'center', gap: '6px' }}>
-                                Instagram <HiArrowUp style={{ transform: 'rotate(45deg)' }} size={12} />
-                            </a>
-                            <a href="#" style={{ fontSize: '14px', color: '#d1d5db', textDecoration: 'none', display: 'flex', alignItems: 'center', gap: '6px' }}>
-                                LinkedIn <HiArrowUp style={{ transform: 'rotate(45deg)' }} size={12} />
-                            </a>
+                            <span style={{ fontSize: '11px', color: '#d1d5db' }}>Available</span>
                         </div>
                     </div>
 
-                    {/* CENTER CTA BUTTONS */}
-                    <div style={{ flex: '0 0 auto', display: 'flex', gap: '12px', flexWrap: 'wrap', justifyContent: 'center', marginTop: '38px' }}>
+                    {/* 2: SOCIALS (Top Right on mobile) */}
+                    <div className="w-full flex flex-col items-start lg:mt-11">
+                        <a href="#" className="hover:text-white transition-colors py-2" style={{ fontSize: '14px', color: '#d1d5db', textDecoration: 'none', display: 'flex', alignItems: 'center', gap: '6px' }}>
+                            Facebook <HiArrowUp style={{ transform: 'rotate(45deg)' }} size={12} />
+                        </a>
+                        <a href="#" className="hover:text-white transition-colors py-2" style={{ fontSize: '14px', color: '#d1d5db', textDecoration: 'none', display: 'flex', alignItems: 'center', gap: '6px' }}>
+                            Instagram <HiArrowUp style={{ transform: 'rotate(45deg)' }} size={12} />
+                        </a>
+                        <a href="#" className="hover:text-white transition-colors py-2" style={{ fontSize: '14px', color: '#d1d5db', textDecoration: 'none', display: 'flex', alignItems: 'center', gap: '6px' }}>
+                            LinkedIn <HiArrowUp style={{ transform: 'rotate(45deg)' }} size={12} />
+                        </a>
+                    </div>
+
+                    {/* 3: QUICK LINKS (Bottom Left on mobile) */}
+                    <div className="w-full">
+                        <h4 style={{ fontSize: '18px', color: '#fff', fontWeight: 500, marginBottom: '20px' }}>Quick Links</h4>
+                        <div className="flex flex-col gap-3">
+                            <a href="#hero" className="hover:text-white transition-colors" style={{ fontSize: '14px', color: '#d1d5db', textDecoration: 'none' }}>Home</a>
+                            <a href="#projects" className="hover:text-white transition-colors" style={{ fontSize: '14px', color: '#d1d5db', textDecoration: 'none' }}>Work</a>
+                            <a href="#about" className="hover:text-white transition-colors" style={{ fontSize: '14px', color: '#d1d5db', textDecoration: 'none' }}>About</a>
+                            <a href="#certificates" className="hover:text-white transition-colors" style={{ fontSize: '14px', color: '#d1d5db', textDecoration: 'none' }}>Certificates</a>
+                            <a href="#skills" className="hover:text-white transition-colors" style={{ fontSize: '14px', color: '#d1d5db', textDecoration: 'none' }}>Skills</a>
+                            <a href="#contact" className="hover:text-white transition-colors" style={{ fontSize: '14px', color: '#d1d5db', textDecoration: 'none' }}>Contact</a>
+                        </div>
+                    </div>
+
+                    {/* 4: CTA BUTTONS (Bottom Right on mobile) */}
+                    <div className="w-full flex flex-col gap-4 items-start lg:items-end lg:mt-10">
                         <a href="mailto:vioadytia30@gmail.com" style={{
-                            display: 'inline-flex', alignItems: 'center', gap: '12px',
-                            padding: '10px 10px 10px 20px', borderRadius: '999px',
+                            display: 'inline-flex', alignItems: 'center', gap: '10px',
+                            padding: '10px 10px 10px 16px', borderRadius: '999px',
                             backgroundColor: 'var(--blue-light)',
-                            color: '#fff', fontSize: '14px', fontWeight: 500,
+                            color: '#fff', fontSize: '13px', fontWeight: 500,
                             textDecoration: 'none', transition: 'transform 0.2s'
                         }} onMouseEnter={e => e.currentTarget.style.transform='scale(1.02)'} onMouseLeave={e => e.currentTarget.style.transform='scale(1)'}>
-                            Start a conversation
-                            <span style={{ width: '28px', height: '28px', borderRadius: '50%', backgroundColor: '#0f172a', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                                <HiArrowRight size={14} color="#fff" />
+                            Email Me
+                            <span style={{ width: '26px', height: '26px', borderRadius: '50%', backgroundColor: '#0f172a', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+                                <HiArrowRight size={12} color="#fff" />
                             </span>
                         </a>
                         
                         <a href="https://wa.me/6282146495055" target="_blank" rel="noopener noreferrer" style={{
-                            display: 'inline-flex', alignItems: 'center', gap: '12px',
-                            padding: '10px 10px 10px 20px', borderRadius: '999px',
+                            display: 'inline-flex', alignItems: 'center', gap: '10px',
+                            padding: '10px 10px 10px 16px', borderRadius: '999px',
                             backgroundColor: 'rgba(255,255,255,0.08)',
-                            color: '#fff', fontSize: '14px', fontWeight: 500,
+                            color: '#fff', fontSize: '13px', fontWeight: 500,
                             textDecoration: 'none', transition: 'transform 0.2s'
                         }} onMouseEnter={e => e.currentTarget.style.transform='scale(1.02)'} onMouseLeave={e => e.currentTarget.style.transform='scale(1)'}>
                             WhatsApp
-                            <span style={{ width: '28px', height: '28px', borderRadius: '50%', backgroundColor: 'rgba(255,255,255,0.15)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                                <HiArrowRight size={14} color="#fff" />
+                            <span style={{ width: '26px', height: '26px', borderRadius: '50%', backgroundColor: 'rgba(255,255,255,0.15)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+                                <HiArrowRight size={12} color="#fff" />
                             </span>
                         </a>
                     </div>
-
-                    {/* RIGHT: QUICK LINKS (Snel naar) */}
-                    <div style={{ flex: '1 1 0', minWidth: '250px', display: 'flex', justifyContent: 'flex-end' }}>
-                        <div style={{ width: '100%', maxWidth: '250px' }}>
-                            <h4 style={{ fontSize: '18px', color: '#fff', fontWeight: 500, marginBottom: '20px' }}>Quick Links</h4>
-                        <div style={{
-                            display: 'grid',
-                            gridTemplateColumns: '1fr 1fr',
-                            gap: '8px 20px'
-                        }}>
-                            <a href="#hero" style={{ fontSize: '14px', color: '#d1d5db', textDecoration: 'none' }}>Home</a>
-                            <a href="#projects" style={{ fontSize: '14px', color: '#d1d5db', textDecoration: 'none' }}>Work</a>
-                            <a href="#about" style={{ fontSize: '14px', color: '#d1d5db', textDecoration: 'none' }}>About</a>
-                            <a href="#certificates" style={{ fontSize: '14px', color: '#d1d5db', textDecoration: 'none' }}>Certificates</a>
-                            <a href="#skills" style={{ fontSize: '14px', color: '#d1d5db', textDecoration: 'none' }}>Skills</a>
-                            <a href="#contact" style={{ fontSize: '14px', color: '#d1d5db', textDecoration: 'none' }}>Contact</a>
-                        </div>
-                    </div>
                 </div>
-            </div>
 
-            {/* ── VERY BOTTOM RIGHT PILL ── */}
-                <div style={{
-                    width: '100%',
-                    marginTop: '60px',
-                    display: 'flex',
-                    justifyContent: 'flex-end',
-                    position: 'relative',
-                    zIndex: 10
-                }}>
-                    <div style={{
-                        display: 'flex',
-                        alignItems: 'center',
-                        gap: '24px',
-                        padding: '10px 24px',
-                        backgroundColor: '#fdfae5', // Exact pale cream color from image
-                        borderRadius: '999px',
-                    }}>
+                {/* ── VERY BOTTOM RIGHT PILL ── */}
+                <div className="w-full mt-16 flex justify-center lg:justify-end relative z-10">
+                    <div className="flex flex-wrap justify-center items-center gap-4 sm:gap-6 px-6 py-3 rounded-full" style={{ backgroundColor: '#fdfae5' }}>
                         <a href="#" style={{ fontSize: '12px', color: '#000', textDecoration: 'none', fontWeight: 500 }}>Cookies policy</a>
                         <a href="#" style={{ fontSize: '12px', color: '#000', textDecoration: 'none', fontWeight: 500 }}>Privacy policy</a>
                         <span style={{ fontSize: '12px', color: '#000', fontWeight: 600 }}>©{year}</span>

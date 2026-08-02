@@ -11,6 +11,7 @@ import Project from './pages/project/Project.jsx';
 import ProjectDetails from './pages/project/ProjectDetails.jsx';
 import Certificates from './pages/certificates/Certificates.jsx';
 import Contact from './pages/contact/Contact.jsx';
+import Lenis from 'lenis';
 
 function ScrollToTop() {
   const { pathname, hash } = useLocation();
@@ -167,8 +168,8 @@ function Cursor() {
 function SmoothScroll() {
   useEffect(() => {
     const lenis = new Lenis({
-      lerp: 0.08,
-      wheelMultiplier: 0.7,
+      lerp: 0.04, // Lower value = slower, smoother momentum
+      wheelMultiplier: 0.6, // Slightly slower scroll distance
       smoothTouch: false,
       touchMultiplier: 2,
     });
@@ -251,6 +252,7 @@ function Home() {
 export default function App() {
     return (
         <BrowserRouter>
+            <SmoothScroll />
             <ScrollToTop />
             <div style={{ minHeight: '100vh' }}>
                 <div className="glass-blobs">
