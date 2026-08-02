@@ -260,7 +260,7 @@ export default function Hero() {
                                             fontSize: 'clamp(28px, 5.5vw, 72px)',
                                             color: isDiamond ? 'rgba(74, 144, 217, 1)' : 'rgba(255, 255, 255, 0.95)',
                                             WebkitTextStroke: isDiamond ? 'none' : 'none',
-                                            textShadow: 'none',
+                                            textShadow: '0 1px 0 #999, 0 2px 0 #888, 0 3px 0 #777, 0 4px 0 #666, 0 5px 0 #555, 0 15px 25px rgba(0,0,0,0.9)',
                                         }}>
                                             {isDiamond ? (
                                                 <img src="/logo.webp" alt="logo" style={{ height: '0.8em', verticalAlign: 'middle', filter: 'drop-shadow(0 0 10px rgba(74, 144, 217, 0.8))' }} />
