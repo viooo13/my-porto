@@ -44,6 +44,8 @@ function Cursor() {
 
     useEffect(() => {
         let rafId;
+        let isTicking = false;
+
         const updateBrackets = () => {
             if (activeTarget.current && bracketsRef.current) {
                 rafId = requestAnimationFrame(() => {
@@ -59,14 +61,18 @@ function Cursor() {
         };
 
         const move = (e) => {
-            window.requestAnimationFrame(() => {
-                if (dot.current) {
-                    dot.current.style.transform = `translate3d(calc(${e.clientX}px - 50%), calc(${e.clientY}px - 50%), 0)`;
-                }
-                if (aimRef.current) {
-                    aimRef.current.style.transform = `translate3d(calc(${e.clientX}px - 50%), calc(${e.clientY}px - 50%), 0)`;
-                }
-            });
+            if (!isTicking) {
+                window.requestAnimationFrame(() => {
+                    if (dot.current) {
+                        dot.current.style.transform = `translate3d(${e.clientX - 4}px, ${e.clientY - 4}px, 0)`;
+                    }
+                    if (aimRef.current) {
+                        aimRef.current.style.transform = `translate3d(${e.clientX - 16}px, ${e.clientY - 16}px, 0)`;
+                    }
+                    isTicking = false;
+                });
+                isTicking = true;
+            }
         };
 
         const over = (e) => {
