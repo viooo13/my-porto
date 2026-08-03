@@ -8,7 +8,7 @@ const tracks = [
     { id: 4, title: 'Forever', artist: 'Gryffin', src: '/music/Forever feat Elley Duhé.mp3' },
     { id: 5, title: 'Ini Abadi', artist: 'Perunggu', src: '/music/Ini Abadi.mp3' },
     { id: 6, title: 'Best Part', artist: 'Daniel Caesar', src: '/music/Best Part feat HER.mp3' },
-    { id: 7, title: 'Dont Look Back in Anger', artist: 'Oasis', src: '/music/Dont Look Back in Anger.mp3' },
+    { id: 7, title: 'Dont Look Back in Anger', artist: 'Oasis', src: '/music/Dont Look Back in Anger Remastered.mp3' },
     { id: 8, title: 'Gemilang', artist: 'Perunggu', src: '/music/Gemilang.mp3' },
     { id: 9, title: 'Stand by Me', artist: 'Oasis', src: '/music/Stand by Me.mp3' },
     { id: 10, title: 'Wonderwall Remastered', artist: 'Oasis', src: '/music/Wonderwall Remastered.mp3' },
