@@ -63,9 +63,7 @@ export default function Hero() {
 
     return (
         <>
-            <section id="hero" style={{
-                position: 'sticky',
-                top: 0,
+            <section id="hero" className="hero-section" style={{
                 height: '100dvh',
                 minHeight: '600px',
                 display: 'flex',
@@ -337,6 +335,15 @@ export default function Hero() {
                 </div>
 
                 <style>{`
+                .hero-section {
+                    position: sticky;
+                    top: 0;
+                }
+                @media (max-width: 768px) {
+                    .hero-section {
+                        position: relative !important;
+                    }
+                }
                 .orbit-glow {
                     animation: orbitPulse 4s ease-in-out infinite;
                 }
