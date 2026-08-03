@@ -339,11 +339,6 @@ export default function Hero() {
                     position: sticky;
                     top: 0;
                 }
-                @media (max-width: 768px) {
-                    .hero-section {
-                        position: relative !important;
-                    }
-                }
                 .orbit-glow {
                     animation: orbitPulse 4s ease-in-out infinite;
                 }
