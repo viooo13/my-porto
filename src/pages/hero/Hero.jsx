@@ -433,11 +433,11 @@ export default function Hero() {
                 }
 
                 .hero-photo {
-                    height: 195dvh;
+                    height: 195vh;
                     width: auto;
                     object-fit: contain;
                     pointer-events: none;
-                    transform: translateY(97dvh) translateZ(0) scale(1);
+                    transform: translateY(97vh) translateZ(0) scale(1);
                     transform-origin: top center;
                     will-change: filter, transform;
                     transition: filter 0.5s ease, transform 0.5s ease;
@@ -445,21 +445,21 @@ export default function Hero() {
                 
                 @media (max-width: 1024px) {
                     .hero-photo {
-                        transform: translateY(97dvh) translateZ(0) scale(1.1);
+                        transform: translateY(97vh) translateZ(0) scale(1.1);
                     }
                 }
                 
                 @media (max-width: 768px) {
                     .hero-photo {
-                        transform: translateY(97dvh) translateZ(0) scale(1.25);
-                        transition: filter 0.5s ease; /* transform dikontrol JS */
+                        transform: translateY(97vh) translateZ(0) scale(1.25);
+                        transition: filter 0.5s ease, transform 0.5s ease;
                     }
                 }
                 
                 @media (max-width: 480px) {
                     .hero-photo {
-                        transform: translateY(107dvh) translateZ(0) scale(0.9);
-                        transition: filter 0.5s ease; /* transform dikontrol JS */
+                        transform: translateY(107vh) translateZ(0) scale(0.9);
+                        transition: filter 0.5s ease, transform 0.5s ease;
                     }
                 }
             `}</style>
