@@ -64,7 +64,7 @@ export default function Hero() {
     return (
         <>
             <section id="hero" className="hero-section" style={{
-                height: '100dvh',
+                height: '100vh',
                 minHeight: '600px',
                 display: 'flex',
                 flexDirection: 'column',
@@ -209,7 +209,7 @@ export default function Hero() {
                 {/* ── Center Character (The Illustration) ── */}
                 <div style={{
                     position: 'absolute', bottom: 0, left: '50%', transform: 'translateX(-50%)',
-                    zIndex: 2, height: '100dvh', width: '100%',
+                    zIndex: 2, height: '100vh', width: '100%',
                     display: 'flex', justifyContent: 'center', alignItems: 'flex-end',
                     pointerEvents: 'none'
                 }}>
@@ -222,7 +222,7 @@ export default function Hero() {
 
                 {/* ── Gradient Overlay for Text Readability ── */}
                 <div style={{
-                    position: 'absolute', bottom: 0, left: 0, width: '100%', height: '40dvh',
+                    position: 'absolute', bottom: 0, left: 0, width: '100%', height: '40vh',
                     background: 'linear-gradient(to top, rgba(10,10,10,1) 0%, rgba(10,10,10,0.7) 40%, transparent 100%)',
                     zIndex: 4, pointerEvents: 'none'
                 }} />
