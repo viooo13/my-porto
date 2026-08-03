@@ -168,23 +168,16 @@ function Cursor() {
 function SmoothScroll() {
   useEffect(() => {
     const lenis = new Lenis({
-      lerp: 0.04, // Lower value = slower, smoother momentum
-      wheelMultiplier: 0.6, // Slightly slower scroll distance
-      smoothTouch: false,
-      touchMultiplier: 2,
+      autoRaf: true,
+      duration: 1.5, // Controls the duration of the smooth scroll, giving it a 60fps feel
+      easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)), // easeOutExpo
+      smoothWheel: true,
+      wheelMultiplier: 1,
     });
 
     window.lenis = lenis;
-    let rafId;
-
-    function raf(time) {
-      lenis.raf(time);
-      rafId = requestAnimationFrame(raf);
-    }
-    rafId = requestAnimationFrame(raf);
 
     return () => {
-      cancelAnimationFrame(rafId);
       lenis.destroy();
       window.lenis = null;
     };

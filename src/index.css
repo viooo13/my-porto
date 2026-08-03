@@ -44,21 +44,11 @@ html {
   -moz-osx-font-smoothing: grayscale;
 }
 
-html.lenis, html.lenis body {
-  height: auto;
-}
-.lenis.lenis-smooth {
-  scroll-behavior: auto !important;
-}
-.lenis.lenis-smooth [data-lenis-prevent] {
-  overscroll-behavior: contain;
-}
-.lenis.lenis-stopped {
-  overflow: hidden;
-}
-.lenis.lenis-smooth iframe {
-  pointer-events: none;
-}
+html.lenis, html.lenis body { height: auto; }
+.lenis.lenis-smooth { scroll-behavior: auto !important; }
+.lenis.lenis-smooth [data-lenis-prevent] { overscroll-behavior: contain; }
+.lenis.lenis-stopped { overflow: hidden; }
+.lenis.lenis-scrolling iframe { pointer-events: none; }
 
 body {
   font-family: var(--font-body);
@@ -110,8 +100,10 @@ body::after {
   inset: 0;
   pointer-events: none;
   z-index: 9990;
-  opacity: 0.03;
-  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.7' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  display: none; /* DISABLED FOR PERFORMANCE: opacity: 0.03; */
+  /* background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.7' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E"); */
+  transform: translateZ(0);
+  will-change: transform;
 }
 
 /* ========================================
@@ -696,12 +688,6 @@ section {
   }
 }
 
-html.lenis, html.lenis body { height: auto; }
-.lenis.lenis-smooth { scroll-behavior: auto !important; }
-.lenis.lenis-smooth [data-lenis-prevent] { overscroll-behavior: contain; }
-.lenis.lenis-stopped { overflow: hidden; }
-.lenis.lenis-scrolling iframe { pointer-events: none; }
-
 /* GLASSMORPHISM THEME EXTENSION */
 body {
   background: transparent !important;
@@ -721,9 +707,11 @@ html {
 .blob-1, .blob-2 {
   position: absolute;
   border-radius: 50%;
-  filter: blur(140px);
-  opacity: 0.6;
+  /* filter: blur(140px); DISABLED FOR PERFORMANCE */
+  opacity: 0.2; /* Lower opacity since there's no blur */
   animation: floatBlob 20s infinite alternate ease-in-out;
+  transform: translateZ(0);
+  will-change: transform;
 }
 .blob-1 {
   width: 60vw;

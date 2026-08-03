@@ -72,7 +72,7 @@ export default function Project() {
                     {projects.map((p, i) => {
                         return (
                             <article key={p.id} style={{ 
-                                position: 'sticky',
+                                position: 'sticky', 
                                 top: `calc(12vh + ${i * 24}px)`,
                                 height: '78vh',
                                 marginBottom: i === projects.length - 1 ? '40vh' : '70vh', 
