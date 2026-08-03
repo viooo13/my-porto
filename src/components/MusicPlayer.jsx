@@ -13,6 +13,10 @@ const tracks = [
     { id: 9, title: 'Stand by Me', artist: 'Oasis', src: '/music/Stand by Me.mp3' },
     { id: 10, title: 'Wonderwall Remastered', artist: 'Oasis', src: '/music/Wonderwall Remastered.mp3' },
     { id: 11, title: 'Who Knows', artist: 'Daniel Caesar', src: '/music/Who Knows.mp3' },
+    { id: 12, title: 'Secukupnya', artist: 'Hindia', src: '/music/Hindia - Secukupnya (Official Lyric Commentary Video).mp3' },
+    { id: 13, title: 'Bertaut', artist: 'Nadin Amizah', src: '/music/Nadin Amizah - Bertaut (Official Music Video).mp3' },
+    { id: 14, title: 'Teh Hijau', artist: 'TULUS', src: '/music/TULUS - Teh Hijau (Official Lyric Video).mp3' },
+    { id: 15, title: 'Sesi Potret', artist: 'eńau feat. Ari Lesmana', src: '/music/eńau feat. Ari Lesmana - Sesi Potret (Official Music Video).mp3' },
 ];
 
 export default function MusicPlayer() {
