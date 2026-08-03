@@ -32,7 +32,7 @@ export default function Hero() {
     useEffect(() => {
         const updateRadius = () => {
             const vw = window.innerWidth;
-            setCylinderRadius(Math.min(vw * 0.22, 300));
+            setCylinderRadius(vw <= 768 ? Math.min(vw * 0.32, 250) : Math.min(vw * 0.22, 300));
         };
         updateRadius();
         window.addEventListener('resize', updateRadius, { passive: true });
@@ -149,7 +149,7 @@ export default function Hero() {
                                     return (
                                         <span key={`b-${i}`} className="char-back" style={{
                                             transform: `rotateY(${i * (360 / totalChars)}deg) translateZ(${cylinderRadius}px) rotateY(180deg)`,
-                                            fontSize: 'clamp(28px, 5.5vw, 72px)',
+                                            fontSize: 'clamp(32px, 6.5vw, 72px)',
                                             color: isDiamond ? 'rgba(74, 144, 217, 0.06)' : 'rgba(255, 255, 255, 0.06)',
                                             WebkitTextStroke: isDiamond ? 'none' : '1px rgba(255, 255, 255, 0.08)',
                                             filter: 'blur(2px)',
@@ -188,7 +188,7 @@ export default function Hero() {
                                     return (
                                         <span key={`f-${i}`} className={`char-front ${isDiamond ? 'char-diamond' : ''}`} style={{
                                             transform: `rotateY(${i * (360 / totalChars)}deg) translateZ(${cylinderRadius}px)`,
-                                            fontSize: 'clamp(28px, 5.5vw, 72px)',
+                                            fontSize: 'clamp(32px, 6.5vw, 72px)',
                                             color: isDiamond ? 'rgba(74, 144, 217, 1)' : 'rgba(255, 255, 255, 0.95)',
                                             WebkitTextStroke: isDiamond ? 'none' : 'none',
                                             textShadow: '0 1px 0 #999, 0 2px 0 #888, 0 3px 0 #777, 0 4px 0 #666, 0 5px 0 #555, 0 15px 25px rgba(0,0,0,0.9)',
