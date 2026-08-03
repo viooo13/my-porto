@@ -75,7 +75,7 @@ export default function Project() {
                                 position: 'sticky', 
                                 top: `calc(12vh + ${i * 24}px)`,
                                 height: '78vh',
-                                marginBottom: i === projects.length - 1 ? '40vh' : '70vh', 
+                                marginBottom: i === projects.length - 1 ? '70vh' : '70vh', 
                             }}
                                 onMouseEnter={() => setHov(i)}
                                 onMouseLeave={() => setHov(null)}
