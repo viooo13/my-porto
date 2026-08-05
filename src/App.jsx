@@ -10,6 +10,7 @@ import Skills from './pages/skills/Skills.jsx';
 import Project from './pages/project/Project.jsx';
 import ProjectDetails from './pages/project/ProjectDetails.jsx';
 import Certificates from './pages/certificates/Certificates.jsx';
+import Education from './pages/education/Education.jsx';
 import Contact from './pages/contact/Contact.jsx';
 import Lenis from 'lenis';
 
@@ -231,6 +232,7 @@ function Home() {
             <main>
                 <Hero />
                 <About />
+                <Education />
                 <Skills />
                 <Project />
                 <Certificates />

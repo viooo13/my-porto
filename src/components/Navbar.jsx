@@ -1,9 +1,10 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
-import { FaHome, FaUser, FaCode, FaBriefcase, FaCertificate, FaEnvelope } from 'react-icons/fa';
+import { FaHome, FaUser, FaGraduationCap, FaCode, FaBriefcase, FaCertificate, FaEnvelope } from 'react-icons/fa';
 
 const links = [
     { name: 'Home', href: '#hero', icon: <FaHome /> },
     { name: 'About', href: '#about', icon: <FaUser /> },
+    { name: 'Edu', href: '#education', icon: <FaGraduationCap /> },
     { name: 'Skills', href: '#skills', icon: <FaCode /> },
     { name: 'Work', href: '#projects', icon: <FaBriefcase /> },
     { name: 'Certs', href: '#certificates', icon: <FaCertificate /> },
