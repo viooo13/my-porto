@@ -248,10 +248,6 @@ export default function App() {
             <SmoothScroll />
             <ScrollToTop />
             <div style={{ minHeight: '100vh' }}>
-                <div className="glass-blobs">
-                    <div className="blob-1"></div>
-                    <div className="blob-2"></div>
-                </div>
                 <Cursor />
                 <ScrollProgress />
                 <Routes>
