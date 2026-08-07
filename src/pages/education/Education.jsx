@@ -1,5 +1,5 @@
 import { useRef, useState } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion, AnimatePresence, useScroll, useTransform } from 'framer-motion';
 import { StyledHeading } from '../../components/StyledWord';
 
 const timelineData = [
@@ -48,9 +48,18 @@ const bgStars = Array.from({ length: 50 }).map((_, i) => ({
 export default function Education() {
     const [activeNode, setActiveNode] = useState(null);
     const containerRef = useRef(null);
+    const sectionRef = useRef(null);
+
+    // Awwwards style parallax
+    const { scrollYProgress } = useScroll({
+        target: sectionRef,
+        offset: ["start end", "end start"]
+    });
+
+    const yText = useTransform(scrollYProgress, [0, 1], ["-30%", "30%"]);
 
     return (
-        <section id="education" style={{ 
+        <section ref={sectionRef} id="education" style={{ 
             background: '#05050a', 
             position: 'relative', 
             zIndex: 1, 
@@ -87,6 +96,28 @@ export default function Education() {
                     />
                 ))}
             </div>
+
+            {/* Awwwards Massive Typography Parallax */}
+            <motion.div style={{
+                position: 'absolute',
+                top: '50%',
+                left: '50%',
+                x: '-50%',
+                y: '-50%',
+                translateY: yText,
+                fontSize: 'clamp(80px, 18vw, 300px)',
+                fontFamily: 'Plus Jakarta Sans, sans-serif',
+                fontWeight: 900,
+                color: 'transparent',
+                WebkitTextStroke: '2px rgba(255,255,255,0.03)',
+                whiteSpace: 'nowrap',
+                pointerEvents: 'none',
+                zIndex: 0,
+                letterSpacing: '-0.05em',
+                textTransform: 'uppercase'
+            }}>
+                EXPERIENCE
+            </motion.div>
 
             <div style={{ position: 'relative', zIndex: 1, maxWidth: '1200px', margin: '0 auto', padding: '0 40px', width: '100%', flex: 1, display: 'flex', flexDirection: 'column' }}>
                 
@@ -155,19 +186,23 @@ export default function Education() {
                                 onMouseLeave={() => setActiveNode(null)}
                             >
                                 {/* The Star itself */}
-                                <div style={{
-                                    width: '24px',
-                                    height: '24px',
-                                    borderRadius: '50%',
-                                    background: activeNode === i ? '#fff' : '#4a90d9',
-                                    boxShadow: activeNode === i ? '0 0 30px #fff' : '0 0 20px #4a90d9',
-                                    cursor: 'pointer',
-                                    position: 'relative',
-                                    display: 'flex',
-                                    alignItems: 'center',
-                                    justifyContent: 'center',
-                                    transform: 'translate(-50%, -50%)',
-                                }}>
+                                <motion.div 
+                                    whileHover={{ scale: 1.2 }}
+                                    style={{
+                                        width: '24px',
+                                        height: '24px',
+                                        borderRadius: '50%',
+                                        background: activeNode === i ? '#fff' : '#4a90d9',
+                                        boxShadow: activeNode === i ? '0 0 30px #fff' : '0 0 20px #4a90d9',
+                                        cursor: 'pointer',
+                                        position: 'relative',
+                                        display: 'flex',
+                                        alignItems: 'center',
+                                        justifyContent: 'center',
+                                        transform: 'translate(-50%, -50%)',
+                                        transition: 'background 0.3s ease, box-shadow 0.3s ease'
+                                    }}
+                                >
                                     <div style={{ width: '8px', height: '8px', background: '#05050a', borderRadius: '50%' }} />
                                     
                                     {/* Pulse Effect */}
@@ -176,7 +211,7 @@ export default function Education() {
                                         animate={{ scale: [1, 2.5], opacity: [0.8, 0] }}
                                         transition={{ duration: 2, repeat: Infinity, ease: "easeOut" }}
                                     />
-                                </div>
+                                </motion.div>
 
                                 {/* Label (shows when not active to hint) */}
                                 <AnimatePresence>
@@ -220,21 +255,22 @@ export default function Education() {
                                                 left: node.x > 50 ? 'auto' : '20px',
                                                 right: node.x > 50 ? '20px' : 'auto',
                                                 width: '320px',
-                                                background: 'rgba(15, 20, 35, 0.75)',
+                                                background: 'rgba(10, 15, 25, 0.65)',
                                                 backdropFilter: 'blur(20px)',
                                                 WebkitBackdropFilter: 'blur(20px)',
-                                                border: '1px solid rgba(74, 144, 217, 0.3)',
-                                                borderRadius: '16px',
-                                                padding: '24px',
-                                                boxShadow: '0 20px 40px rgba(0,0,0,0.5), 0 0 0 1px rgba(255,255,255,0.05) inset',
+                                                border: '1px solid rgba(255, 255, 255, 0.1)',
+                                                borderRadius: '24px',
+                                                padding: '32px',
+                                                boxShadow: '0 30px 60px rgba(0,0,0,0.6), 0 0 0 1px rgba(255,255,255,0.05) inset',
                                                 pointerEvents: 'none'
                                             }}
                                         >
-                                            <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '12px' }}>
+                                            <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '16px' }}>
                                                 <span style={{ 
                                                     fontFamily: 'Inter, sans-serif', fontSize: '10px', fontWeight: 600, color: '#4a90d9', 
-                                                    letterSpacing: '0.1em', padding: '4px 10px', background: 'rgba(74, 144, 217, 0.15)', 
-                                                    borderRadius: '999px'
+                                                    letterSpacing: '0.1em', padding: '6px 12px', background: 'rgba(74, 144, 217, 0.1)', 
+                                                    borderRadius: '999px',
+                                                    border: '1px solid rgba(74, 144, 217, 0.2)'
                                                 }}>
                                                     {node.year}
                                                 </span>
@@ -242,13 +278,13 @@ export default function Education() {
                                                     {node.type}
                                                 </span>
                                             </div>
-                                            <h3 style={{ fontSize: '18px', color: '#fff', fontWeight: 600, fontFamily: 'Plus Jakarta Sans, sans-serif', margin: '0 0 6px 0' }}>
+                                            <h3 style={{ fontSize: '20px', color: '#fff', fontWeight: 600, fontFamily: 'Plus Jakarta Sans, sans-serif', margin: '0 0 8px 0', lineHeight: 1.2 }}>
                                                 {node.title}
                                             </h3>
-                                            <h4 style={{ fontSize: '13px', color: '#4a90d9', fontWeight: 400, margin: '0 0 12px 0' }}>
+                                            <h4 style={{ fontSize: '13px', color: '#4a90d9', fontWeight: 400, margin: '0 0 16px 0' }}>
                                                 {node.subtitle}
                                             </h4>
-                                            <p style={{ fontSize: '13px', color: 'rgba(255,255,255,0.6)', lineHeight: 1.6, margin: 0, fontFamily: 'Inter, sans-serif' }}>
+                                            <p style={{ fontSize: '14px', color: 'rgba(255,255,255,0.5)', lineHeight: 1.7, margin: 0, fontFamily: 'Inter, sans-serif' }}>
                                                 {node.desc}
                                             </p>
                                         </motion.div>
@@ -268,20 +304,20 @@ export default function Education() {
                                 viewport={{ once: true, margin: "-50px" }}
                                 transition={{ delay: i * 0.2, duration: 0.6 }}
                                 style={{
-                                    background: 'rgba(15, 20, 35, 0.5)',
-                                    border: '1px solid rgba(74, 144, 217, 0.15)',
-                                    borderRadius: '16px',
-                                    padding: '24px',
+                                    background: 'rgba(10, 15, 25, 0.5)',
+                                    border: '1px solid rgba(255, 255, 255, 0.05)',
+                                    borderRadius: '24px',
+                                    padding: '32px',
                                     position: 'relative',
                                     overflow: 'hidden'
                                 }}
                             >
                                 <div style={{ position: 'absolute', top: 0, left: 0, width: '4px', height: '100%', background: '#4a90d9' }} />
                                 
-                                <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '12px' }}>
+                                <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '16px' }}>
                                     <span style={{ 
                                         fontFamily: 'Inter, sans-serif', fontSize: '11px', fontWeight: 600, color: '#4a90d9', 
-                                        letterSpacing: '0.1em', padding: '4px 10px', background: 'rgba(74, 144, 217, 0.1)', 
+                                        letterSpacing: '0.1em', padding: '6px 12px', background: 'rgba(74, 144, 217, 0.1)', 
                                         borderRadius: '999px'
                                     }}>
                                         {node.year}
@@ -290,13 +326,13 @@ export default function Education() {
                                         {node.type}
                                     </span>
                                 </div>
-                                <h3 style={{ fontSize: '18px', color: '#fff', fontWeight: 600, fontFamily: 'Plus Jakarta Sans, sans-serif', margin: '0 0 6px 0' }}>
+                                <h3 style={{ fontSize: '20px', color: '#fff', fontWeight: 600, fontFamily: 'Plus Jakarta Sans, sans-serif', margin: '0 0 8px 0' }}>
                                     {node.title}
                                 </h3>
-                                <h4 style={{ fontSize: '14px', color: 'rgba(255,255,255,0.7)', fontWeight: 400, margin: '0 0 12px 0' }}>
+                                <h4 style={{ fontSize: '14px', color: 'rgba(255,255,255,0.7)', fontWeight: 400, margin: '0 0 16px 0' }}>
                                     {node.subtitle}
                                 </h4>
-                                <p style={{ fontSize: '14px', color: 'rgba(255,255,255,0.5)', lineHeight: 1.6, margin: 0, fontFamily: 'Inter, sans-serif' }}>
+                                <p style={{ fontSize: '14px', color: 'rgba(255,255,255,0.5)', lineHeight: 1.7, margin: 0, fontFamily: 'Inter, sans-serif' }}>
                                     {node.desc}
                                 </p>
                             </motion.div>
