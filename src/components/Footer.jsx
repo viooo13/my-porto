@@ -1,4 +1,4 @@
-import { FaLinkedin, FaGithub, FaInstagram, FaWhatsapp } from 'react-icons/fa';
+import { Fa inkedin, FaGithub, FaInstagram, FaWhatsapp } from 'react-icons/fa';
 import { HiArrowRight, HiArrowUp } from 'react-icons/hi';
 import { useState } from 'react';
 
