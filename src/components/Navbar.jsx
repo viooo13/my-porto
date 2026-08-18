@@ -123,9 +123,10 @@ export default function Navbar() {
                         const isActive = activeSection === l.href.substring(1);
                         return (
                             <a key={l.name} href={l.href} data-hover style={{
-                                fontSize: '11px',
-                                fontWeight: isActive ? 700 : 500,
-                                letterSpacing: '0.1em',
+                                fontFamily: '"Cinzel Decorative", serif',
+                                fontSize: '13px',
+                                fontWeight: isActive ? 700 : 400,
+                                letterSpacing: '0.15em',
                                 color: isActive ? '#fff' : 'rgba(255,255,255,0.4)',
                                 textDecoration: 'none',
                                 transition: 'color 0.3s, transform 0.3s',
@@ -212,8 +213,7 @@ export default function Navbar() {
                                     letterSpacing: '0.15em',
                                     color: isActive ? '#fff' : 'rgba(255,255,255,0.5)',
                                     textDecoration: 'none',
-                                    textTransform: 'uppercase',
-                                    fontFamily: 'var(--font-display)',
+                                    fontFamily: '"Cinzel Decorative", serif',
                                 }}
                             >
                                 {l.name}

@@ -118,7 +118,7 @@ export default function Project() {
                                             {/* Top part: Number & Tags */}
                                             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
                                                 <div style={{ 
-                                                    fontFamily: 'Plus Jakarta Sans, sans-serif', fontWeight: 800, 
+                                                    fontFamily: 'var(--font-display)', fontWeight: 800, 
                                                     fontSize: 'clamp(60px, 8vw, 120px)', lineHeight: 0.8,
                                                     color: 'transparent', WebkitTextStroke: '2px rgba(255,255,255,0.3)'
                                                 }}>
@@ -140,7 +140,7 @@ export default function Project() {
                                             {/* Bottom part: Title & Desc */}
                                             <div style={{ display: 'flex', flexDirection: 'column', gap: 24 }}>
                                                 <h3 style={{
-                                                    fontFamily: 'Plus Jakarta Sans, sans-serif', fontWeight: 700,
+                                                    fontFamily: 'var(--font-display)', fontWeight: 700,
                                                     fontSize: 'clamp(48px, 6vw, 100px)', lineHeight: 0.9,
                                                     color: '#fff', letterSpacing: '-0.02em',
                                                     whiteSpace: 'pre-line',

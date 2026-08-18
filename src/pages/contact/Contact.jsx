@@ -64,7 +64,7 @@ export default function Contact() {
             title: 'GitHub',
             sub: 'Code Repository',
             action: 'Follow',
-            href: '#',
+            href: 'https://github.com/viooo13',
             actionIcon: <span style={{ fontSize: 13 }}>↗</span>,
         },
         {
