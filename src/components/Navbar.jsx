@@ -13,12 +13,14 @@ export default function Navbar() {
     const [open, setOpen] = useState(false);
     const [activeSection, setActiveSection] = useState('hero');
     const [dragOffset, setDragOffset] = useState(0);
+    const [isVisible, setIsVisible] = useState(true);
 
     const isDragging = useRef(false);
     const touchStartY = useRef(0);
     const touchStartTime = useRef(0);
+    const lastScrollY = useRef(0);
 
-    // Active section tracking
+    // Active section tracking and navbar visibility
     useEffect(() => {
         const sectionElements = links.map(l => document.getElementById(l.href.substring(1))).filter(Boolean);
         if (sectionElements.length === 0) return;
@@ -40,6 +42,19 @@ export default function Navbar() {
         sectionElements.forEach(el => observer.observe(el));
         
         const handleScroll = () => {
+            const currentScrollY = window.scrollY;
+            
+            // Navbar visibility logic
+            if (currentScrollY > lastScrollY.current && currentScrollY > 100) {
+                // Scrolling down -> hide
+                setIsVisible(false);
+            } else if (currentScrollY < lastScrollY.current || currentScrollY <= 100) {
+                // Scrolling up -> show
+                setIsVisible(true);
+            }
+            lastScrollY.current = currentScrollY;
+
+            // Active section logic
             let bestId = 'hero';
             const threshold = window.innerHeight * 0.3;
             for (const el of sectionElements) {
@@ -112,8 +127,10 @@ export default function Navbar() {
             <nav style={{
                 position: 'fixed', top: 0, left: 0, right: 0, zIndex: 500,
                 display: 'flex', justifyContent: 'flex-end', alignItems: 'flex-start',
-                padding: '32px 48px',
+                padding: 'clamp(16px, 4vw, 32px) clamp(16px, 5vw, 48px)',
                 pointerEvents: 'none',
+                transform: isVisible ? 'translateY(0)' : 'translateY(-100%)',
+                transition: 'transform 0.4s cubic-bezier(0.16, 1, 0.3, 1)',
             }}>
 
 

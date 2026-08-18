@@ -39,6 +39,23 @@ export default function Hero() {
         return () => window.removeEventListener('resize', updateRadius);
     }, []);
     
+    const [heroHeight, setHeroHeight] = useState('100vh');
+
+    useEffect(() => {
+        // Lock the height in pixels to completely prevent address bar resize jumps
+        setHeroHeight(`${window.innerHeight}px`);
+        let lastWidth = window.innerWidth;
+        const handleResize = () => {
+            // Only update height if width changes (orientation change), ignore vertical scroll resize
+            if (window.innerWidth !== lastWidth) {
+                setHeroHeight(`${window.innerHeight}px`);
+                lastWidth = window.innerWidth;
+            }
+        };
+        window.addEventListener('resize', handleResize, { passive: true });
+        return () => window.removeEventListener('resize', handleResize);
+    }, []);
+
     useEffect(() => {
         setLoaded(true);
         let isHovering = false;
@@ -64,7 +81,7 @@ export default function Hero() {
     return (
         <>
             <section id="hero" className="hero-section" style={{
-                height: '100vh',
+                height: heroHeight,
                 minHeight: '600px',
                 display: 'flex',
                 flexDirection: 'column',
@@ -209,7 +226,7 @@ export default function Hero() {
                 {/* ── Center Character (The Illustration) ── */}
                 <div style={{
                     position: 'absolute', bottom: 0, left: '50%', transform: 'translateX(-50%)',
-                    zIndex: 2, height: '100vh', width: '100%',
+                    zIndex: 2, height: heroHeight, width: '100%',
                     display: 'flex', justifyContent: 'center', alignItems: 'flex-end',
                     pointerEvents: 'none'
                 }}>
@@ -425,11 +442,11 @@ export default function Hero() {
                 }
 
                 .hero-photo {
-                    height: 195vh;
+                    height: 195%;
                     width: auto;
                     object-fit: contain;
                     pointer-events: none;
-                    transform: translateY(97vh) translateZ(0) scale(1);
+                    transform: translateY(49.7%) translateZ(0) scale(1);
                     transform-origin: top center;
                     will-change: filter, transform;
                     transition: filter 0.5s ease, transform 0.5s ease;
@@ -437,20 +454,20 @@ export default function Hero() {
                 
                 @media (max-width: 1024px) {
                     .hero-photo {
-                        transform: translateY(97vh) translateZ(0) scale(1.1);
+                        transform: translateY(49.7%) translateZ(0) scale(1.1);
                     }
                 }
                 
                 @media (max-width: 768px) {
                     .hero-photo {
-                        transform: translateY(97vh) translateZ(0) scale(1.25);
+                        transform: translateY(49.7%) translateZ(0) scale(1.25);
                         transition: filter 0.5s ease, transform 0.5s ease;
                     }
                 }
                 
                 @media (max-width: 480px) {
                     .hero-photo {
-                        transform: translateY(107vh) translateZ(0) scale(0.9);
+                        transform: translateY(54.8%) translateZ(0) scale(0.9);
                         transition: filter 0.5s ease, transform 0.5s ease;
                     }
                 }
