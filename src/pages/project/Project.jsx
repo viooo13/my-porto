@@ -115,14 +115,24 @@ export default function Project() {
                                             padding: 'clamp(20px, 4vw, 40px)',
                                             display: 'flex', flexDirection: 'column', justifyContent: 'space-between'
                                         }}>
-                                            {/* Top part: Number & Tags */}
-                                            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
+                                        {/* Top part: Number & Tags */}
+                                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
                                                 <div style={{ 
                                                     fontFamily: 'var(--font-display)', fontWeight: 800, 
                                                     fontSize: 'clamp(60px, 8vw, 120px)', lineHeight: 0.8,
-                                                    color: 'transparent', WebkitTextStroke: '2px rgba(255,255,255,0.3)'
                                                 }}>
-                                                    0{i + 1}
+                                                    <svg width="1.5em" height="0.8em" style={{ overflow: 'visible', display: 'block' }}>
+                                                        <text 
+                                                            x="0" 
+                                                            y="0.76em" 
+                                                            fill="transparent" 
+                                                            stroke="rgba(255,255,255,0.3)" 
+                                                            strokeWidth="2" 
+                                                            strokeLinejoin="round"
+                                                        >
+                                                            0{i + 1}
+                                                        </text>
+                                                    </svg>
                                                 </div>
                                                 
                                                 <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap', justifyContent: 'flex-end', maxWidth: '60%' }}>

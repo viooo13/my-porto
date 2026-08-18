@@ -142,9 +142,9 @@ export default function Footer() {
                 {/* ── VERY BOTTOM RIGHT PILL ── */}
                 <div className="w-full mt-16 flex justify-center lg:justify-end relative z-10">
                     <div className="flex flex-wrap justify-center items-center gap-4 sm:gap-6 px-6 py-3 rounded-full" style={{ backgroundColor: '#fdfae5' }}>
-                        <a href="#" style={{ fontSize: '12px', color: '#000', textDecoration: 'none', fontWeight: 500 }}>Cookies policy</a>
-                        <a href="#" style={{ fontSize: '12px', color: '#000', textDecoration: 'none', fontWeight: 500 }}>Privacy policy</a>
-                        <span style={{ fontSize: '12px', color: '#000', fontWeight: 600 }}>©{year}</span>
+                        <a href="#" style={{ fontSize: '12px', color: '#000', textDecoration: 'none', fontWeight: 500, padding: '4px 8px' }}>Cookies policy</a>
+                        <a href="#" style={{ fontSize: '12px', color: '#000', textDecoration: 'none', fontWeight: 500, padding: '4px 8px' }}>Privacy policy</a>
+                        <span style={{ fontSize: '12px', color: '#000', fontWeight: 600, padding: '4px 8px', padding : '4px 8px'}}>©{year}</span>
                     </div>
                 </div>
             </footer>
