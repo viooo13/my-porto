@@ -260,10 +260,7 @@ export default function Hero() {
                             </h2>
                         </div>
 
-                        <div className="hide-mobile" style={{ textAlign: 'right', pointerEvents: 'auto', marginTop: 10 }}>
-                            <p style={{ fontFamily: 'Inter, sans-serif', fontSize: 10, color: 'rgba(255,255,255,0.4)', letterSpacing: '0.2em', margin: '0 0 8px 0' }}>CURRENTLY BASED IN</p>
-                            <p style={{ fontFamily: 'Inter, sans-serif', fontSize: 14, color: '#fff', fontWeight: 600, letterSpacing: '0.2em', margin: 0 }}>BOGOR, IDN</p>
-                        </div>
+
                     </div>
 
                     {/* Bottom Details */}

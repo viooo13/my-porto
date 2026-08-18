@@ -1,61 +1,47 @@
-import { useState, useEffect, useRef, useCallback } from 'react';
-import { FaHome, FaUser, FaGraduationCap, FaCode, FaBriefcase, FaCertificate, FaEnvelope } from 'react-icons/fa';
+import { useState, useEffect, useRef } from 'react';
 
 const links = [
-    { name: 'Home', href: '#hero', icon: <FaHome /> },
-    { name: 'About', href: '#about', icon: <FaUser /> },
-    { name: 'Edu', href: '#education', icon: <FaGraduationCap /> },
-    { name: 'Skills', href: '#skills', icon: <FaCode /> },
-    { name: 'Work', href: '#projects', icon: <FaBriefcase /> },
-    { name: 'Certs', href: '#certificates', icon: <FaCertificate /> },
-    { name: 'Contact', href: '#contact', icon: <FaEnvelope /> },
+    { name: 'HOME', href: '#hero' },
+    { name: 'ABOUT', href: '#about' },
+    { name: 'SKILLS', href: '#skills' },
+    { name: 'PROJECTS', href: '#projects' },
+    { name: 'CERTS', href: '#certificates' },
+    { name: 'CONTACT', href: '#contact' },
 ];
 
 export default function Navbar() {
     const [open, setOpen] = useState(false);
     const [activeSection, setActiveSection] = useState('hero');
-    const [navHidden, setNavHidden] = useState(false);
     const [dragOffset, setDragOffset] = useState(0);
 
-    const prevScrollY = useRef(0);
     const isDragging = useRef(false);
     const touchStartY = useRef(0);
     const touchStartTime = useRef(0);
-    const ticking = useRef(false);
 
-    // ─── INTERSECTION OBSERVER — Active section tracking ──────────────────
+    // Active section tracking
     useEffect(() => {
         const sectionElements = links.map(l => document.getElementById(l.href.substring(1))).filter(Boolean);
         if (sectionElements.length === 0) return;
 
-        // We use IntersectionObserver just as an efficient way to trigger recalculation on scroll
         const observer = new IntersectionObserver(
             () => {
                 let bestId = 'hero';
-                const threshold = window.innerHeight * 0.3; // 30% from top of viewport
-                
+                const threshold = window.innerHeight * 0.3;
                 for (const el of sectionElements) {
                     const rect = el.getBoundingClientRect();
                     if (rect.top <= threshold && rect.bottom >= threshold) {
                         bestId = el.id;
                     }
                 }
-                
                 setActiveSection(bestId);
             },
-            {
-                rootMargin: '0px 0px 0px 0px',
-                threshold: Array.from({ length: 11 }, (_, i) => i * 0.1), // Trigger frequently as it intersects
-            }
+            { rootMargin: '0px', threshold: Array.from({ length: 11 }, (_, i) => i * 0.1) }
         );
-
         sectionElements.forEach(el => observer.observe(el));
         
-        // Also add a scroll listener as fallback since IntersectionObserver might not fire for sticky elements that don't change intersection ratio
         const handleScroll = () => {
             let bestId = 'hero';
             const threshold = window.innerHeight * 0.3;
-            
             for (const el of sectionElements) {
                 const rect = el.getBoundingClientRect();
                 if (rect.top <= threshold && rect.bottom > threshold) {
@@ -64,56 +50,19 @@ export default function Navbar() {
             }
             setActiveSection(bestId);
         };
-        
         window.addEventListener('scroll', handleScroll, { passive: true });
-
         return () => {
             observer.disconnect();
             window.removeEventListener('scroll', handleScroll);
         };
     }, []);
 
-    // ─── SCROLL HIDE/SHOW ────────────────────────────────────────────────
-    useEffect(() => {
-        const handleScroll = () => {
-            if (open) return;
-            if (!ticking.current) {
-                window.requestAnimationFrame(() => {
-                    const y = window.scrollY;
-                    const prev = prevScrollY.current;
-                    const delta = y - prev;
-
-                    if (y <= 80) {
-                        setNavHidden(false);
-                        prevScrollY.current = y;
-                        ticking.current = false;
-                        return;
-                    }
-
-                    if (Math.abs(delta) >= 5) {
-                        setNavHidden(delta > 0);
-                    }
-
-                    prevScrollY.current = y;
-                    ticking.current = false;
-                });
-                ticking.current = true;
-            }
-        };
-
-        prevScrollY.current = window.scrollY;
-        window.addEventListener('scroll', handleScroll, { passive: true });
-        return () => window.removeEventListener('scroll', handleScroll);
-    }, [open]);
-
-    // ─── ESCAPE KEY ──────────────────────────────────────────────────────
     useEffect(() => {
         const fn = (e) => { if (e.key === 'Escape') setOpen(false); };
         window.addEventListener('keydown', fn);
         return () => window.removeEventListener('keydown', fn);
     }, []);
 
-    // ─── DRAG-TO-DISMISS (mobile menu) ───────────────────────────────────
     useEffect(() => { if (!open) setDragOffset(0); }, [open]);
 
     const handleTouchStart = (e) => {
@@ -138,7 +87,6 @@ export default function Navbar() {
         }
     };
 
-    // ─── LOCK BODY SCROLL saat mobile menu terbuka ───────────────────────
     useEffect(() => {
         if (open) {
             const scrollY = window.scrollY;
@@ -155,184 +103,117 @@ export default function Navbar() {
             if (top) {
                 const y = -parseInt(top || '0');
                 window.scrollTo(0, y);
-                prevScrollY.current = y; // sync agar tidak langsung hide
             }
         }
     }, [open]);
 
-    // ─── RENDER ──────────────────────────────────────────────────────────
     return (
         <>
             <nav style={{
                 position: 'fixed', top: 0, left: 0, right: 0, zIndex: 500,
-                height: 'clamp(60px, 10vw, 80px)',
-                display: 'flex', alignItems: 'flex-start', justifyContent: 'center',
-                paddingTop: 16,
-                background: 'transparent',
+                display: 'flex', justifyContent: 'flex-end', alignItems: 'flex-start',
+                padding: '32px 48px',
                 pointerEvents: 'none',
-                transition: 'transform 0.6s cubic-bezier(0.25, 1, 0.5, 1)',
-                transform: navHidden ? 'translateY(calc(-100% - 24px))' : 'translateY(0)',
-                willChange: 'transform',
             }}>
-                {/* Floating nav container */}
-                <div style={{
-                    display: 'flex', alignItems: 'center', justifyContent: 'space-between',
-                    gap: 16,
-                    padding: '8px 12px 8px 16px',
-                    background: 'linear-gradient(135deg, rgba(255,255,255,0.08) 0%, rgba(255,255,255,0.03) 100%)',
-                    border: '1px solid rgba(255,255,255,0.12)',
-                    borderRadius: 999,
-                    backdropFilter: 'blur(20px) saturate(150%)',
-                    boxShadow: '0 8px 32px rgba(0,0,0,0.3), inset 0 1px 0 rgba(255,255,255,0.1)',
-                    pointerEvents: 'auto',
-                }}>
-                    {/* Logo */}
-                    <a href="#hero" data-hover style={{ textDecoration: 'none', display: 'flex', alignItems: 'center', flexShrink: 0 }}>
-                        <img
-                            src="/logo.webp"
-                            alt="Vio Adytia"
-                            width="512"
-                            height="512"
-                            style={{
-                                width: 40, height: 'auto', display: 'block',
-                                transition: 'transform 0.4s cubic-bezier(0.16,1,0.3,1)',
+
+
+                {/* Right Side (Links) */}
+                <div className="hide-mobile" style={{ pointerEvents: 'auto', display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: '4px' }}>
+                    {links.map((l) => {
+                        const isActive = activeSection === l.href.substring(1);
+                        return (
+                            <a key={l.name} href={l.href} data-hover style={{
+                                fontSize: '11px',
+                                fontWeight: isActive ? 700 : 500,
+                                letterSpacing: '0.1em',
+                                color: isActive ? '#fff' : 'rgba(255,255,255,0.4)',
+                                textDecoration: 'none',
+                                transition: 'color 0.3s, transform 0.3s',
+                                transform: isActive ? 'translateX(0)' : 'translateX(0)',
                             }}
-                            onMouseEnter={e => e.currentTarget.style.transform = 'scale(1.1) rotate(8deg)'}
-                            onMouseLeave={e => e.currentTarget.style.transform = 'scale(1) rotate(0deg)'}
-                        />
-                    </a>
-
-                    {/* Desktop links */}
-                    <div className="hide-mobile" style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
-                        {links.map((l) => {
-                            const isActive = activeSection === l.href.substring(1);
-                            return (
-                                <a key={l.name} href={l.href} data-hover style={{
-                                    fontWeight: 400, fontSize: 11,
-                                    letterSpacing: '0.08em', textTransform: 'uppercase',
-                                    color: isActive ? '#fff' : 'rgba(255,255,255,0.55)',
-                                    textDecoration: 'none',
-                                    transition: 'all 0.3s cubic-bezier(0.16,1,0.3,1)',
-                                    padding: '8px 16px',
-                                    borderRadius: 999,
-                                    background: isActive ? 'rgba(74, 144, 217, 0.15)' : 'transparent',
-                                }}
-                                    onMouseEnter={e => {
-                                        if (!isActive) {
-                                            e.currentTarget.style.color = 'rgba(255,255,255,0.85)';
-                                            e.currentTarget.style.background = 'rgba(255,255,255,0.06)';
-                                        }
-                                    }}
-                                    onMouseLeave={e => {
-                                        e.currentTarget.style.color = isActive ? '#fff' : 'rgba(255,255,255,0.55)';
-                                        e.currentTarget.style.background = isActive ? 'rgba(74, 144, 217, 0.15)' : 'transparent';
-                                    }}
-                                >
-                                    {l.name}
-                                </a>
-                            );
-                        })}
-                    </div>
-
-                    {/* Status pill */}
-                    <div className="hide-mobile" style={{
-                        padding: '6px 12px',
-                        background: 'rgba(74, 144, 217, 0.12)',
-                        border: '1px solid rgba(74, 144, 217, 0.2)',
-                        borderRadius: 999,
-                        fontSize: 10, fontWeight: 700,
-                        letterSpacing: '0.1em', textTransform: 'uppercase',
-                        color: '#4a90d9',
-                    }}>
-                        2026
-                    </div>
-
-                    {/* Hamburger — mobile only */}
-                    <button
-                        onClick={() => setOpen(!open)}
-                        aria-label="Menu"
-                        data-hover
-                        className="hide-desktop"
-                        style={{
-                            display: 'flex',
-                            width: 40, height: 40,
-                            alignItems: 'center', justifyContent: 'center',
-                            background: open
-                                ? 'linear-gradient(135deg, rgba(220,50,50,0.8) 0%, rgba(180,40,40,0.6) 100%)'
-                                : 'linear-gradient(135deg, rgba(30,58,95,0.6) 0%, rgba(45,90,135,0.4) 100%)',
-                            border: '1px solid rgba(255,255,255,0.2)',
-                            borderRadius: 999,
-                            flexDirection: 'column',
-                            gap: 4,
-                            cursor: 'pointer',
-                            transition: 'all 0.3s cubic-bezier(0.16,1,0.3,1)',
-                            boxShadow: open
-                                ? '0 4px 15px rgba(220,50,50,0.4)'
-                                : '0 4px 15px rgba(30,58,95,0.3)',
-                        }}
-                    >
-                        <span style={{
-                            width: 20, height: 2.5, background: '#fff', display: 'block', borderRadius: 2,
-                            transition: 'transform 0.25s ease, opacity 0.25s ease',
-                            transform: open ? 'translateY(3px) rotate(45deg)' : 'translateY(0) rotate(0deg)',
-                            opacity: open ? 0.9 : 1,
-                        }} />
-                        <span style={{
-                            width: 20, height: 2.5, background: '#fff', display: 'block', borderRadius: 2,
-                            transition: 'opacity 0.25s ease',
-                            opacity: open ? 0 : 1,
-                        }} />
-                        <span style={{
-                            width: 20, height: 2.5, background: '#fff', display: 'block', borderRadius: 2,
-                            transition: 'transform 0.25s ease, opacity 0.25s ease',
-                            transform: open ? 'translateY(-3px) rotate(-45deg)' : 'translateY(0) rotate(0deg)',
-                            opacity: open ? 0.9 : 1,
-                        }} />
-                    </button>
+                            onMouseEnter={e => e.currentTarget.style.color = '#fff'}
+                            onMouseLeave={e => e.currentTarget.style.color = isActive ? '#fff' : 'rgba(255,255,255,0.4)'}
+                            >
+                                {l.name}
+                            </a>
+                        );
+                    })}
                 </div>
+
+                {/* Hamburger (Mobile) */}
+                <button
+                    onClick={() => setOpen(!open)}
+                    aria-label="Menu"
+                    data-hover
+                    className="hide-desktop"
+                    style={{
+                        pointerEvents: 'auto',
+                        display: 'flex',
+                        width: 40, height: 40,
+                        alignItems: 'center', justifyContent: 'center',
+                        background: 'transparent',
+                        border: 'none',
+                        flexDirection: 'column',
+                        gap: 6,
+                        cursor: 'pointer',
+                        zIndex: 510,
+                    }}
+                >
+                    <span style={{
+                        width: 24, height: 2, background: '#fff', display: 'block',
+                        transition: 'transform 0.3s, opacity 0.3s',
+                        transform: open ? 'translateY(8px) rotate(45deg)' : 'translateY(0)',
+                    }} />
+                    <span style={{
+                        width: 24, height: 2, background: '#fff', display: 'block',
+                        transition: 'opacity 0.3s',
+                        opacity: open ? 0 : 1,
+                    }} />
+                    <span style={{
+                        width: 24, height: 2, background: '#fff', display: 'block',
+                        transition: 'transform 0.3s',
+                        transform: open ? 'translateY(-8px) rotate(-45deg)' : 'translateY(0)',
+                    }} />
+                </button>
             </nav>
 
-            {/* Backdrop */}
+            {/* Mobile Backdrop & Menu */}
             <div className="hide-desktop" onClick={() => setOpen(false)} style={{
-                position: 'fixed', inset: 0, zIndex: 599,
-                background: 'rgba(0,0,0,0.6)',
+                position: 'fixed', inset: 0, zIndex: 490,
+                background: 'rgba(0,0,0,0.8)',
+                backdropFilter: 'blur(10px)',
                 opacity: open ? Math.max(0, 1 - dragOffset / 300) : 0,
-                transition: dragOffset === 0 ? 'opacity 0.3s ease' : 'none',
+                transition: dragOffset === 0 ? 'opacity 0.3s' : 'none',
                 pointerEvents: open ? 'auto' : 'none',
             }} />
 
-            {/* Mobile fullscreen menu */}
             <div
                 className="hide-desktop"
                 onTouchStart={handleTouchStart}
                 onTouchMove={handleTouchMove}
                 onTouchEnd={handleTouchEnd}
                 style={{
-                    position: 'fixed', top: 0, left: 0, width: '100%', height: '100dvh', zIndex: 9999,
-                    background: '#000000',
-                    backdropFilter: 'blur(30px)',
+                    position: 'fixed', top: 0, left: 0, width: '100%', height: '100dvh', zIndex: 495,
                     display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center',
-                    transition: dragOffset === 0 ? 'opacity 0.4s ease, transform 0.4s ease' : 'none',
+                    transition: dragOffset === 0 ? 'opacity 0.4s, transform 0.4s' : 'none',
                     opacity: open ? 1 : 0,
                     transform: open ? `translateY(${dragOffset}px)` : 'translateY(20px)',
                     pointerEvents: open ? 'auto' : 'none',
-                    overflow: 'hidden',
                 }}
             >
-                <nav style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 20, zIndex: 10 }}>
-                    {links.map((l, i) => {
+                <nav style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 24 }}>
+                    {links.map((l) => {
                         const isActive = activeSection === l.href.substring(1);
                         return (
                             <a key={l.name} href={l.href}
                                 onClick={() => { setOpen(false); setActiveSection(l.href.substring(1)); }}
                                 style={{
-                                    fontSize: 28, fontWeight: 400,
-                                    letterSpacing: '0.18em',
-                                    color: isActive ? '#4a90d9' : 'rgba(255,255,255,0.55)',
+                                    fontSize: '24px', fontWeight: 600,
+                                    letterSpacing: '0.15em',
+                                    color: isActive ? '#fff' : 'rgba(255,255,255,0.5)',
                                     textDecoration: 'none',
-                                    fontFamily: '"Cinzel Decorative", serif',
-                                    transition: `all 0.35s cubic-bezier(0.16,1,0.3,1) ${i * 0.05}s`,
                                     textTransform: 'uppercase',
+                                    fontFamily: 'var(--font-display)',
                                 }}
                             >
                                 {l.name}
@@ -340,33 +221,6 @@ export default function Navbar() {
                         );
                     })}
                 </nav>
-
-                {/* Close X button */}
-                <button onClick={() => setOpen(false)} aria-label="Close"
-                    style={{
-                        position: 'absolute', top: 24, right: 24,
-                        width: 44, height: 44,
-                        display: 'flex', alignItems: 'center', justifyContent: 'center',
-                        background: 'rgba(74, 144, 217, 0.1)',
-                        border: '1px solid rgba(74, 144, 217, 0.2)',
-                        borderRadius: 12,
-                        cursor: 'pointer',
-                        transition: 'all 0.3s',
-                    }}
-                    onMouseEnter={e => {
-                        e.currentTarget.style.background = 'rgba(74, 144, 217, 0.2)';
-                        e.currentTarget.style.transform = 'rotate(90deg)';
-                    }}
-                    onMouseLeave={e => {
-                        e.currentTarget.style.background = 'rgba(74, 144, 217, 0.1)';
-                        e.currentTarget.style.transform = 'rotate(0deg)';
-                    }}
-                >
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#4a90d9" strokeWidth="2.5" strokeLinecap="round">
-                        <line x1="18" y1="6" x2="6" y2="18" />
-                        <line x1="6" y1="6" x2="18" y2="18" />
-                    </svg>
-                </button>
             </div>
         </>
     );
