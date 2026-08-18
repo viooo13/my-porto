@@ -11,7 +11,6 @@ export default function Project() {
     const textRef = useRef(null);
     const navigate = useNavigate();
     const [vis, setVis] = useState(false);
-    const [hov, setHov] = useState(null);
 
     useEffect(() => {
         const obs = new IntersectionObserver(([e]) => { setVis(e.isIntersecting); }, { threshold: 0.1 });
@@ -73,118 +72,104 @@ export default function Project() {
                         return (
                             <article key={p.id} style={{ 
                                 position: 'sticky', 
-                                top: `calc(12vh + ${i * 24}px)`,
-                                height: '78vh',
-                                marginBottom: i === projects.length - 1 ? '0' : '70vh', 
-                            }}
-                                onMouseEnter={() => setHov(i)}
-                                onMouseLeave={() => setHov(null)}
-                            >
-                                <div style={{ ...a(100 + i * 100), width: '100%', height: '100%' }}>
+                                top: `calc(12vh + ${i * 50}px)`,
+                                height: `calc(78vh + ${(projects.length - 1 - i) * 50}px)`,
+                                marginBottom: 0, 
+                                zIndex: i,
+                            }}>
+                                <div style={{ ...a(100 + i * 100), width: '100%', height: '78vh' }}>
                                     <a href={`/project/${p.id}`} data-hover onClick={(e) => { e.preventDefault(); navigate(`/project/${p.id}`); }} style={{
                                         display: 'block', position: 'relative', width: '100%', height: '100%',
-                                    borderRadius: 40, overflow: 'hidden',
-                                    border: '1px solid rgba(255,255,255,0.1)',
-                                    background: '#050505',
-                                    transform: hov === i ? 'scale(0.98)' : 'scale(1)',
-                                    transition: 'all 0.6s cubic-bezier(0.16,1,0.3,1)',
-                                    willChange: 'transform'
-                                }}>
-                                    {/* Image background */}
-                                    <div style={{ position: 'absolute', inset: 0 }}>
-                                        <img 
-                                            src={[
-                                                "https://images.unsplash.com/photo-1460925895917-afdab827c52f?q=80&w=2400&auto=format&fit=crop",
-                                                "https://images.unsplash.com/photo-1551288049-bebda4e38f71?q=80&w=2400&auto=format&fit=crop",
-                                                "https://images.unsplash.com/photo-1563986768494-4dee2763ff3f?q=80&w=2400&auto=format&fit=crop",
-                                                "https://images.unsplash.com/photo-1677442136019-21780ecad995?q=80&w=2400&auto=format&fit=crop"
-                                            ][i]} 
-                                            alt={p.title} 
-                                            style={{
-                                                width: '100%', height: '100%', objectFit: 'cover',
-                                                transform: hov === i ? 'scale(1.05)' : 'scale(1)',
-                                                transition: 'transform 1.5s cubic-bezier(0.16,1,0.3,1)',
-                                                opacity: hov === i ? 0.9 : 0.4,
-                                                willChange: 'transform'
-                                            }}
-                                        />
-                                    </div>
-
-                                    {/* Gradient overlay */}
-                                    <div style={{
-                                        position: 'absolute', inset: 0,
-                                        background: 'linear-gradient(to top, rgba(10,10,10,1) 0%, rgba(10,10,10,0.2) 50%, rgba(10,10,10,0.8) 100%)',
-                                    }} />
-
-                                    {/* Content */}
-                                    <div style={{
-                                        position: 'absolute', inset: 0,
-                                        padding: 'clamp(30px, 5vw, 60px)',
-                                        display: 'flex', flexDirection: 'column', justifyContent: 'space-between'
+                                        borderRadius: 40, overflow: 'hidden',
+                                        border: '1px solid rgba(255,255,255,0.1)',
+                                        borderTop: '1px solid rgba(255,255,255,0.3)',
+                                        boxShadow: '0 -15px 40px rgba(0,0,0,0.6)',
+                                        background: '#050505',
                                     }}>
-                                        {/* Top part: Number & Tags */}
-                                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
-                                            <div style={{ 
-                                                fontFamily: 'Plus Jakarta Sans, sans-serif', fontWeight: 800, 
-                                                fontSize: 'clamp(60px, 8vw, 120px)', lineHeight: 0.8,
-                                                color: 'transparent', WebkitTextStroke: '2px rgba(255,255,255,0.3)'
-                                            }}>
-                                                0{i + 1}
-                                            </div>
-                                            
-                                            <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap', justifyContent: 'flex-end', maxWidth: '60%' }}>
-                                                {p.tags.map(t => (
-                                                    <span key={t} style={{
-                                                        fontSize: 12, letterSpacing: '0.1em', textTransform: 'uppercase',
-                                                        padding: '10px 24px', border: '1px solid rgba(255,255,255,0.15)',
-                                                        color: '#fff', borderRadius: 100,
-                                                        background: 'rgba(0,0,0,0.5)',
-                                                    }}>{t}</span>
-                                                ))}
-                                            </div>
+                                        {/* Image background */}
+                                        <div style={{ position: 'absolute', inset: 0 }}>
+                                            <img 
+                                                src={[
+                                                    "https://images.unsplash.com/photo-1460925895917-afdab827c52f?q=80&w=2400&auto=format&fit=crop",
+                                                    "https://images.unsplash.com/photo-1551288049-bebda4e38f71?q=80&w=2400&auto=format&fit=crop",
+                                                    "https://images.unsplash.com/photo-1563986768494-4dee2763ff3f?q=80&w=2400&auto=format&fit=crop",
+                                                    "https://images.unsplash.com/photo-1677442136019-21780ecad995?q=80&w=2400&auto=format&fit=crop"
+                                                ][i]} 
+                                                alt={p.title} 
+                                                style={{
+                                                    width: '100%', height: '100%', objectFit: 'cover',
+                                                    opacity: 0.6,
+                                                }}
+                                            />
                                         </div>
-                                        
-                                        {/* Bottom part: Title & Desc */}
-                                        <div style={{ display: 'flex', flexDirection: 'column', gap: 24 }}>
-                                            <h3 style={{
-                                                fontFamily: 'Plus Jakarta Sans, sans-serif', fontWeight: 700,
-                                                fontSize: 'clamp(48px, 6vw, 100px)', lineHeight: 0.9,
-                                                color: '#fff', letterSpacing: '-0.02em',
-                                                whiteSpace: 'pre-line',
-                                                transform: hov === i ? 'translateX(20px)' : 'translateX(0)',
-                                                transition: 'transform 0.6s cubic-bezier(0.16,1,0.3,1)',
-                                            }}>
-                                                {p.title}
-                                            </h3>
-                                            
-                                            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', gap: 40, flexWrap: 'wrap' }}>
-                                                <p style={{
-                                                    fontSize: 'clamp(16px, 1.5vw, 20px)', lineHeight: 1.6, color: 'rgba(255,255,255,0.6)',
-                                                    maxWidth: 600, fontWeight: 300,
-                                                    transform: hov === i ? 'translateX(20px)' : 'translateX(0)',
-                                                    transition: 'transform 0.7s cubic-bezier(0.16,1,0.3,1)',
-                                                }}>
-                                                    {p.desc}
-                                                </p>
-                                                
+
+                                        {/* Gradient overlay */}
+                                        <div style={{
+                                            position: 'absolute', inset: 0,
+                                            background: 'linear-gradient(to top, rgba(10,10,10,1) 0%, rgba(10,10,10,0.2) 50%, rgba(10,10,10,0.8) 100%)',
+                                        }} />
+
+                                        {/* Content */}
+                                        <div style={{
+                                            position: 'absolute', inset: 0,
+                                            padding: 'clamp(20px, 4vw, 40px)',
+                                            display: 'flex', flexDirection: 'column', justifyContent: 'space-between'
+                                        }}>
+                                            {/* Top part: Number & Tags */}
+                                            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
                                                 <div style={{ 
-                                                    width: 80, height: 80, borderRadius: '50%',
-                                                    background: hov === i ? '#fff' : 'rgba(255,255,255,0.05)',
-                                                    color: hov === i ? '#0a0a0a' : '#fff',
-                                                    display: 'flex', alignItems: 'center', justifyContent: 'center',
-                                                    transition: 'all 0.5s cubic-bezier(0.16,1,0.3,1)',
-                                                    border: '1px solid rgba(255,255,255,0.2)',
-                                                    flexShrink: 0
+                                                    fontFamily: 'Plus Jakarta Sans, sans-serif', fontWeight: 800, 
+                                                    fontSize: 'clamp(60px, 8vw, 120px)', lineHeight: 0.8,
+                                                    color: 'transparent', WebkitTextStroke: '2px rgba(255,255,255,0.3)'
                                                 }}>
-                                                    <HiArrowUpRight size={32} style={{
-                                                        transform: hov === i ? 'rotate(45deg)' : 'rotate(0)',
-                                                        transition: 'transform 0.5s cubic-bezier(0.16,1,0.3,1)',
-                                                    }} />
+                                                    0{i + 1}
+                                                </div>
+                                                
+                                                <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap', justifyContent: 'flex-end', maxWidth: '60%' }}>
+                                                    {p.tags.map(t => (
+                                                        <span key={t} style={{
+                                                            fontSize: 12, letterSpacing: '0.1em', textTransform: 'uppercase',
+                                                            padding: '10px 24px', border: '1px solid rgba(255,255,255,0.15)',
+                                                            color: '#fff', borderRadius: 100,
+                                                            background: 'rgba(0,0,0,0.5)',
+                                                        }}>{t}</span>
+                                                    ))}
+                                                </div>
+                                            </div>
+                                            
+                                            {/* Bottom part: Title & Desc */}
+                                            <div style={{ display: 'flex', flexDirection: 'column', gap: 24 }}>
+                                                <h3 style={{
+                                                    fontFamily: 'Plus Jakarta Sans, sans-serif', fontWeight: 700,
+                                                    fontSize: 'clamp(48px, 6vw, 100px)', lineHeight: 0.9,
+                                                    color: '#fff', letterSpacing: '-0.02em',
+                                                    whiteSpace: 'pre-line',
+                                                }}>
+                                                    {p.title}
+                                                </h3>
+                                                
+                                                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', gap: 40, flexWrap: 'wrap' }}>
+                                                    <p style={{
+                                                        fontSize: 'clamp(16px, 1.5vw, 20px)', lineHeight: 1.6, color: 'rgba(255,255,255,0.6)',
+                                                        maxWidth: 600, fontWeight: 300,
+                                                    }}>
+                                                        {p.desc}
+                                                    </p>
+                                                    
+                                                    <div style={{ 
+                                                        width: 80, height: 80, borderRadius: '50%',
+                                                        background: 'rgba(255,255,255,0.05)',
+                                                        color: '#fff',
+                                                        display: 'flex', alignItems: 'center', justifyContent: 'center',
+                                                        border: '1px solid rgba(255,255,255,0.2)',
+                                                        flexShrink: 0
+                                                    }}>
+                                                        <HiArrowUpRight size={32} />
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
-                                    </div>
-                                </a>
+                                    </a>
                                 </div>
                             </article>
                         );
