@@ -231,7 +231,7 @@ export default function Hero() {
                     pointerEvents: 'none'
                 }}>
                     <img ref={photoRef} className="hero-photo" src="/my-photo-bordered.webp" alt="Vio Adytia Illustration" width="1792" height="2394" style={{
-                        filter: `${isPhotoHovered ? 'grayscale(0%)' : 'grayscale(100%)'} drop-shadow(0 0 40px rgba(74, 144, 217, 0.25))`,
+                        filter: `${isPhotoHovered ? 'grayscale(0%)' : 'grayscale(100%)'}`,
                         maxWidth: 'none',
                     }} 
                     />

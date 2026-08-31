@@ -13,14 +13,12 @@ export default function Navbar() {
     const [open, setOpen] = useState(false);
     const [activeSection, setActiveSection] = useState('hero');
     const [dragOffset, setDragOffset] = useState(0);
-    const [isVisible, setIsVisible] = useState(true);
 
     const isDragging = useRef(false);
     const touchStartY = useRef(0);
     const touchStartTime = useRef(0);
-    const lastScrollY = useRef(0);
 
-    // Active section tracking and navbar visibility
+    // Active section tracking
     useEffect(() => {
         const sectionElements = links.map(l => document.getElementById(l.href.substring(1))).filter(Boolean);
         if (sectionElements.length === 0) return;
@@ -42,18 +40,6 @@ export default function Navbar() {
         sectionElements.forEach(el => observer.observe(el));
         
         const handleScroll = () => {
-            const currentScrollY = window.scrollY;
-            
-            // Navbar visibility logic
-            if (currentScrollY > lastScrollY.current && currentScrollY > 100) {
-                // Scrolling down -> hide
-                setIsVisible(false);
-            } else if (currentScrollY < lastScrollY.current || currentScrollY <= 100) {
-                // Scrolling up -> show
-                setIsVisible(true);
-            }
-            lastScrollY.current = currentScrollY;
-
             // Active section logic
             let bestId = 'hero';
             const threshold = window.innerHeight * 0.3;
@@ -125,37 +111,55 @@ export default function Navbar() {
     return (
         <>
             <nav style={{
-                position: 'fixed', top: 0, left: 0, right: 0, zIndex: 500,
-                display: 'flex', justifyContent: 'flex-end', alignItems: 'flex-start',
-                padding: 'clamp(16px, 4vw, 32px) clamp(16px, 5vw, 48px)',
-                pointerEvents: 'none',
-                transform: isVisible ? 'translateY(0)' : 'translateY(-100%)',
-                transition: 'transform 0.4s cubic-bezier(0.16, 1, 0.3, 1)',
+                position: 'fixed', 
+                top: 0, left: 0, right: 0, 
+                zIndex: 500,
+                display: 'flex', 
+                justifyContent: 'space-between', 
+                alignItems: 'center',
+                padding: '16px 40px',
+                background: 'transparent',
+                color: '#fff',
+                fontFamily: '"Inter Display", "Inter", sans-serif',
+                fontSize: '12px',
+                fontWeight: 600,
+                letterSpacing: '0.05em',
             }}>
+                {/* Left Side (Name) */}
+                <div style={{ flex: 1, display: 'flex', justifyContent: 'flex-start' }}>
+                    <a href="#hero" style={{ textDecoration: 'none', color: 'inherit', fontWeight: 'bold' }}>
+                        VIO ADYTIA
+                    </a>
+                </div>
 
-
-                {/* Right Side (Links) */}
-                <div className="hide-mobile" style={{ pointerEvents: 'auto', display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: '4px' }}>
-                    {links.map((l) => {
+                {/* Center (Links) */}
+                <div className="hide-mobile" style={{ flex: 2, display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '8px' }}>
+                    {links.map((l, index) => {
                         const isActive = activeSection === l.href.substring(1);
                         return (
-                            <a key={l.name} href={l.href} data-hover style={{
-                                fontFamily: '"Cinzel Decorative", serif',
-                                fontSize: '13px',
-                                fontWeight: isActive ? 700 : 400,
-                                letterSpacing: '0.15em',
-                                color: isActive ? '#fff' : 'rgba(255,255,255,0.4)',
-                                textDecoration: 'none',
-                                transition: 'color 0.3s, transform 0.3s',
-                                transform: isActive ? 'translateX(0)' : 'translateX(0)',
-                            }}
-                            onMouseEnter={e => e.currentTarget.style.color = '#fff'}
-                            onMouseLeave={e => e.currentTarget.style.color = isActive ? '#fff' : 'rgba(255,255,255,0.4)'}
-                            >
-                                {l.name}
-                            </a>
+                            <span key={l.name} style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                                <a href={l.href} data-hover style={{
+                                    color: isActive ? '#fff' : 'rgba(255,255,255,0.5)',
+                                    textDecoration: 'none',
+                                    transition: 'color 0.3s',
+                                    fontWeight: isActive ? 700 : 500
+                                }}
+                                onMouseEnter={e => e.currentTarget.style.color = '#fff'}
+                                onMouseLeave={e => e.currentTarget.style.color = isActive ? '#fff' : 'rgba(255,255,255,0.5)'}
+                                >
+                                    {l.name}
+                                </a>
+                                {index < links.length - 1 && <span style={{ color: 'rgba(255,255,255,0.3)', margin: '0 4px', fontWeight: 400 }}>/</span>}
+                            </span>
                         );
                     })}
+                </div>
+
+                {/* Right Side (Email) */}
+                <div className="hide-mobile" style={{ flex: 1, display: 'flex', justifyContent: 'flex-end' }}>
+                    <a href="mailto:hey@vioadytia.com" data-hover style={{ textDecoration: 'none', color: 'inherit', fontWeight: '600' }}>
+                        HEY@VIOADYTIA.COM
+                    </a>
                 </div>
 
                 {/* Hamburger (Mobile) */}
@@ -165,32 +169,32 @@ export default function Navbar() {
                     data-hover
                     className="hide-desktop"
                     style={{
-                        pointerEvents: 'auto',
                         display: 'flex',
-                        width: 40, height: 40,
+                        width: 32, height: 32,
                         alignItems: 'center', justifyContent: 'center',
                         background: 'transparent',
                         border: 'none',
                         flexDirection: 'column',
-                        gap: 6,
+                        gap: 5,
                         cursor: 'pointer',
                         zIndex: 510,
+                        padding: 0,
                     }}
                 >
                     <span style={{
-                        width: 24, height: 2, background: '#fff', display: 'block',
+                        width: 20, height: 1.5, background: '#fff', display: 'block',
                         transition: 'transform 0.3s, opacity 0.3s',
-                        transform: open ? 'translateY(8px) rotate(45deg)' : 'translateY(0)',
+                        transform: open ? 'translateY(6.5px) rotate(45deg)' : 'translateY(0)',
                     }} />
                     <span style={{
-                        width: 24, height: 2, background: '#fff', display: 'block',
+                        width: 20, height: 1.5, background: '#fff', display: 'block',
                         transition: 'opacity 0.3s',
                         opacity: open ? 0 : 1,
                     }} />
                     <span style={{
-                        width: 24, height: 2, background: '#fff', display: 'block',
+                        width: 20, height: 1.5, background: '#fff', display: 'block',
                         transition: 'transform 0.3s',
-                        transform: open ? 'translateY(-8px) rotate(-45deg)' : 'translateY(0)',
+                        transform: open ? 'translateY(-6.5px) rotate(-45deg)' : 'translateY(0)',
                     }} />
                 </button>
             </nav>
@@ -198,7 +202,7 @@ export default function Navbar() {
             {/* Mobile Backdrop & Menu */}
             <div className="hide-desktop" onClick={() => setOpen(false)} style={{
                 position: 'fixed', inset: 0, zIndex: 490,
-                background: 'rgba(0,0,0,0.8)',
+                background: 'rgba(10, 10, 10, 0.95)',
                 backdropFilter: 'blur(10px)',
                 opacity: open ? Math.max(0, 1 - dragOffset / 300) : 0,
                 transition: dragOffset === 0 ? 'opacity 0.3s' : 'none',
@@ -227,18 +231,38 @@ export default function Navbar() {
                                 onClick={() => { setOpen(false); setActiveSection(l.href.substring(1)); }}
                                 style={{
                                     fontSize: '24px', fontWeight: 600,
-                                    letterSpacing: '0.15em',
+                                    letterSpacing: '0.1em',
                                     color: isActive ? '#fff' : 'rgba(255,255,255,0.5)',
                                     textDecoration: 'none',
-                                    fontFamily: '"Cinzel Decorative", serif',
+                                    fontFamily: '"Inter Display", "Inter", sans-serif',
                                 }}
                             >
                                 {l.name}
                             </a>
                         );
                     })}
+                    
+                    <a href="mailto:hey@vioadytia.com" style={{
+                        marginTop: 40,
+                        fontSize: '14px',
+                        color: '#fff',
+                        textDecoration: 'none',
+                        fontFamily: '"Inter Display", "Inter", sans-serif',
+                        letterSpacing: '0.05em',
+                        fontWeight: 600
+                    }}>
+                        HEY@VIOADYTIA.COM
+                    </a>
                 </nav>
             </div>
+            
+            <style>{`
+                @media (max-width: 768px) {
+                    nav {
+                        padding: 16px 20px !important;
+                    }
+                }
+            `}</style>
         </>
     );
 }
