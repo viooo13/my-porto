@@ -1,5 +1,5 @@
 import { useEffect, useState, useRef } from 'react';
-import { FaGithub, FaLinkedin, FaImage, FaBriefcase, FaFileAlt } from 'react-icons/fa';
+import { FaGithub, FaLinkedin, FaBriefcase, FaFileAlt } from 'react-icons/fa';
 import { StyledWord } from '../../components/StyledWord';
 
 

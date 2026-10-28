@@ -3,7 +3,7 @@ import { FaReact, FaGitAlt, FaHtml5, FaCss3Alt, FaJs, FaPhp, FaLaravel, FaGithub
 import { SiTailwindcss, SiMysql, SiDotnet, SiThreedotjs, SiPostgresql } from 'react-icons/si';
 import { TbBrandCSharp, TbBrandVscode, TbBrandVisualStudio } from 'react-icons/tb';
 import { StyledWord } from '../../components/StyledWord';
-import { AnimatedNumber, useCounter } from '../../components/AnimatedNumber';
+import { AnimatedNumber } from '../../components/AnimatedNumber';
 
 const a = (vis, d = 0) => ({
     opacity: vis ? 1 : 0,

@@ -1,8 +1,8 @@
 import { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { HiArrowUpRight } from 'react-icons/hi2';
-import { StyledWord, StyledHeading } from '../../components/StyledWord';
-import { AnimatedNumber } from '../../components/AnimatedNumber';
+import { StyledWord } from '../../components/StyledWord';
+
 
 import { projectsData as projects } from '../../data/projectsData';
 

@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import { StyledHeading } from '../../components/StyledWord';
-import { AnimatedNumber } from '../../components/AnimatedNumber';
+
 
 export default function About() {
     const ref = useRef(null);

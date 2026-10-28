@@ -1,6 +1,6 @@
-import { FaLinkedin, FaGithub, FaInstagram, FaWhatsapp } from 'react-icons/fa';
+
 import { HiArrowRight, HiArrowUp } from 'react-icons/hi';
-import { useState } from 'react';
+
 
 export default function Footer() {
     const year = new Date().getFullYear();
@@ -144,7 +144,7 @@ export default function Footer() {
                     <div className="flex flex-wrap justify-center items-center gap-4 sm:gap-6 px-6 py-3 rounded-full" style={{ backgroundColor: '#fdfae5' }}>
                         <a href="#" style={{ fontSize: '12px', color: '#000', textDecoration: 'none', fontWeight: 500, padding: '4px 8px' }}>Cookies policy</a>
                         <a href="#" style={{ fontSize: '12px', color: '#000', textDecoration: 'none', fontWeight: 500, padding: '4px 8px' }}>Privacy policy</a>
-                        <span style={{ fontSize: '12px', color: '#000', fontWeight: 600, padding: '4px 8px', padding : '4px 8px'}}>©{year}</span>
+                        <span style={{ fontSize: '12px', color: '#000', fontWeight: 600, padding: '4px 8px' }}>©{year}</span>
                     </div>
                 </div>
             </footer>

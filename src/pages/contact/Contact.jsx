@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { HiMail, HiLocationMarker } from 'react-icons/hi';
-import { FaLinkedin, FaGithub, FaWhatsapp } from 'react-icons/fa';
-import { AnimatedNumber } from '../../components/AnimatedNumber';
+import { FaLinkedin, FaGithub } from 'react-icons/fa';
+
 
 export default function Contact() {
     const ref = useRef(null);

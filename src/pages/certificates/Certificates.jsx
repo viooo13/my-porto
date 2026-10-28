@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { certificatesData as certs } from '../../data/certificatesData';
 import { StyledWord } from '../../components/StyledWord';
-import { AnimatedNumber } from '../../components/AnimatedNumber';
+
 
 export default function Certificates() {
     const ref = useRef(null);

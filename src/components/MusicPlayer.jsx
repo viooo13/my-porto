@@ -1,5 +1,7 @@
 import { useState, useRef, useEffect } from 'react';
-import { FaPlay, FaPause, FaStepForward, FaStepBackward, FaMusic, FaTimes, FaVolumeUp, FaVolumeMute } from 'react-icons/fa';
+import { FaPlay, FaPause, FaStepForward, FaStepBackward, FaMusic, FaTimes, FaVolumeUp, FaVolumeDown, FaVolumeMute } from 'react-icons/fa';
+import { MdOutlineLyrics, MdLyrics } from 'react-icons/md';
+import { bundledLyrics } from '../data/lyricsData';
 
 const tracks = [
     { id: 1, title: '33x', artist: 'Perunggu', src: '/music/33x.mp3' },
@@ -19,60 +21,180 @@ const tracks = [
     { id: 15, title: 'Sesi Potret', artist: 'eńau feat. Ari Lesmana', src: '/music/eńau feat. Ari Lesmana - Sesi Potret (Official Music Video).mp3' },
 ];
 
+const ICON_SIZE = 58;
+const PADDING = 20;
+
+function parseLrc(lrc) {
+    if (!lrc || typeof lrc !== 'string') return [];
+    const result = [];
+    const lines = lrc.split(/\r?\n/);
+    const timeRegex = /\[(\d{1,3}):(\d{2})(?:\.(\d{1,3}))?\]/g;
+
+    for (const rawLine of lines) {
+        const matches = [...rawLine.matchAll(timeRegex)];
+        if (matches.length === 0) continue;
+        const text = rawLine.replace(timeRegex, '').trim();
+        if (!text) continue;
+        for (const m of matches) {
+            const mins = parseInt(m[1], 10);
+            const secs = parseInt(m[2], 10);
+            const frac = m[3] ? parseInt(m[3].padEnd(3, '0'), 10) / 1000 : 0;
+            result.push({ time: mins * 60 + secs + frac, text });
+        }
+    }
+    result.sort((a, b) => a.time - b.time);
+    return result;
+}
+
+function normalizeQueryTitle(title) {
+    return title
+        .replace(/\s*Remastered\s*/i, '')
+        .replace(/^Sweet Scars$/i, 'Sweet Scar')
+        .replace(/^Dont\b/i, "Don't")
+        .trim();
+}
+
+function normalizeQueryArtist(artist) {
+    return artist
+        .split(/\s+feat\./i)[0]
+        .normalize('NFD')
+        .replace(/[\u0300-\u036f]/g, '')
+        .trim();
+}
+
+async function fetchTrackLyrics(track, audioDuration) {
+    if (bundledLyrics[track.id]) {
+        return bundledLyrics[track.id];
+    }
+
+    const cleanTitle = normalizeQueryTitle(track.title);
+    const cleanArtist = normalizeQueryArtist(track.artist);
+
+    const tryFetchJson = async (url) => {
+        for (let attempt = 0; attempt < 2; attempt++) {
+            const res = await fetch(url);
+            if (res.ok) return res.json();
+            await new Promise(r => setTimeout(r, 450));
+        }
+        return [];
+    };
+
+    try {
+        const searchUrl = `https://lrclib.net/api/search?track_name=${encodeURIComponent(cleanTitle)}&artist_name=${encodeURIComponent(cleanArtist)}`;
+        let data = await tryFetchJson(searchUrl);
+
+        if (!Array.isArray(data) || data.length === 0) {
+            const fallbackUrl = `https://lrclib.net/api/search?q=${encodeURIComponent(`${cleanTitle} ${cleanArtist}`)}`;
+            data = await tryFetchJson(fallbackUrl);
+        }
+
+        if (!Array.isArray(data) || data.length === 0) {
+            return { status: 'empty', synced: false, lines: [] };
+        }
+
+        const parsedSynced = data
+            .filter(item => item && item.syncedLyrics)
+            .map(item => ({ item, lines: parseLrc(item.syncedLyrics) }))
+            .filter(entry => entry.lines.length > 0);
+
+        if (parsedSynced.length > 0) {
+            const maxLines = Math.max(...parsedSynced.map(entry => entry.lines.length));
+            const completePool = parsedSynced.filter(entry => entry.lines.length >= Math.ceil(maxLines * 0.75));
+            const pool = completePool.length > 0 ? completePool : parsedSynced;
+
+            let best = pool[0];
+            if (audioDuration > 0) {
+                best = pool.reduce((prev, curr) => {
+                    const prevDiff = Math.abs((prev.item.duration || 0) - audioDuration);
+                    const currDiff = Math.abs((curr.item.duration || 0) - audioDuration);
+                    if (Math.abs(currDiff - prevDiff) <= 2) {
+                        return curr.lines.length > prev.lines.length ? curr : prev;
+                    }
+                    return currDiff < prevDiff ? curr : prev;
+                }, pool[0]);
+            }
+
+            return { status: 'loaded', synced: true, lines: best.lines };
+        }
+
+        const plainCandidates = data
+            .filter(item => item && item.plainLyrics)
+            .map(item => item.plainLyrics.split(/\r?\n/).map(t => t.trim()).filter(Boolean))
+            .filter(lines => lines.length > 0);
+
+        if (plainCandidates.length > 0) {
+            const fullestPlain = plainCandidates.reduce(
+                (prev, curr) => (curr.length > prev.length ? curr : prev),
+                plainCandidates[0]
+            );
+            return {
+                status: 'loaded',
+                synced: false,
+                lines: fullestPlain.map((text, idx) => ({ time: idx, text })),
+            };
+        }
+
+        return { status: 'empty', synced: false, lines: [] };
+    } catch {
+        return { status: 'error', synced: false, lines: [] };
+    }
+}
+
 export default function MusicPlayer() {
     const [isPlaying, setIsPlaying] = useState(false);
     const [currentTrackIndex, setCurrentTrackIndex] = useState(0);
     const [progress, setProgress] = useState(0);
     const [currentTime, setCurrentTime] = useState(0);
     const [duration, setDuration] = useState(0);
-    const [error, setError] = useState(null);
     const [isHovered, setIsHovered] = useState(false);
     const [isOpen, setIsOpen] = useState(false);
-    const [isIconHovered, setIsIconHovered] = useState(false);
     const [isMuted, setIsMuted] = useState(false);
+    const [volume, setVolume] = useState(0.8);
+    const [isDraggingVolume, setIsDraggingVolume] = useState(false);
+    const [showHint, setShowHint] = useState(true);
+    const [showLyrics, setShowLyrics] = useState(false);
+    const [lyricsMap, setLyricsMap] = useState({});
 
     // Drag state — position is stored as {left, top} in px from viewport edges
-    const [initialized, setInitialized] = useState(false);
-    const [position, setPosition] = useState({ left: 0, top: 0 });
+    const [viewport, setViewport] = useState(() => ({
+        w: typeof document !== 'undefined' ? document.documentElement.clientWidth : 1440,
+        h: typeof window !== 'undefined' ? window.innerHeight : 900,
+    }));
+    const [position, setPosition] = useState(() => {
+        const w = typeof document !== 'undefined' ? document.documentElement.clientWidth : 1440;
+        const h = typeof window !== 'undefined' ? window.innerHeight : 900;
+        const isMobile = w <= 768;
+        return {
+            left: Math.max(PADDING, w - ICON_SIZE - (isMobile ? 20 : 28)),
+            top: isMobile ? Math.max(PADDING, h - ICON_SIZE - 24) : Math.max(90, h - 250),
+        };
+    });
     const [isDragging, setIsDragging] = useState(false);
     const dragStart = useRef({ x: 0, y: 0 });
     const posStart = useRef({ left: 0, top: 0 });
-    const [viewport, setViewport] = useState({ w: window.innerWidth, h: window.innerHeight });
-    const PADDING = 20;
-
-    // Set initial position to bottom-right on mount
-    useEffect(() => {
-        const w = document.documentElement.clientWidth;
-        const h = window.innerHeight; // innerHeight is usually better for mobile to avoid address bar issues, but clientWidth is safer for scrollbars
-        setPosition({ left: w - 48 - PADDING - 20, top: h * 0.80, });
-        setViewport({ w, h });
-        setInitialized(true);
-
-    }, []);
-
-    // Re-clamp base position when viewport changes (always based on 56x56 icon size)
-    useEffect(() => {
-        if (!initialized) return;
-        setPosition(prev => ({
-            left: Math.max(PADDING, Math.min(viewport.w - 56 - PADDING, prev.left)),
-            top: Math.max(PADDING, Math.min(viewport.h - 56 - PADDING, prev.top)),
-        }));
-    }, [viewport.w, viewport.h, initialized]);
+    const hasDragged = useRef(false);
 
     // Track viewport size and re-clamp position on resize/orientation change
     useEffect(() => {
-        const onResize = () => setViewport({ w: document.documentElement.clientWidth, h: window.innerHeight });
+        const onResize = () => {
+            const w = document.documentElement.clientWidth;
+            const h = window.innerHeight;
+            setViewport({ w, h });
+            setPosition(prev => ({
+                left: Math.max(PADDING, Math.min(w - ICON_SIZE - PADDING, prev.left)),
+                top: Math.max(PADDING, Math.min(h - ICON_SIZE - PADDING, prev.top)),
+            }));
+        };
         window.addEventListener('resize', onResize);
         return () => window.removeEventListener('resize', onResize);
     }, []);
 
     const audioRef = useRef(null);
-    const cardRef = useRef(null);
     const containerRef = useRef(null);
+    const volumeBarRef = useRef(null);
+    const lyricsContainerRef = useRef(null);
+    const activeLineRef = useRef(null);
     const currentTrack = tracks[currentTrackIndex];
-
-    // Drag handlers
-    const hasDragged = useRef(false);
 
     const handleDragStart = (e) => {
         const clientX = e.touches ? e.touches[0].clientX : e.clientX;
@@ -83,65 +205,85 @@ export default function MusicPlayer() {
         setIsDragging(true);
     };
 
-    const handleDragMove = (e) => {
-        if (!isDragging) return;
-        e.preventDefault();
-        const clientX = e.touches ? e.touches[0].clientX : e.clientX;
-        const clientY = e.touches ? e.touches[0].clientY : e.clientY;
-        const dx = clientX - dragStart.current.x;
-        const dy = clientY - dragStart.current.y;
-
-        // Mark as dragged if moved more than 5px
-        if (Math.abs(dx) > 5 || Math.abs(dy) > 5) {
-            hasDragged.current = true;
-        }
-
-        const rawLeft = posStart.current.left + dx;
-        const rawTop = posStart.current.top + dy;
-
-        const clampedLeft = Math.max(PADDING, Math.min(viewport.w - 56 - PADDING, rawLeft));
-        const clampedTop = Math.max(PADDING, Math.min(viewport.h - 56 - PADDING, rawTop));
-
-        if (containerRef.current) {
-            containerRef.current.style.left = `${clampedLeft}px`;
-            containerRef.current.style.top = `${clampedTop}px`;
-        }
-    };
-
-    const handleDragEnd = () => {
-        if (containerRef.current) {
-            setPosition({
-                left: parseInt(containerRef.current.style.left, 10) || position.left,
-                top: parseInt(containerRef.current.style.top, 10) || position.top
-            });
-        }
-        setIsDragging(false);
-        // Clear hasDragged after a short delay
-        setTimeout(() => { hasDragged.current = false; }, 50);
-    };
-
-    const handleClick = (e) => {
-        if (hasDragged.current) {
-            e.stopPropagation();
-            return;
-        }
-        setIsOpen(true);
-    };
-
     useEffect(() => {
-        if (isDragging) {
-            window.addEventListener('mousemove', handleDragMove);
-            window.addEventListener('mouseup', handleDragEnd);
-            window.addEventListener('touchmove', handleDragMove, { passive: false });
-            window.addEventListener('touchend', handleDragEnd);
-        }
+        if (!isDragging) return;
+
+        const onMove = (e) => {
+            e.preventDefault();
+            const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+            const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+            const dx = clientX - dragStart.current.x;
+            const dy = clientY - dragStart.current.y;
+
+            if (Math.abs(dx) > 5 || Math.abs(dy) > 5) {
+                hasDragged.current = true;
+            }
+
+            const w = document.documentElement.clientWidth;
+            const h = window.innerHeight;
+            const clampedLeft = Math.max(PADDING, Math.min(w - ICON_SIZE - PADDING, posStart.current.left + dx));
+            const clampedTop = Math.max(PADDING, Math.min(h - ICON_SIZE - PADDING, posStart.current.top + dy));
+
+            if (containerRef.current) {
+                containerRef.current.style.left = `${clampedLeft}px`;
+                containerRef.current.style.top = `${clampedTop}px`;
+            }
+        };
+
+        const onEnd = () => {
+            if (containerRef.current) {
+                setPosition(prev => ({
+                    left: parseInt(containerRef.current.style.left, 10) || prev.left,
+                    top: parseInt(containerRef.current.style.top, 10) || prev.top,
+                }));
+            }
+            setIsDragging(false);
+            setTimeout(() => { hasDragged.current = false; }, 50);
+        };
+
+        window.addEventListener('mousemove', onMove);
+        window.addEventListener('mouseup', onEnd);
+        window.addEventListener('touchmove', onMove, { passive: false });
+        window.addEventListener('touchend', onEnd);
         return () => {
-            window.removeEventListener('mousemove', handleDragMove);
-            window.removeEventListener('mouseup', handleDragEnd);
-            window.removeEventListener('touchmove', handleDragMove);
-            window.removeEventListener('touchend', handleDragEnd);
+            window.removeEventListener('mousemove', onMove);
+            window.removeEventListener('mouseup', onEnd);
+            window.removeEventListener('touchmove', onMove);
+            window.removeEventListener('touchend', onEnd);
         };
     }, [isDragging]);
+
+    useEffect(() => {
+        if (!audioRef.current) return;
+        audioRef.current.volume = volume;
+        audioRef.current.muted = isMuted || volume === 0;
+    }, [volume, isMuted]);
+
+    useEffect(() => {
+        if (!isDraggingVolume) return;
+
+        const updateFromEvent = (e) => {
+            if (!volumeBarRef.current) return;
+            const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+            const rect = volumeBarRef.current.getBoundingClientRect();
+            const nextVol = Math.max(0, Math.min(1, (clientX - rect.left) / rect.width));
+            setVolume(nextVol);
+            setIsMuted(nextVol === 0);
+        };
+
+        const stopVolumeDrag = () => setIsDraggingVolume(false);
+
+        window.addEventListener('mousemove', updateFromEvent);
+        window.addEventListener('mouseup', stopVolumeDrag);
+        window.addEventListener('touchmove', updateFromEvent, { passive: true });
+        window.addEventListener('touchend', stopVolumeDrag);
+        return () => {
+            window.removeEventListener('mousemove', updateFromEvent);
+            window.removeEventListener('mouseup', stopVolumeDrag);
+            window.removeEventListener('touchmove', updateFromEvent);
+            window.removeEventListener('touchend', stopVolumeDrag);
+        };
+    }, [isDraggingVolume]);
 
     useEffect(() => {
         if (!audioRef.current) return;
@@ -175,34 +317,47 @@ export default function MusicPlayer() {
     };
 
     const handleError = () => {
-        setError('Audio tidak dapat diputar');
         setIsPlaying(false);
     };
 
     const handleLoadedMetadata = () => {
         if (audioRef.current) {
             setDuration(audioRef.current.duration);
-            setError(null);
+            audioRef.current.volume = volume;
+            audioRef.current.muted = isMuted || volume === 0;
         }
     };
 
     const changeTrack = (idx) => {
         setCurrentTrackIndex(idx);
         setIsPlaying(true);
-        setError(null);
         setProgress(0);
         setCurrentTime(0);
     };
 
     const handleNext = () => changeTrack((currentTrackIndex + 1) % tracks.length);
     const handlePrev = () => changeTrack((currentTrackIndex - 1 + tracks.length) % tracks.length);
-    const togglePlay = () => setIsPlaying(!isPlaying);
+    const togglePlay = () => setIsPlaying(prev => !prev);
     const toggleMute = (e) => {
         e.stopPropagation();
-        if (audioRef.current) {
-            audioRef.current.muted = !isMuted;
-            setIsMuted(!isMuted);
+        if (isMuted || volume === 0) {
+            const restored = volume === 0 ? 0.5 : volume;
+            setVolume(restored);
+            setIsMuted(false);
+        } else {
+            setIsMuted(true);
         }
+    };
+
+    const handleVolumeBarDown = (e) => {
+        e.stopPropagation();
+        if (!volumeBarRef.current) return;
+        const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+        const rect = volumeBarRef.current.getBoundingClientRect();
+        const nextVol = Math.max(0, Math.min(1, (clientX - rect.left) / rect.width));
+        setVolume(nextVol);
+        setIsMuted(nextVol === 0);
+        setIsDraggingVolume(true);
     };
 
     const handleSeek = (e) => {
@@ -217,19 +372,96 @@ export default function MusicPlayer() {
         return `${m}:${s.toString().padStart(2, '0')}`;
     };
 
+    const isMobile = viewport.w <= 768;
     const isRightHalf = position.left > viewport.w / 2;
     const isBottomHalf = position.top > viewport.h / 2;
-    const ICON_SIZE = 64;
-    const EXPANDED_WIDTH = 320;
-    const EXPANDED_HEIGHT = 125;
+    const EXPANDED_WIDTH = Math.min(320, viewport.w - PADDING * 2);
+    const EXPANDED_HEIGHT = showLyrics
+        ? Math.min(308, viewport.h - PADDING * 2)
+        : 132;
     const isExpanded = isOpen || isHovered;
+    const effectiveVolume = isMuted ? 0 : volume;
+    const currentLyrics = bundledLyrics[currentTrack.id] || lyricsMap[currentTrack.id];
+
+    const activeLyricIndex = (() => {
+        if (!currentLyrics || currentLyrics.status !== 'loaded' || !currentLyrics.synced) return -1;
+        const lines = currentLyrics.lines;
+        let idx = -1;
+        const t = currentTime + 0.15;
+        for (let i = 0; i < lines.length; i++) {
+            if (t >= lines[i].time) idx = i;
+            else break;
+        }
+        return idx;
+    })();
+
+    useEffect(() => {
+        if (!showLyrics) return;
+        if (bundledLyrics[currentTrack.id] || lyricsMap[currentTrack.id]) return;
+
+        let cancelled = false;
+        (async () => {
+            const entry = await fetchTrackLyrics(currentTrack, audioRef.current?.duration || 0);
+            if (!cancelled) {
+                setLyricsMap(prev => ({ ...prev, [currentTrack.id]: entry }));
+            }
+        })();
+
+        return () => {
+            cancelled = true;
+        };
+    }, [showLyrics, currentTrack, lyricsMap]);
+
+    useEffect(() => {
+        if (!showLyrics || !isExpanded) return;
+
+        const scrollActiveLine = (behavior = 'smooth') => {
+            const container = lyricsContainerRef.current;
+            if (!container) return;
+
+            if (activeLyricIndex < 0) {
+                container.scrollTo({ top: 0, behavior });
+                return;
+            }
+
+            const activeEl = activeLineRef.current;
+            if (!activeEl) return;
+
+            const targetTop = activeEl.offsetTop - container.clientHeight / 2 + activeEl.offsetHeight / 2;
+            container.scrollTo({
+                top: Math.max(0, targetTop),
+                behavior,
+            });
+        };
+
+        scrollActiveLine('smooth');
+        const settleTimer = setTimeout(() => scrollActiveLine('smooth'), 420);
+        return () => clearTimeout(settleTimer);
+    }, [activeLyricIndex, showLyrics, isExpanded, currentTrack.id]);
+
+    const handleLyricLineClick = (line) => {
+        if (!currentLyrics?.synced || !audioRef.current) return;
+        audioRef.current.currentTime = line.time;
+        setCurrentTime(line.time);
+        const dur = audioRef.current.duration || duration || 1;
+        setProgress((line.time / dur) * 100);
+        if (!isPlaying) setIsPlaying(true);
+    };
+
+    const retryFetchLyrics = () => {
+        setLyricsMap(prev => {
+            const next = { ...prev };
+            delete next[currentTrack.id];
+            return next;
+        });
+    };
 
     return (
         <>
             <audio
                 ref={audioRef}
                 src={currentTrack.src}
-                preload="none"
+                preload="metadata"
                 onTimeUpdate={handleTimeUpdate}
                 onLoadedMetadata={handleLoadedMetadata}
                 onEnded={handleNext}
@@ -244,11 +476,175 @@ export default function MusicPlayer() {
                     width: ICON_SIZE,
                     height: ICON_SIZE,
                     zIndex: 1000,
-                    visibility: initialized ? 'visible' : 'hidden',
                 }}
             >
+                {/* ── Unclipped Soundwave Ripples ── */}
                 <div
-                    onMouseEnter={() => setIsHovered(true)}
+                    style={{
+                        position: 'absolute',
+                        inset: 0,
+                        pointerEvents: 'none',
+                        opacity: isExpanded ? 0 : 1,
+                        transition: 'opacity 0.25s ease',
+                    }}
+                >
+                    {(isPlaying ? [0, 1, 2] : [0, 1]).map((i) => (
+                        <div
+                            key={`${isPlaying ? 'play' : 'idle'}-${i}`}
+                            style={{
+                                position: 'absolute',
+                                top: '50%',
+                                left: '50%',
+                                width: ICON_SIZE,
+                                height: ICON_SIZE,
+                                borderRadius: '50%',
+                                border: '1.5px solid #4a90d9',
+                                animation: isPlaying
+                                    ? `speakerRipple 1.8s ease-out infinite ${i * 0.55}s`
+                                    : `musicIdleRipple 2.8s cubic-bezier(0.16, 1, 0.3, 1) infinite ${i * 1.4}s`,
+                            }}
+                        />
+                    ))}
+                </div>
+
+                {/* ── Floating Callout Pill ("PLAY MUSIC" / "NOW PLAYING") ── */}
+                {showHint && !isExpanded && (
+                    <div
+                        data-hover
+                        onClick={(e) => {
+                            e.stopPropagation();
+                            if (hasDragged.current) return;
+                            if (!isPlaying) setIsPlaying(true);
+                            setIsOpen(true);
+                        }}
+                        style={{
+                            position: 'absolute',
+                            top: '50%',
+                            right: isRightHalf ? ICON_SIZE + 12 : 'auto',
+                            left: isRightHalf ? 'auto' : ICON_SIZE + 12,
+                            display: 'flex',
+                            alignItems: 'center',
+                            gap: 10,
+                            padding: '8px 12px',
+                            borderRadius: 999,
+                            background: '#172554',
+                            border: '1px solid #2a2a2e',
+                            boxShadow: 'none',
+                            whiteSpace: 'nowrap',
+                            cursor: 'pointer',
+                            userSelect: 'none',
+                            animation: isRightHalf
+                                ? 'musicHintFloatLeft 2.6s ease-in-out infinite'
+                                : 'musicHintFloatRight 2.6s ease-in-out infinite',
+                        }}
+                    >
+                        {/* Mini Play / Equalizer Indicator */}
+                        <div
+                            style={{
+                                width: 26,
+                                height: 26,
+                                borderRadius: '50%',
+                                border: '1px solid #9ca3af',
+                                background: '#172554',
+                                display: 'flex',
+                                alignItems: 'center',
+                                justifyContent: 'center',
+                                flexShrink: 0,
+                                color: '#fff',
+                            }}
+                        >
+                            {isPlaying ? (
+                                <div style={{ display: 'flex', alignItems: 'flex-end', gap: 2, height: 11 }}>
+                                    {[0, 1, 2].map(i => (
+                                        <span
+                                            key={i}
+                                            style={{
+                                                width: 2,
+                                                borderRadius: 1,
+                                                background: '#fff',
+                                                animation: `eqBounceSmall ${0.35 + i * 0.12}s ease-in-out infinite alternate`,
+                                            }}
+                                        />
+                                    ))}
+                                </div>
+                            ) : (
+                                <FaPlay size={9} style={{ marginLeft: 1.5 }} />
+                            )}
+                        </div>
+
+                        {/* Text Stack */}
+                        <div style={{ display: 'flex', flexDirection: 'column', lineHeight: 1.2 }}>
+                            <span
+                                style={{
+                                    fontSize: 9.5,
+                                    fontWeight: 700,
+                                    letterSpacing: '0.14em',
+                                    textTransform: 'uppercase',
+                                    color: '#ffff',
+                                    fontFamily: '"Inter Display", "Inter", sans-serif',
+                                }}
+                            >
+                                {isPlaying ? 'NOW PLAYING' : 'PLAY MUSIC'}
+                            </span>
+                            <span
+                                style={{
+                                    fontSize: 11.5,
+                                    fontWeight: 600,
+                                    color: '#ffffff',
+                                    fontFamily: '"Inter", sans-serif',
+                                    maxWidth: isMobile ? 120 : 155,
+                                    overflow: 'hidden',
+                                    textOverflow: 'ellipsis',
+                                    whiteSpace: 'nowrap',
+                                    marginTop: 1,
+                                }}
+                            >
+                                {currentTrack.title} • {currentTrack.artist}
+                            </span>
+                        </div>
+
+                        {/* Subtle Dismiss Pill Button */}
+                        <button
+                            type="button"
+                            aria-label="Hide music hint"
+                            onClick={(e) => {
+                                e.stopPropagation();
+                                setShowHint(false);
+                            }}
+                            style={{
+                                width: 18,
+                                height: 18,
+                                borderRadius: '50%',
+                                border: 'none',
+                                background: '#26262a',
+                                color: '#a1a1aa',
+                                display: 'flex',
+                                alignItems: 'center',
+                                justifyContent: 'center',
+                                padding: 0,
+                                marginLeft: 2,
+                                cursor: 'pointer',
+                                flexShrink: 0,
+                                transition: 'background 0.2s, color 0.2s',
+                            }}
+                            onMouseEnter={e => {
+                                e.currentTarget.style.background = '#3f3f46';
+                                e.currentTarget.style.color = '#ffffff';
+                            }}
+                            onMouseLeave={e => {
+                                e.currentTarget.style.background = '#172554';
+                                e.currentTarget.style.color = '#a1a1aa';
+                            }}
+                        >
+                            <FaTimes size={9} />
+                        </button>
+                    </div>
+                )}
+
+                {/* ── Main Morphing Orb / Expanded Card ── */}
+                <div
+                    data-hover
+                    onMouseEnter={() => !isMobile && setIsHovered(true)}
                     onMouseLeave={() => !isOpen && setIsHovered(false)}
                     onMouseDown={handleDragStart}
                     onTouchStart={handleDragStart}
@@ -267,12 +663,12 @@ export default function MusicPlayer() {
                         right: isRightHalf ? 0 : 'auto',
                         height: isExpanded ? EXPANDED_HEIGHT : ICON_SIZE,
                         width: isExpanded ? EXPANDED_WIDTH : ICON_SIZE,
-                        background: 'rgba(28,28,30,0.95)',
-                        backdropFilter: 'blur(24px)',
-                        borderRadius: isExpanded ? 16 : ICON_SIZE / 2,
-                        boxShadow: '0 16px 40px rgba(0,0,0,0.5)',
+                        background: isExpanded ? '#161618' : '#172554',
+                        borderRadius: isExpanded ? 18 : ICON_SIZE / 2,
+                        border: isExpanded ? '1px solid #2a2a2e' : 'none',
+                        boxShadow: 'none',
                         overflow: 'hidden',
-                        transition: 'all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1)',
+                        transition: 'width 0.4s cubic-bezier(0.34, 1.56, 0.64, 1), height 0.4s cubic-bezier(0.34, 1.56, 0.64, 1), border-radius 0.4s cubic-bezier(0.34, 1.56, 0.64, 1), background 0.3s ease',
                         cursor: isDragging ? 'grabbing' : 'grab',
                     }}
                 >
@@ -290,52 +686,32 @@ export default function MusicPlayer() {
                             display: 'flex',
                             alignItems: 'center',
                             justifyContent: 'center',
-                            background: 'rgba(6,83,166,0.15)',
-                            backdropFilter: 'blur(12px)',
                             color: '#fff',
                             opacity: isExpanded ? 0 : 1,
+                            pointerEvents: isExpanded ? 'none' : 'auto',
                             transition: 'opacity 0.2s',
-                            animation: 'speakerPulse 1.2s ease-in-out infinite',
-                            border: '1px solid rgba(74,144,217,0.4)',
-                            boxShadow: '0 8px 32px rgba(0,0,0,0.36), 0 0 0 0 rgba(74,144,217,0.6)',
                         }}
-                        onMouseEnter={() => setIsIconHovered(true)}
-                        onMouseLeave={() => setIsIconHovered(false)}
                     >
-                        {/* Speaker ripple rings */}
-                        {!isExpanded && isPlaying && (
-                            <>
-                                {[...Array(3)].map((_, i) => (
-                                    <div key={i} style={{
-                                        position: 'absolute',
-                                        top: '50%',
-                                        left: '50%',
-                                        transform: 'translate(-50%, -50%)',
-                                        width: ICON_SIZE,
-                                        height: ICON_SIZE,
-                                        borderRadius: '50%',
-                                        border: `1px solid rgba(74,144,217,${0.4 - i * 0.1})`,
-                                        animation: `speakerRipple ${1.5 + i * 0.3}s ease-out infinite`,
-                                        animationDelay: `${i * 0.4}s`,
-                                        pointerEvents: 'none',
-                                    }} />
-                                ))}
-                            </>
-                        )}
                         {isPlaying ? (
-                            <div style={{ display: 'flex', alignItems: 'flex-end', gap: 2, height: 16 }}>
-                                {[0, 1, 2].map(i => (
+                            <div style={{ display: 'flex', alignItems: 'flex-end', gap: 2.5, height: 18 }}>
+                                {[0, 1, 2, 3].map(i => (
                                     <div key={i} style={{
-                                        width: 3, borderRadius: 1.5, background: '#4a90d9',
-                                        animation: `eqBounce ${0.4 + i * 0.1}s ease-in-out infinite alternate`,
+                                        width: 3, borderRadius: 2, background: '#ffffff',
+                                        animation: `eqBounce ${0.38 + i * 0.1}s ease-in-out infinite alternate`,
                                     }} />
                                 ))}
                             </div>
                         ) : (
-                            <FaMusic size={20} color='#4a90d9' />
+                            <FaMusic
+                                size={20}
+                                color="#ffffff"
+                                style={{
+                                    animation: 'musicNoteTilt 2.4s ease-in-out infinite',
+                                }}
+                            />
                         )}
                         {/* Drag indicator dots */}
-                        <div style={{ position: 'absolute', bottom: 8, display: 'flex', gap: 3, opacity: 0.6 }}>
+                        <div style={{ position: 'absolute', bottom: 7, display: 'flex', gap: 3, opacity: 0.75 }}>
                             <div style={{ width: 3, height: 3, borderRadius: '50%', background: '#fff' }} />
                             <div style={{ width: 3, height: 3, borderRadius: '50%', background: '#fff' }} />
                         </div>
@@ -346,24 +722,24 @@ export default function MusicPlayer() {
                         position: 'absolute',
                         top: 0, left: 0, right: 0, bottom: 0,
                         display: 'flex', flexDirection: 'column',
-                        padding: '12px 16px', boxSizing: 'border-box',
+                        padding: '13px 16px', boxSizing: 'border-box',
                         opacity: isExpanded ? 1 : 0,
                         transition: 'opacity 0.3s',
-                        transitionDelay: isExpanded ? '0.15s' : '0s',
+                        transitionDelay: isExpanded ? '0.12s' : '0s',
                         pointerEvents: isExpanded ? 'auto' : 'none',
                     }}>
-                        {/* Top: Text + EQ */}
+                        {/* Top: Text + EQ + Close */}
                         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', position: 'relative', zIndex: 2 }}>
-                            <div style={{ display: 'flex', flexDirection: 'column', overflow: 'hidden', paddingRight: 16 }}>
+                            <div style={{ display: 'flex', flexDirection: 'column', overflow: 'hidden', paddingRight: 12 }}>
                                 <span style={{
-                                    color: '#fff', fontSize: 16, fontWeight: 700,
+                                    color: '#fff', fontSize: 15, fontWeight: 700,
                                     fontFamily: '"Inter", sans-serif',
                                     whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis'
                                 }}>
                                     {currentTrack.title}
                                 </span>
                                 <span style={{
-                                    color: 'rgba(255,255,255,0.5)', fontSize: 13,
+                                    color: '#9ca3af', fontSize: 12.5,
                                     fontFamily: '"Inter", sans-serif', marginTop: 2,
                                     whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis'
                                 }}>
@@ -371,102 +747,361 @@ export default function MusicPlayer() {
                                 </span>
                             </div>
 
-                            {/* Equalizer bars */}
-                            <div style={{ display: 'flex', alignItems: 'flex-end', gap: 3, height: 16, marginTop: 4 }}>
-                                {[0, 1, 2, 3].map(i => (
-                                    <div key={i} style={{
-                                        width: 4, borderRadius: 2, background: '#4a90d9',
-                                        animation: isPlaying ? `eqBounce ${0.35 + i * 0.1}s ease-in-out infinite alternate` : 'none',
-                                        height: isPlaying ? '16px' : '4px',
-                                    }} />
-                                ))}
+                            <div style={{ display: 'flex', alignItems: 'center', gap: 10, flexShrink: 0 }}>
+                                {/* Equalizer bars */}
+                                <div style={{ display: 'flex', alignItems: 'flex-end', gap: 2.5, height: 16 }}>
+                                    {[0, 1, 2, 3].map(i => (
+                                        <div key={i} style={{
+                                            width: 3.5, borderRadius: 2, background: '#ffffff',
+                                            animation: isPlaying ? `eqBounce ${0.35 + i * 0.1}s ease-in-out infinite alternate` : 'none',
+                                            height: isPlaying ? '16px' : '4px',
+                                        }} />
+                                    ))}
+                                </div>
+
+                                {/* Close card button */}
+                                <button
+                                    type="button"
+                                    aria-label="Minimize music player"
+                                    onClick={(e) => {
+                                        e.stopPropagation();
+                                        setIsOpen(false);
+                                        setIsHovered(false);
+                                    }}
+                                    onMouseDown={e => e.stopPropagation()}
+                                    onTouchStart={e => e.stopPropagation()}
+                                    style={{
+                                        width: 22, height: 22, borderRadius: '50%',
+                                        border: 'none', background: '#172554',
+                                        color: '#a1a1aa', cursor: 'pointer',
+                                        display: 'flex', alignItems: 'center', justifyContent: 'center',
+                                        padding: 0, transition: 'background 0.2s, color 0.2s',
+                                    }}
+                                    onMouseEnter={e => {
+                                        e.currentTarget.style.background = '#3f3f46';
+                                        e.currentTarget.style.color = '#ffffff';
+                                    }}
+                                    onMouseLeave={e => {
+                                        e.currentTarget.style.background = '#172554';
+                                        e.currentTarget.style.color = '#a1a1aa';
+                                    }}
+                                >
+                                    <FaTimes size={10} />
+                                </button>
                             </div>
                         </div>
 
-                        {/* Middle: Progress Bar with Timer */}
-                        <div style={{ marginTop: 6, display: 'flex', flexDirection: 'column' }}>
-                            <div onClick={handleSeek} onMouseDown={e => e.stopPropagation()} onTouchStart={e => e.stopPropagation()} style={{
-                                height: 4, background: 'rgba(255,255,255,0.1)', borderRadius: 2, cursor: 'pointer', position: 'relative'
-                            }}>
-                                <div style={{ width: `${progress}%`, height: '100%', background: '#4a90d9', borderRadius: 2, transition: 'width 0.1s linear' }} />
+                        {/* Expandable Lyrics Drawer */}
+                        {showLyrics && (
+                            <div
+                                ref={lyricsContainerRef}
+                                data-lenis-prevent
+                                className="lyrics-scroll"
+                                onClick={e => e.stopPropagation()}
+                                onMouseDown={e => e.stopPropagation()}
+                                onTouchStart={e => e.stopPropagation()}
+                                onWheel={e => e.stopPropagation()}
+                                style={{
+                                    flex: 1,
+                                    minHeight: 0,
+                                    marginTop: 10,
+                                    marginBottom: 2,
+                                    background: '#111113',
+                                    border: '1px solid #242428',
+                                    borderRadius: 10,
+                                    overflowY: 'auto',
+                                    position: 'relative',
+                                    padding: currentLyrics?.status === 'loaded' ? '52px 12px' : '12px',
+                                    display: currentLyrics?.status === 'loaded' ? 'block' : 'flex',
+                                    alignItems: 'center',
+                                    justifyContent: 'center',
+                                }}
+                            >
+                                {!currentLyrics ? (
+                                    <span style={{ color: '#9ca3af', fontSize: 12, fontFamily: '"Inter", sans-serif' }}>
+                                        Memuat lirik...
+                                    </span>
+                                ) : currentLyrics.status === 'error' ? (
+                                    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 8 }}>
+                                        <span style={{ color: '#9ca3af', fontSize: 12, fontFamily: '"Inter", sans-serif', textAlign: 'center' }}>
+                                            Gagal memuat lirik
+                                        </span>
+                                        <button
+                                            type="button"
+                                            onClick={retryFetchLyrics}
+                                            style={{
+                                                border: 'none',
+                                                background: '#172554',
+                                                color: '#ffffff',
+                                                fontSize: 11,
+                                                fontWeight: 600,
+                                                padding: '5px 12px',
+                                                borderRadius: 999,
+                                                cursor: 'pointer',
+                                                fontFamily: '"Inter", sans-serif',
+                                            }}
+                                        >
+                                            Coba lagi
+                                        </button>
+                                    </div>
+                                ) : currentLyrics.status === 'empty' ? (
+                                    <span style={{ color: '#9ca3af', fontSize: 12, fontFamily: '"Inter", sans-serif', textAlign: 'center' }}>
+                                        Lirik belum tersedia untuk lagu ini
+                                    </span>
+                                ) : (
+                                    <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
+                                        {currentLyrics.synced && activeLyricIndex === -1 && (
+                                            <div
+                                                style={{
+                                                    color: '#ffffff',
+                                                    fontSize: 13,
+                                                    fontWeight: 700,
+                                                    letterSpacing: '0.2em',
+                                                    fontFamily: '"Inter", sans-serif',
+                                                }}
+                                            >
+                                                ♪ • • •
+                                            </div>
+                                        )}
+                                        {currentLyrics.lines.map((line, idx) => {
+                                            const isActiveLine = currentLyrics.synced && idx === activeLyricIndex;
+                                            return (
+                                                <div
+                                                    key={`${idx}-${line.time}`}
+                                                    ref={isActiveLine ? activeLineRef : null}
+                                                    onClick={() => handleLyricLineClick(line)}
+                                                    style={{
+                                                        color: !currentLyrics.synced
+                                                            ? '#d4d4d8'
+                                                            : isActiveLine
+                                                                ? '#ffffff'
+                                                                : '#6b7280',
+                                                        fontSize: isActiveLine ? 13.5 : 12.5,
+                                                        fontWeight: isActiveLine ? 700 : 500,
+                                                        lineHeight: 1.45,
+                                                        fontFamily: '"Inter", sans-serif',
+                                                        cursor: currentLyrics.synced ? 'pointer' : 'default',
+                                                        transition: 'color 0.25s ease, font-size 0.2s ease',
+                                                    }}
+                                                    onMouseEnter={e => {
+                                                        if (currentLyrics.synced && !isActiveLine) {
+                                                            e.currentTarget.style.color = '#d4d4d8';
+                                                        }
+                                                    }}
+                                                    onMouseLeave={e => {
+                                                        if (currentLyrics.synced && !isActiveLine) {
+                                                            e.currentTarget.style.color = '#6b7280';
+                                                        }
+                                                    }}
+                                                >
+                                                    {line.text}
+                                                </div>
+                                            );
+                                        })}
+                                    </div>
+                                )}
                             </div>
-                            <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: 4, fontSize: 11, color: 'rgba(255,255,255,0.5)', fontFamily: '"Inter", sans-serif' }}>
+                        )}
+
+                        {/* Middle: Progress Bar with Timer */}
+                        <div style={{ marginTop: 8, display: 'flex', flexDirection: 'column', flexShrink: 0 }}>
+                            <div onClick={(e) => { e.stopPropagation(); handleSeek(e); }} onMouseDown={e => e.stopPropagation()} onTouchStart={e => e.stopPropagation()} style={{
+                                height: 4, background: '#464646', borderRadius: 2, cursor: 'pointer', position: 'relative'
+                            }}>
+                                <div style={{ width: `${progress}%`, height: '100%', background: '#172554', borderRadius: 2, transition: 'width 0.1s linear' }} />
+                            </div>
+                            <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: 4, fontSize: 11, color: '#9ca3af', fontFamily: '"Inter", sans-serif' }}>
                                 <span>{fmt(currentTime)}</span>
                                 <span>{fmt(duration)}</span>
                             </div>
                         </div>
 
                         {/* Bottom: Controls */}
-                        <div style={{ marginTop: 'auto', display: 'flex', alignItems: 'center', justifyContent: 'center', position: 'relative' }} onMouseDown={e => e.stopPropagation()} onTouchStart={e => e.stopPropagation()}>
-                            {/* Volume Icon */}
-                            <div onClick={toggleMute} style={{ position: 'absolute', left: 0, color: 'rgba(255,255,255,0.5)', fontSize: 16, cursor: 'pointer', transition: 'color 0.2s', display: 'flex', alignItems: 'center', justifyContent: 'center' }} onMouseEnter={e => e.currentTarget.style.color = '#fff'} onMouseLeave={e => e.currentTarget.style.color = 'rgba(255,255,255,0.5)'}>
-                                {isMuted ? <FaVolumeMute /> : <FaVolumeUp />}
-                            </div>
+                        <div
+                            style={{ marginTop: showLyrics ? 8 : 'auto', flexShrink: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', position: 'relative' }}
+                            onClick={e => e.stopPropagation()}
+                            onMouseDown={e => e.stopPropagation()}
+                            onTouchStart={e => e.stopPropagation()}
+                        >
+                            {/* Left: Lyrics Toggle Button */}
+                            <button
+                                type="button"
+                                aria-label="Toggle lyrics"
+                                title={showLyrics ? 'Sembunyikan lirik' : 'Tampilkan lirik'}
+                                onClick={() => {
+                                    setShowLyrics(prev => !prev);
+                                    setIsOpen(true);
+                                }}
+                                style={{
+                                    position: 'absolute',
+                                    left: 0,
+                                    width: 28,
+                                    height: 28,
+                                    borderRadius: '50%',
+                                    border: 'none',
+                                    background: showLyrics ? '#172554' : 'transparent',
+                                    color: showLyrics ? '#ffffff' : '#9ca3af',
+                                    cursor: 'pointer',
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    justifyContent: 'center',
+                                    padding: 0,
+                                    transition: 'background 0.2s, color 0.2s',
+                                }}
+                                onMouseEnter={e => {
+                                    e.currentTarget.style.color = '#ffffff';
+                                }}
+                                onMouseLeave={e => {
+                                    e.currentTarget.style.color = showLyrics ? '#ffffff' : '#9ca3af';
+                                }}
+                            >
+                                {showLyrics ? <MdLyrics size={16} /> : <MdOutlineLyrics size={16} />}
+                            </button>
 
                             <FaStepBackward
                                 onClick={handlePrev}
-                                style={{ cursor: 'pointer', color: '#ccc', fontSize: 16, marginRight: 24, transition: 'color 0.2s' }}
+                                style={{ cursor: 'pointer', color: '#d4d4d8', fontSize: 15, marginRight: 20, transition: 'color 0.2s' }}
                                 onMouseEnter={e => e.currentTarget.style.color = '#fff'}
-                                onMouseLeave={e => e.currentTarget.style.color = '#ccc'}
+                                onMouseLeave={e => e.currentTarget.style.color = '#d4d4d8'}
                             />
 
                             <div
                                 onClick={togglePlay}
                                 style={{
                                     width: 36, height: 36, borderRadius: '50%',
-                                    background: '#0653a6', display: 'flex', alignItems: 'center', justifyContent: 'center',
-                                    cursor: 'pointer', color: '#fff', fontSize: 14,
-                                    boxShadow: '0 4px 14px rgba(6,83,166,0.3)',
-                                    transition: 'transform 0.15s, box-shadow 0.15s',
-                                    marginTop: -7,
+                                    background: '#172554',
+                                    display: 'flex', alignItems: 'center', justifyContent: 'center',
+                                    cursor: 'pointer', color: '#fff', fontSize: 13,
+                                    transition: 'transform 0.15s',
+                                    marginTop: -5,
                                 }}
                                 onMouseEnter={e => {
-                                    e.currentTarget.style.transform = 'scale(1.06)';
-                                    e.currentTarget.style.boxShadow = '0 6px 20px rgba(6,83,166,0.5)';
+                                    e.currentTarget.style.transform = 'scale(1.08)';
                                 }}
                                 onMouseLeave={e => {
                                     e.currentTarget.style.transform = 'scale(1)';
-                                    e.currentTarget.style.boxShadow = '0 4px 14px rgba(6,83,166,0.3)';
                                 }}
                             >
-                                {isPlaying ? <FaPause /> : <FaPlay style={{ marginLeft: 3 }} />}
+                                {isPlaying ? <FaPause /> : <FaPlay style={{ marginLeft: 2.5 }} />}
                             </div>
 
                             <FaStepForward
                                 onClick={handleNext}
-                                style={{ cursor: 'pointer', color: '#ccc', fontSize: 18, marginLeft: 24, transition: 'color 0.2s' }}
+                                style={{ cursor: 'pointer', color: '#d4d4d8', fontSize: 15, marginLeft: 20, transition: 'color 0.2s' }}
                                 onMouseEnter={e => e.currentTarget.style.color = '#fff'}
-                                onMouseLeave={e => e.currentTarget.style.color = '#ccc'}
+                                onMouseLeave={e => e.currentTarget.style.color = '#d4d4d8'}
                             />
+
+                            {/* Right: Speaker Icon + Volume Bar */}
+                            <div
+                                style={{
+                                    position: 'absolute', right: 0,
+                                    display: 'flex', alignItems: 'center', gap: 7,
+                                    userSelect: 'none',
+                                }}
+                            >
+                                <div
+                                    onClick={toggleMute}
+                                    title={effectiveVolume === 0 ? 'Unmute' : 'Mute'}
+                                    style={{
+                                        color: '#9ca3af', fontSize: 14, cursor: 'pointer',
+                                        transition: 'color 0.2s',
+                                        display: 'flex', alignItems: 'center', justifyContent: 'center',
+                                    }}
+                                    onMouseEnter={e => e.currentTarget.style.color = '#fff'}
+                                    onMouseLeave={e => e.currentTarget.style.color = '#9ca3af'}
+                                >
+                                    {effectiveVolume === 0 ? <FaVolumeMute /> : effectiveVolume < 0.5 ? <FaVolumeDown /> : <FaVolumeUp />}
+                                </div>
+
+                                <div
+                                    ref={volumeBarRef}
+                                    onMouseDown={handleVolumeBarDown}
+                                    onTouchStart={handleVolumeBarDown}
+                                    style={{
+                                        width: 48, height: 16,
+                                        display: 'flex', alignItems: 'center',
+                                        cursor: 'pointer', position: 'relative',
+                                    }}
+                                >
+                                    <div style={{ width: '100%', height: 4, background: '#464646', borderRadius: 2, position: 'relative' }}>
+                                        <div
+                                            style={{
+                                                width: `${effectiveVolume * 100}%`,
+                                                height: '100%',
+                                                background: '#ffffff',
+                                                borderRadius: 2,
+                                            }}
+                                        />
+                                        <div
+                                            style={{
+                                                position: 'absolute',
+                                                top: '50%',
+                                                left: `${effectiveVolume * 100}%`,
+                                                transform: 'translate(-50%, -50%)',
+                                                width: 8, height: 8,
+                                                borderRadius: '50%',
+                                                background: '#ffffff',
+                                            }}
+                                        />
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
 
             <style>{`
+                .lyrics-scroll::-webkit-scrollbar {
+                    width: 3px;
+                }
+                .lyrics-scroll::-webkit-scrollbar-track {
+                    background: transparent;
+                }
+                .lyrics-scroll::-webkit-scrollbar-thumb {
+                    background: #2a2a2e;
+                    border-radius: 2px;
+                }
                 @keyframes eqBounce {
                     0% { height: 4px; }
                     100% { height: 16px; }
                 }
-                @keyframes speakerPulse {
-                    0%, 100% { 
-                        box-shadow: 0 8px 32px rgba(0,0,0,0.36), 0 0 0 0 rgba(74,144,217,0.6); 
-                        transform: scale(1);
+                @keyframes eqBounceSmall {
+                    0% { height: 3px; }
+                    100% { height: 11px; }
+                }
+                @keyframes musicIdleRipple {
+                    0% {
+                        transform: translate(-50%, -50%) scale(1);
+                        opacity: 0.65;
                     }
-                    50% { 
-                        box-shadow: 0 8px 32px rgba(0,0,0,0.36), 0 0 0 20px rgba(74,144,217,0); 
-                        transform: scale(1.08);
+                    100% {
+                        transform: translate(-50%, -50%) scale(1.75);
+                        opacity: 0;
                     }
                 }
                 @keyframes speakerRipple {
-                    0% { 
-                        transform: translate(-50%, -50%) scale(0.8); 
-                        opacity: 0.5; 
+                    0% {
+                        transform: translate(-50%, -50%) scale(0.95);
+                        opacity: 0.75;
                     }
-                    100% { 
-                        transform: translate(-50%, -50%) scale(1.8); 
-                        opacity: 0; 
+                    100% {
+                        transform: translate(-50%, -50%) scale(1.95);
+                        opacity: 0;
                     }
+                }
+                @keyframes musicNoteTilt {
+                    0%, 100% { transform: rotate(-6deg) scale(1); }
+                    50% { transform: rotate(8deg) scale(1.08); }
+                }
+                @keyframes musicHintFloatLeft {
+                    0%, 100% { transform: translate(0, -50%); }
+                    50% { transform: translate(-4px, -50%); }
+                }
+                @keyframes musicHintFloatRight {
+                    0%, 100% { transform: translate(0, -50%); }
+                    50% { transform: translate(4px, -50%); }
                 }
             `}</style>
         </>
