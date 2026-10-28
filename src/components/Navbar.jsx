@@ -125,10 +125,20 @@ export default function Navbar() {
                 fontWeight: 600,
                 letterSpacing: '0.05em',
             }}>
-                {/* Left Side (Name) */}
-                <div style={{ flex: 1, display: 'flex', justifyContent: 'flex-start' }}>
-                    <a href="#hero" style={{ textDecoration: 'none', color: 'inherit', fontWeight: 'bold' }}>
-                        VIO ADYTIA
+                {/* Left Side (Logo) */}
+                <div style={{ flex: 1, display: 'flex', justifyContent: 'flex-start', alignItems: 'center' }}>
+                    <a
+                        href="#hero"
+                        onClick={() => setOpen(false)}
+                        aria-label="Vio Adytia"
+                        data-hover
+                        style={{ display: 'inline-flex', alignItems: 'center', textDecoration: 'none' }}
+                    >
+                        <img
+                            src="/logo.webp"
+                            alt="Vio Adytia"
+                            className="navbar-logo"
+                        />
                     </a>
                 </div>
 
@@ -257,9 +267,22 @@ export default function Navbar() {
             </div>
             
             <style>{`
+                .navbar-logo {
+                    height: 28px;
+                    width: auto;
+                    display: block;
+                    object-fit: contain;
+                    transition: opacity 0.3s ease;
+                }
+                .navbar-logo:hover {
+                    opacity: 0.85;
+                }
                 @media (max-width: 768px) {
                     nav {
                         padding: 16px 20px !important;
+                    }
+                    .navbar-logo {
+                        height: 24px;
                     }
                 }
             `}</style>
