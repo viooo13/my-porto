@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { certificatesData as certs } from '../../data/certificatesData';
 import { StyledWord } from '../../components/StyledWord';
+import { HiArrowUpRight } from 'react-icons/hi2';
 
 
 export default function Certificates() {
@@ -195,7 +196,7 @@ export default function Certificates() {
                         onMouseEnter={e => { e.currentTarget.style.background = 'rgba(30,58,95,0.1)'; e.currentTarget.style.transform = 'scale(1.05)'; }}
                         onMouseLeave={e => { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.transform = 'scale(1)'; }}
                     >
-                        GET IN TOUCH ↗
+                        GET IN TOUCH <HiArrowUpRight size={14} />
                     </a>
                 </div>
             </div>

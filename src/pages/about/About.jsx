@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import { StyledHeading } from '../../components/StyledWord';
+import { HiArrowUpRight } from 'react-icons/hi2';
 
 
 export default function About() {
@@ -171,7 +172,7 @@ export default function About() {
                             onMouseEnter={e => { e.currentTarget.style.background = '#1e3a5f'; e.currentTarget.style.color = '#fff'; e.currentTarget.style.transform = 'translateX(6px)'; e.currentTarget.style.boxShadow = '0 0 30px rgba(30,58,95,0.3)'; }}
                             onMouseLeave={e => { e.currentTarget.style.background = '#fff'; e.currentTarget.style.color = '#0a0a0a'; e.currentTarget.style.transform = 'translateX(0)'; e.currentTarget.style.boxShadow = 'none'; }}
                             >
-                                LET'S BUILD THE FUTURE ↗
+                                LET'S BUILD THE FUTURE <HiArrowUpRight size={14} />
                             </a>
                         </div>
                     </div>

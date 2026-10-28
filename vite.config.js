@@ -10,6 +10,6 @@ export default defineConfig({
     tailwindcss(),
   ],
   optimizeDeps: {
-    include: ['react-icons/fa', 'react-icons/hi', 'react-icons/si']
+    include: ['react-icons/fa', 'react-icons/hi', 'react-icons/hi2', 'react-icons/md', 'react-icons/si', 'react-icons/tb']
   }
 })

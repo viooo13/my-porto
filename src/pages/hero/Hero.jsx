@@ -1,5 +1,6 @@
 import { useEffect, useState, useRef } from 'react';
-import { FaGithub, FaLinkedin, FaBriefcase, FaFileAlt } from 'react-icons/fa';
+import { FaGithub, FaLinkedin, FaBriefcase, FaFileAlt, FaTimes } from 'react-icons/fa';
+import { HiArrowUpRight } from 'react-icons/hi2';
 import { StyledWord } from '../../components/StyledWord';
 
 
@@ -16,7 +17,7 @@ function HeroButton({ children, href, className, onClick }) {
                     <span className="btn-text-alt">{children}</span>
                 </span>
             </div>
-            <span className="btn-arrow">↗</span>
+            <span className="btn-arrow" style={{ display: 'inline-flex', alignItems: 'center' }}><HiArrowUpRight size={14} /></span>
         </a>
     );
 }
@@ -421,7 +422,7 @@ export default function Hero() {
                         onMouseEnter={e => e.currentTarget.style.background = 'rgba(255,255,255,0.2)'}
                         onMouseLeave={e => e.currentTarget.style.background = 'rgba(255,255,255,0.1)'}
                     >
-                        ✕
+                        <FaTimes size={16} />
                     </button>
 
                     {/* CV Image */}
