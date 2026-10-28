@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect } from 'react';
+import { useState, useRef, useEffect, useCallback } from 'react';
 import { FaPlay, FaPause, FaStepForward, FaStepBackward, FaMusic, FaTimes, FaVolumeUp, FaVolumeDown, FaVolumeMute } from 'react-icons/fa';
 import { MdOutlineLyrics, MdLyrics } from 'react-icons/md';
 import { bundledLyrics } from '../data/lyricsData';
@@ -190,11 +190,70 @@ export default function MusicPlayer() {
     }, []);
 
     const audioRef = useRef(null);
+    const audioCtxRef = useRef(null);
+    const gainNodeRef = useRef(null);
     const containerRef = useRef(null);
     const volumeBarRef = useRef(null);
     const lyricsContainerRef = useRef(null);
     const activeLineRef = useRef(null);
     const currentTrack = tracks[currentTrackIndex];
+
+    const applyVolumeToAudio = useCallback((vol, muted) => {
+        const effective = muted ? 0 : Math.max(0, Math.min(1, vol));
+        const taperedGain = effective * effective;
+
+        if (gainNodeRef.current && audioCtxRef.current) {
+            gainNodeRef.current.gain.setValueAtTime(taperedGain, audioCtxRef.current.currentTime);
+            if (audioRef.current) {
+                try { audioRef.current.volume = 1; } catch { /* read-only on iOS */ }
+                audioRef.current.muted = effective === 0;
+            }
+        } else if (audioRef.current) {
+            try { audioRef.current.volume = taperedGain; } catch { /* read-only on iOS */ }
+            audioRef.current.muted = effective === 0;
+        }
+    }, []);
+
+    const ensureAudioGraph = useCallback((overrideVol, overrideMuted) => {
+        if (!audioRef.current) return;
+        try {
+            if (typeof navigator !== 'undefined' && navigator.audioSession) {
+                navigator.audioSession.type = 'playback';
+            }
+            if (!audioCtxRef.current) {
+                const AudioCtx = window.AudioContext || window.webkitAudioContext;
+                if (AudioCtx) {
+                    const ctx = new AudioCtx();
+                    const source = ctx.createMediaElementSource(audioRef.current);
+                    const gain = ctx.createGain();
+                    const effective = overrideMuted ? 0 : Math.max(0, Math.min(1, overrideVol));
+                    gain.gain.value = effective * effective;
+                    source.connect(gain);
+                    gain.connect(ctx.destination);
+                    audioCtxRef.current = ctx;
+                    gainNodeRef.current = gain;
+                    try { audioRef.current.volume = 1; } catch { /* read-only on iOS */ }
+                }
+            }
+            if (
+                audioCtxRef.current &&
+                audioCtxRef.current.state !== 'running' &&
+                audioCtxRef.current.state !== 'closed'
+            ) {
+                audioCtxRef.current.resume().catch(() => {});
+            }
+        } catch {
+            // Fallback to native HTMLAudioElement volume if Web Audio API is unavailable
+        }
+    }, []);
+
+    useEffect(() => {
+        return () => {
+            if (audioCtxRef.current && audioCtxRef.current.state !== 'closed') {
+                audioCtxRef.current.close().catch(() => {});
+            }
+        };
+    }, []);
 
     const handleDragStart = (e) => {
         const clientX = e.touches ? e.touches[0].clientX : e.clientX;
@@ -254,19 +313,20 @@ export default function MusicPlayer() {
     }, [isDragging]);
 
     useEffect(() => {
-        if (!audioRef.current) return;
-        audioRef.current.volume = volume;
-        audioRef.current.muted = isMuted || volume === 0;
-    }, [volume, isMuted]);
+        applyVolumeToAudio(volume, isMuted);
+    }, [volume, isMuted, applyVolumeToAudio]);
 
     useEffect(() => {
         if (!isDraggingVolume) return;
 
         const updateFromEvent = (e) => {
             if (!volumeBarRef.current) return;
-            const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+            if (e.cancelable) e.preventDefault();
+            const touch = e.touches?.[0] || e.changedTouches?.[0];
+            const clientX = touch ? touch.clientX : e.clientX;
             const rect = volumeBarRef.current.getBoundingClientRect();
             const nextVol = Math.max(0, Math.min(1, (clientX - rect.left) / rect.width));
+            applyVolumeToAudio(nextVol, nextVol === 0);
             setVolume(nextVol);
             setIsMuted(nextVol === 0);
         };
@@ -275,15 +335,17 @@ export default function MusicPlayer() {
 
         window.addEventListener('mousemove', updateFromEvent);
         window.addEventListener('mouseup', stopVolumeDrag);
-        window.addEventListener('touchmove', updateFromEvent, { passive: true });
+        window.addEventListener('touchmove', updateFromEvent, { passive: false });
         window.addEventListener('touchend', stopVolumeDrag);
+        window.addEventListener('touchcancel', stopVolumeDrag);
         return () => {
             window.removeEventListener('mousemove', updateFromEvent);
             window.removeEventListener('mouseup', stopVolumeDrag);
             window.removeEventListener('touchmove', updateFromEvent);
             window.removeEventListener('touchend', stopVolumeDrag);
+            window.removeEventListener('touchcancel', stopVolumeDrag);
         };
-    }, [isDraggingVolume]);
+    }, [isDraggingVolume, applyVolumeToAudio]);
 
     useEffect(() => {
         if (!audioRef.current) return;
@@ -323,12 +385,12 @@ export default function MusicPlayer() {
     const handleLoadedMetadata = () => {
         if (audioRef.current) {
             setDuration(audioRef.current.duration);
-            audioRef.current.volume = volume;
-            audioRef.current.muted = isMuted || volume === 0;
+            applyVolumeToAudio(volume, isMuted);
         }
     };
 
     const changeTrack = (idx) => {
+        ensureAudioGraph(volume, isMuted);
         setCurrentTrackIndex(idx);
         setIsPlaying(true);
         setProgress(0);
@@ -337,24 +399,35 @@ export default function MusicPlayer() {
 
     const handleNext = () => changeTrack((currentTrackIndex + 1) % tracks.length);
     const handlePrev = () => changeTrack((currentTrackIndex - 1 + tracks.length) % tracks.length);
-    const togglePlay = () => setIsPlaying(prev => !prev);
+    const togglePlay = () => {
+        ensureAudioGraph(volume, isMuted);
+        setIsPlaying(prev => !prev);
+    };
     const toggleMute = (e) => {
         e.stopPropagation();
         if (isMuted || volume === 0) {
             const restored = volume === 0 ? 0.5 : volume;
+            ensureAudioGraph(restored, false);
+            applyVolumeToAudio(restored, false);
             setVolume(restored);
             setIsMuted(false);
         } else {
+            ensureAudioGraph(volume, true);
+            applyVolumeToAudio(volume, true);
             setIsMuted(true);
         }
     };
 
     const handleVolumeBarDown = (e) => {
         e.stopPropagation();
+        if (e.cancelable) e.preventDefault();
         if (!volumeBarRef.current) return;
-        const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+        const touch = e.touches?.[0] || e.changedTouches?.[0];
+        const clientX = touch ? touch.clientX : e.clientX;
         const rect = volumeBarRef.current.getBoundingClientRect();
         const nextVol = Math.max(0, Math.min(1, (clientX - rect.left) / rect.width));
+        ensureAudioGraph(nextVol, nextVol === 0);
+        applyVolumeToAudio(nextVol, nextVol === 0);
         setVolume(nextVol);
         setIsMuted(nextVol === 0);
         setIsDraggingVolume(true);
@@ -441,6 +514,7 @@ export default function MusicPlayer() {
 
     const handleLyricLineClick = (line) => {
         if (!currentLyrics?.synced || !audioRef.current) return;
+        ensureAudioGraph(volume, isMuted);
         audioRef.current.currentTime = line.time;
         setCurrentTime(line.time);
         const dur = audioRef.current.duration || duration || 1;
@@ -462,6 +536,15 @@ export default function MusicPlayer() {
                 ref={audioRef}
                 src={currentTrack.src}
                 preload="metadata"
+                onPlay={() => {
+                    if (
+                        audioCtxRef.current &&
+                        audioCtxRef.current.state !== 'running' &&
+                        audioCtxRef.current.state !== 'closed'
+                    ) {
+                        audioCtxRef.current.resume().catch(() => {});
+                    }
+                }}
                 onTimeUpdate={handleTimeUpdate}
                 onLoadedMetadata={handleLoadedMetadata}
                 onEnded={handleNext}
@@ -514,6 +597,7 @@ export default function MusicPlayer() {
                         onClick={(e) => {
                             e.stopPropagation();
                             if (hasDragged.current) return;
+                            ensureAudioGraph(volume, isMuted);
                             if (!isPlaying) setIsPlaying(true);
                             setIsOpen(true);
                         }}
@@ -1019,9 +1103,10 @@ export default function MusicPlayer() {
                                     onMouseDown={handleVolumeBarDown}
                                     onTouchStart={handleVolumeBarDown}
                                     style={{
-                                        width: 48, height: 16,
+                                        width: 50, height: 24,
                                         display: 'flex', alignItems: 'center',
                                         cursor: 'pointer', position: 'relative',
+                                        touchAction: 'none',
                                     }}
                                 >
                                     <div style={{ width: '100%', height: 4, background: '#464646', borderRadius: 2, position: 'relative' }}>
